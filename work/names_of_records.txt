@@ -1,0 +1,32 @@
+warehous.DBF
+
+  0 - INV       : 'QO4 '
+  1 - GROUP     : 'fi'
+  2 - COD       : 4
+  3 - KOL       : 1
+  4 - PRICE_USD : 160.0
+  5 - PRICE_INV : 180.0
+  6 - KOL_SKL   : 0
+  7 - KOL_REZERV: 0
+  8 - KOL_SALE  : 1
+  9 - KOL_SF    : 0
+ 10 - KOL_OTKAZ : 0
+ 11 - CODE      : 'QO4AAI0   '
+ 12 - PRICE_KRB : 935.0
+ 13 - TAX_TAM   : None
+ 14 - TAX_ACK   : None
+ 15 - SIZE_INV  : '                                                        '
+ 16 - SIZE_SKL  : '                                                        '
+ 17 - OLD_SALE  : 0
+
+firm.dbf
+
+  0 - FIRM      : 1
+  1 - FIRM_TXT  : 'Transcend                               '
+  2 - FIRM_IMAGE: '                                                                                                    '
+  3 - FIRM_URL  : '                                                                                                    '
+  4 - REC_OFF   : True
+  5 - DESCRIPT  : ''
+  6 - URL       : ''
+  7 - MANAGER_ID: 8
+  8 - FIRM_GRP  : '  '
