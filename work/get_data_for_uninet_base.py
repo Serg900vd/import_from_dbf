@@ -38,13 +38,19 @@ def get_firm(filter_id_firm: tuple = None) -> dict:
     return firm
 
 
-def get_goods(filter_group: tuple = None) -> dict:
+def get_goods(key_field: str = 0, filter_group: tuple = None) -> dict:
+    """
+
+    :param key_field: 'SHOW_PRG' Имя поля или индекс. Значение True включает строку в результат
+    :param filter_group: ('KM', 'HB') кортеж с значениями поля которые необходимо отфильтровать
+    :return:
+    """
     goods = {}
     f = dbf.Table(PATH_BASE + 'goods.dbf', codepage=CODEPAGE)
     with f.open() as ff:
         field_names = ff.field_names
         for row in ff:
-            if row and not dbf.is_deleted(row) and row.SHOW_PRG and (not filter_group or row.GROUP in filter_group):
+            if row and not dbf.is_deleted(row) and row[key_field] and (not filter_group or row.GROUP in filter_group):
                 group_cod_feilds = {}
                 for j, feild in enumerate(row):
                     group_cod_feilds[field_names[j].lower()] = feild
@@ -54,7 +60,7 @@ def get_goods(filter_group: tuple = None) -> dict:
 
 
 if __name__ == '__main__':
-    goods = get_goods(FILTER_GROUP_KM_HB)
+    goods = get_goods('SHOW_PRG', FILTER_GROUP_KM_HB)
     print(goods['KM750'])
 
     # warehous = get_warehous(FILTER_GROUP_KM_HB)
