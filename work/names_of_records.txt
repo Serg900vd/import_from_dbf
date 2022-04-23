@@ -21,12 +21,93 @@ warehous.DBF
 
 firm.dbf
 
-  0 - FIRM      : 1
-  1 - FIRM_TXT  : 'Transcend                               '
+  0 - FIRM      : 150
+  1 - FIRM_TXT  : 'Uninet USA                              '
   2 - FIRM_IMAGE: '                                                                                                    '
   3 - FIRM_URL  : '                                                                                                    '
-  4 - REC_OFF   : True
+  4 - REC_OFF   : None
   5 - DESCRIPT  : ''
-  6 - URL       : ''
-  7 - MANAGER_ID: 8
-  8 - FIRM_GRP  : '  '
+  6 - URL       : 'http://www.uninetimaging.com'
+  7 - MANAGER_ID: 12
+  8 - FIRM_GRP  : 'KM'
+
+  goods.DBF
+
+  0 - GROUP     : 'ZI'
+  1 - COD       : 3
+  2 - GROUPID   : 460
+  3 - MODEL     : 'JM318S644A-75       '
+  4 - MODEL_TXT : "Модуль пам'ятi JETRAM 128Мб SDRAM133                                                                "
+  5 - FIRM      : 1
+  6 - PRICE_SALE: 0.0
+  7 - PRICE_DM  : 16.0
+  8 - TAX_TAM   : 0
+  9 - TAX_ACK   : 0
+ 10 - SIZE      : 0
+ 11 - PROFIT    : 0
+ 12 - CURR      : '   '
+ 13 - PRICE_OPT : 0.0
+ 14 - PRICE_BAS : 0.0
+ 15 - KPR1      : 0.0
+ 16 - KPR2      : 0.0
+ 17 - KPR3      : 0.0
+ 18 - KPR4      : 0.0
+ 19 - KPR5      : 0.0
+ 20 - MARK      : ' '
+ 21 - PRICE_A   : 0.0
+ 22 - PRICE_B   : 22.0
+ 23 - PRICE_C   : 23.0
+ 24 - PRICE_D   : 25.0
+ 25 - LABEL_TXT : '.                             '
+ 26 - PROD_CODE : '            '
+ 27 - MIN_QTY   : 2
+ 28 - SHOW_SITE : False
+ 29 - SHOW_PRG  : False
+ 30 - COND_ID   : 0
+ 31 - COND_STR  : '          '
+ 32 - DSN_ID    : 0
+ 33 - URL       : ''
+ 34 - TESTICO   : 0
+ 35 - PUBLIC_MOD: ''
+ 36 - PUBLIC_TXT: ''
+ 37 - WARRANTY  : 0
+
+        --Fields--
+          0) b'GROUP C(2)'
+          1) b'COD I binary'
+          2) b'GROUPID I binary'
+          3) b'MODEL C(20)'
+          4) b'MODEL_TXT C(100)'
+          5) b'FIRM I binary'
+          6) b'PRICE_SALE N(10,2)'
+          7) b'PRICE_DM N(10,2)'
+          8) b'TAX_TAM I binary'
+          9) b'TAX_ACK I binary'
+         10) b'SIZE I binary'
+         11) b'PROFIT I binary'
+         12) b'CURR C(3)'
+         13) b'PRICE_OPT N(10,2)'
+         14) b'PRICE_BAS N(10,2)'
+         15) b'KPR1 N(5,3)'
+         16) b'KPR2 N(5,3)'
+         17) b'KPR3 N(5,3)'
+         18) b'KPR4 N(5,3)'
+         19) b'KPR5 N(5,3)'
+         20) b'MARK C(1)'
+         21) b'PRICE_A N(10,2)'
+         22) b'PRICE_B N(10,2)'
+         23) b'PRICE_C N(10,2)'
+         24) b'PRICE_D N(10,2)'
+         25) b'LABEL_TXT C(30)'
+         26) b'PROD_CODE C(12)'
+         27) b'MIN_QTY I binary'
+         28) b'SHOW_SITE L'
+         29) b'SHOW_PRG L'
+         30) b'COND_ID I binary'
+         31) b'COND_STR C(10)'
+         32) b'DSN_ID I binary'
+         33) b'URL M'
+         34) b'TESTICO I binary'
+         35) b'PUBLIC_MOD M'
+         36) b'PUBLIC_TXT M'
+         37) b'WARRANTY I binary'
