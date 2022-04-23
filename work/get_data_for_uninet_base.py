@@ -5,11 +5,12 @@ from typing import Tuple
 PATH_BASE = "d:\\Kotik\\work\\2012_toner_base\\"
 CODEPAGE = 'cp1251'
 FILTR_FIRM_UNINET_HB =(150, 183)
+FILTER_GROUP_KM_HB = ('KM', 'HB')
 
 import dbf
 
 
-def get_warehous() -> list:
+def get_warehous(filter_group:tuple=None) -> list:
     warehous = []
     f = dbf.Table(PATH_BASE + 'warehous.dbf', codepage=CODEPAGE)
     with f.open() as ff:
@@ -17,7 +18,7 @@ def get_warehous() -> list:
         row_out = ('inv', 'group_cod', 'group', 'cod', 'price_usd', 'kol', 'kol_skl', 'kol_rezerv', 'kol_sf')
         warehous.append(row_out)
         for row in ff:
-            if row and not dbf.is_deleted(row) and row.KOL_SKL:
+            if row and not dbf.is_deleted(row) and row.KOL_SKL and (not filter_group or row.GROUP in filter_group):
                 row_out = (
                     row.INV, row.GROUP + str(row.COD), row.GROUP, row.COD, row.PRICE_USD, row.KOL, row.KOL_SKL,
                     row.KOL_REZERV,
@@ -56,10 +57,12 @@ def get_goods():
 
 
 if __name__ == '__main__':
+    warehous = get_warehous(FILTER_GROUP_KM_HB)
+    print(len(warehous))
+
     firm = get_firm((150, 183))  # (Uninet USA, H&B)
     assert (get_firm((150, 183)) == {150: 'Uninet USA', 183: 'H&B'}), "{150: 'Uninet USA', 183: 'H&B'}"
 
-    warehous = get_warehous()
 
     catalogue = get_goods()
     print(catalogue)
