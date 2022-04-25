@@ -28,6 +28,15 @@ def get_warehous(filter_group: tuple = None) -> list:
 
 
 def get_firm(filter_id_firm: tuple = None) -> dict:
+    """
+    Возвращает, из файла firm.dbf, словарь в котором ключ поле FIRM, значение поле FIRM_TXT
+    :param filter_id_firm:
+    :return: dict
+    >>> get_firm((150, 183))
+    {150: 'Uninet USA', 183: 'H&B'}
+    >>> get_firm((150, ))
+    {150: 'Uninet USA'}
+    """
     firm = {}
     f = dbf.Table(PATH_BASE + 'firm.dbf', codepage=CODEPAGE)
     with f.open() as ff:
@@ -60,13 +69,17 @@ def get_goods(key_field: str = 0, filter_group: tuple = None) -> dict:
 
 
 if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
+
     goods = get_goods('SHOW_PRG', FILTER_GROUP_KM_HB)
     print(goods['KM750'])
 
     # warehous = get_warehous(FILTER_GROUP_KM_HB)
     # print(len(warehous))
     #
-    # firm = get_firm((150, 183))  # (Uninet USA, H&B)
+    firm = get_firm((151, 183))  # (Uninet USA, H&B)
+    print(firm)
     # assert (get_firm((150, 183)) == {150: 'Uninet USA', 183: 'H&B'}), "{150: 'Uninet USA', 183: 'H&B'}"
 
     pass
