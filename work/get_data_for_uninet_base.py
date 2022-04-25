@@ -1,6 +1,7 @@
 # Обновление данных для UNINET base.xls
 #
 PATH_BASE = "d:\\Kotik\\work\\2012_toner_base\\"
+PATH_BASE_TEST = "..\\tests\\dbf\\"
 CODEPAGE = 'cp1251'
 FILTR_FIRM_UNINET_HB = (150, 183)
 FILTER_GROUP_KM_HB = ('KM', 'HB')
@@ -50,14 +51,33 @@ def get_data_from_pass(file_name: str, key_field: str = 0, filter_group: tuple =
     return data
 
 
+def cut_tabl(file_name, namber_row):
+    """
+    Обрезка файлов для тестов
+    :param file_name:
+    :param namber_row: номер строки по которую обрезаем
+    :return:
+    """
+    f = dbf.Table(PATH_BASE + file_name, codepage=CODEPAGE)
+    with f.open() as ff:
+        g = ff.new(PATH_BASE_TEST + file_name)
+        with g.open(mode=dbf.READ_WRITE) as gg:
+            for j, row in enumerate(ff):
+                if j > namber_row:
+                    gg.append(row)
+    print(f'В файле {file_name} записи с 0 по {namber_row} удалены. \n Результат в дирректории {PATH_BASE_TEST}')
+
+
 if __name__ == '__main__':
-    import doctest
+    cut_tabl('goods.DBF', 15800)
 
-    doctest.testmod()
-
-    goods = get_data_from_pass(PATH_BASE + 'goods.dbf', 'SHOW_PRG', FILTER_GROUP_KM_HB)
-    print(goods['KM750'])
-
+    # import doctest
+    #
+    # doctest.testmod()
+    #
+    # goods = get_data_from_pass(PATH_BASE + 'goods.dbf', 'SHOW_PRG', FILTER_GROUP_KM_HB)
+    # print(goods['KM750'])
+    #
     warehous = get_data_from_pass(PATH_BASE + 'warehous.dbf', 'KOL_SKL', FILTER_GROUP_KM_HB)
     print(warehous['KM750'])
 
