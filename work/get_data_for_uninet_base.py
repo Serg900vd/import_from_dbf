@@ -33,13 +33,15 @@ def get_firm(path_base: str, filter_id_firm: tuple = None) -> dict:
     return firm
 
 
-def get_data_from_pass(file_name: str, key_field: str = 0, filter_group: tuple = None) -> dict:
+def get_data_from_pass(file_name: str, key_tabl=lambda row: row.GROUP + str(row.COD), key_field: str = 0,
+                       filter_group: tuple = None) -> dict:
     """
     Возвращает словарь в словаре по ключу groupcod
     :param file_name: pass + file_name.dbf
+    :param key_tabl: lambda row: row.GROUP + str(row.COD) ключ таблицы
     :param key_field: 'SHOW_PRG' Имя поля или индекс. Значение True включает строку в результат
     :param filter_group: ('KM', 'HB') кортеж с значениями поля GROUP которые необходимо отфильтровать
-    :return: {'KM750'- gropcod : {'group': 'KM', 'cod': 750, 'groupid': 695, ...(все поля таблицы)}}
+    :return: {key_tabl : {'group': 'KM', 'cod': 750, 'groupid': 695, ...(все поля таблицы)}}
     """
     if not os.path.isfile(file_name):
         raise FileNotFoundError(f'Нет необходимого файла {file_name}')
@@ -52,7 +54,7 @@ def get_data_from_pass(file_name: str, key_field: str = 0, filter_group: tuple =
                 group_cod_feilds = {}
                 for j, feild in enumerate(row):
                     group_cod_feilds[field_names[j].lower()] = feild
-                data[row.GROUP + str(row.COD)] = group_cod_feilds
+                data[key_tabl(row)] = group_cod_feilds
     return data
 
 
@@ -82,10 +84,10 @@ if __name__ == '__main__':
 
     # invoice = get_data_from_pass(PATH_BASE_TEST + 'invoice.DBF')
     #
-    # goods = get_data_from_pass(PATH_BASE + 'goods.dbf', 'SHOW_PRG', FILTER_GROUP_KM_HB)
+    # goods = get_data_from_pass(PATH_BASE_TEST + 'goods.dbf', 'SHOW_PRG', FILTER_GROUP_KM_HB)
     # print(goods['KM750'])
     #
-    # warehous = get_data_from_pass(PATH_BASE + 'warehous.dbf', 'KOL_SKL', FILTER_GROUP_KM_HB)
-    # print(warehous['KM750'])
+    warehous = get_data_from_pass(PATH_BASE_TEST + 'warehous.dbf', key_field='KOL_SKL', filter_group=FILTER_GROUP_KM_HB)
+    print(warehous)  # ['KM1196']
 
     # cut_tabl('invoice.DBF', 13600)

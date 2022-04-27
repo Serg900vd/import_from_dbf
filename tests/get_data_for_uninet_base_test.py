@@ -15,7 +15,8 @@ FILTER_GROUP_KM_HB = ('KM', 'HB')
 class Get_firmTest(TestCase):
     def test_uninet_hb(self):
         self.assertEqual(get_data_for_uninet_base.get_firm(PATH_BASE_TEST, (150, 183)), {150: 'Uninet USA', 183: 'H&B'})
-        self.assertNotEqual(get_data_for_uninet_base.get_firm(PATH_BASE_TEST, (150, 204)), {150: 'Uninet USA', 183: 'H&B'})
+        self.assertNotEqual(get_data_for_uninet_base.get_firm(PATH_BASE_TEST, (150, 204)),
+                            {150: 'Uninet USA', 183: 'H&B'})
 
     def test_olansi(self):
         self.assertEqual(get_data_for_uninet_base.get_firm(PATH_BASE_TEST, (204,)), {204: 'Olansi'})
@@ -42,7 +43,8 @@ class Get_data_from_passTest(TestCase):
                    'tax_ack': None,
                    'tax_tam': None}
         self.assertEqual(
-            get_data_for_uninet_base.get_data_from_pass(PATH_BASE_TEST + 'warehous.dbf', 'KOL_SKL', FILTER_GROUP_KM_HB)[
+            get_data_for_uninet_base.get_data_from_pass(PATH_BASE_TEST + 'warehous.dbf', key_field='KOL_SKL',
+                                                        filter_group=FILTER_GROUP_KM_HB)[
                 'KM1196'], _result)
 
     def test_goods(self):
@@ -87,7 +89,8 @@ class Get_data_from_passTest(TestCase):
                    'url': '',
                    'warranty': 0}
         self.assertEqual(
-            get_data_for_uninet_base.get_data_from_pass(PATH_BASE_TEST + 'goods.dbf', 'SHOW_PRG', FILTER_GROUP_KM_HB)[
+            get_data_for_uninet_base.get_data_from_pass(PATH_BASE_TEST + 'goods.dbf', key_field='SHOW_PRG',
+                                                        filter_group=FILTER_GROUP_KM_HB)[
                 'HB809'], _result)
 
 
