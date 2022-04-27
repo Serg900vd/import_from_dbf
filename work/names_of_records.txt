@@ -111,3 +111,56 @@ firm.dbf
          35) b'PUBLIC_MOD M'
          36) b'PUBLIC_TXT M'
          37) b'WARRANTY I binary'
+
+invoice.DBF
+
+  0 - INV       : 'DBE6'
+  1 - INV_DAY   : datetime.date(2021, 7, 2)
+  2 - INV_TXT   : 'июнь                                              '
+  3 - SUM_INV   : 6277477.43
+  4 - CONDITION : 'ПРОДАЖИ   '
+  5 - INV_NKL   : 483861
+  6 - CONTRACT  : '                    '
+  7 - APP_NUM   : 0
+  8 - SUM_USD   : 16872163.69
+  9 - SUM_KRB   : 45008310.02
+ 10 - KRB_USD   : 1.0
+ 11 - DM_USD    : 1.0
+ 12 - COND      : 2
+ 13 - TAX_TAM   : 0
+ 14 - TAX_NDS   : 1
+ 15 - TAX_PROC  : 1.0
+ 16 - CURR      : '001'
+ 17 - INV_REG   : datetime.date(2021, 7, 2)
+ 18 - PEO       : 0
+ 19 - CUST      : 1150
+ 20 - AUTO_ID   : 0
+ 21 - USER_ID   : 22
+ 22 - NOTES     : ''
+ 23 - TAKING_DAY: None
+
+        --Fields--
+          0) b'INV C(4)'
+          1) b'INV_DAY D'
+          2) b'INV_TXT C(50)'
+          3) b'SUM_INV N(12,2)'
+          4) b'CONDITION C(10)'
+          5) b'INV_NKL I binary'
+          6) b'CONTRACT C(20)'
+          7) b'APP_NUM I binary'
+          8) b'SUM_USD N(12,2)'
+          9) b'SUM_KRB N(12,2)'
+         10) b'KRB_USD N(6,2)'
+         11) b'DM_USD N(6,2)'
+         12) b'COND I binary'
+         13) b'TAX_TAM I binary'
+         14) b'TAX_NDS I binary'
+         15) b'TAX_PROC N(4,2)'
+         16) b'CURR C(3)'
+         17) b'INV_REG D'
+         18) b'PEO I binary'
+         19) b'CUST I binary'
+         20) b'AUTO_ID I binary'
+         21) b'USER_ID I binary'
+         22) b'NOTES M'
+         23) b'TAKING_DAY D'
