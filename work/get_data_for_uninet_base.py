@@ -6,7 +6,7 @@ CODEPAGE = 'cp1251'
 FILTR_FIRM_UNINET_HB = (150, 183)
 FILTER_GROUP_KM_HB = ('KM', 'HB')
 
-import dbf
+import dbf, os
 
 
 def get_firm(path_base: str, filter_id_firm: tuple = None) -> dict:
@@ -20,8 +20,11 @@ def get_firm(path_base: str, filter_id_firm: tuple = None) -> dict:
     >>> get_firm(PATH_BASE, (150, ))
     {150: 'Uninet USA'}
     """
+    file = path_base + 'firm.dbf'
+    if not os.path.isfile(file):
+        raise FileNotFoundError(f'Нет необходимого файла {file}')
     firm = {}
-    f = dbf.Table(path_base + 'firm.dbf', codepage=CODEPAGE)
+    f = dbf.Table(file, codepage=CODEPAGE)
     with f.open() as ff:
         for row in ff:
             if row and not dbf.is_deleted(row) and not row.REC_OFF and (
@@ -38,6 +41,8 @@ def get_data_from_pass(file_name: str, key_field: str = 0, filter_group: tuple =
     :param filter_group: ('KM', 'HB') кортеж с значениями поля GROUP которые необходимо отфильтровать
     :return: {'KM750'- gropcod : {'group': 'KM', 'cod': 750, 'groupid': 695, ...(все поля таблицы)}}
     """
+    if not os.path.isfile(file_name):
+        raise FileNotFoundError(f'Нет необходимого файла {file_name}')
     data = {}
     f = dbf.Table(file_name, codepage=CODEPAGE)
     with f.open() as ff:
@@ -58,6 +63,8 @@ def cut_tabl(file_name, namber_row):
     :param namber_row: номер строки по которую обрезаем
     :return:
     """
+    if not os.path.isfile(PATH_BASE + file_name):
+        raise FileNotFoundError(f'Нет необходимого файла {PATH_BASE + file_name}')
     f = dbf.Table(PATH_BASE + file_name, codepage=CODEPAGE)
     with f.open() as ff:
         g = ff.new(PATH_BASE_TEST + file_name)
@@ -69,23 +76,16 @@ def cut_tabl(file_name, namber_row):
 
 
 if __name__ == '__main__':
-    cut_tabl('goods.DBF', 15800)
+    import doctest
 
-    # import doctest
-    #
-    # doctest.testmod()
+    doctest.testmod()
+
+    # invoice = get_data_from_pass(PATH_BASE_TEST + 'invoice.DBF')
     #
     # goods = get_data_from_pass(PATH_BASE + 'goods.dbf', 'SHOW_PRG', FILTER_GROUP_KM_HB)
     # print(goods['KM750'])
     #
-    warehous = get_data_from_pass(PATH_BASE + 'warehous.dbf', 'KOL_SKL', FILTER_GROUP_KM_HB)
-    print(warehous['KM750'])
+    # warehous = get_data_from_pass(PATH_BASE + 'warehous.dbf', 'KOL_SKL', FILTER_GROUP_KM_HB)
+    # print(warehous['KM750'])
 
-    # warehous = get_warehous(FILTER_GROUP_KM_HB)
-    # print(len(warehous))
-    #
-    # firm = get_firm((151, 183))  # (Uninet USA, H&B)
-    # print(firm)
-    # assert (get_firm((150, 183)) == {150: 'Uninet USA', 183: 'H&B'}), "{150: 'Uninet USA', 183: 'H&B'}"
-
-    pass
+    # cut_tabl('invoice.DBF', 13600)
