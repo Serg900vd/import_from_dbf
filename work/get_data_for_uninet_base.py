@@ -6,7 +6,7 @@ CODEPAGE = 'cp1251'
 FILTR_FIRM_UNINET_HB = (150, 183)
 FILTER_GROUP_KM_HB = ('KM', 'HB')
 
-import dbf, os
+import dbf, os, datetime
 
 
 def get_firm(path_base: str, filter_id_firm: tuple = None) -> dict:
@@ -82,11 +82,12 @@ if __name__ == '__main__':
 
     doctest.testmod()
 
-    # invoice = get_data_from_pass(PATH_BASE_TEST + 'invoice.DBF')
-    #
-    # goods = get_data_from_pass(PATH_BASE_TEST + 'goods.dbf', 'SHOW_PRG', FILTER_GROUP_KM_HB)
-    # print(goods['KM750'])
-    #
+    invoice = get_data_from_pass(PATH_BASE_TEST + 'invoice.DBF', lambda row: row.INV)
+    print(invoice['DBE8'])
+
+    goods = get_data_from_pass(PATH_BASE_TEST + 'goods.dbf', key_field='SHOW_PRG', filter_group=FILTER_GROUP_KM_HB)
+    print(goods['HB812'])  # ['HB812']
+
     warehous = get_data_from_pass(PATH_BASE_TEST + 'warehous.dbf', key_field='KOL_SKL', filter_group=FILTER_GROUP_KM_HB)
     print(warehous)  # ['KM1196']
 

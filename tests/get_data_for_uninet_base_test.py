@@ -1,5 +1,5 @@
 from unittest import TestCase, main
-import doctest, os
+import doctest, os, datetime
 from work import get_data_for_uninet_base
 
 if os.getcwd().split('\\')[-1] == 'tests':
@@ -92,6 +92,35 @@ class Get_data_from_passTest(TestCase):
             get_data_for_uninet_base.get_data_from_pass(PATH_BASE_TEST + 'goods.dbf', key_field='SHOW_PRG',
                                                         filter_group=FILTER_GROUP_KM_HB)[
                 'HB809'], _result)
+
+    def test_invoice(self):
+        _result = {'app_num': 0,
+                   'auto_id': 0,
+                   'cond': 2,
+                   'condition': 'ПРОДАЖИ   ',
+                   'contract': '                    ',
+                   'curr': '001',
+                   'cust': 1377,
+                   'dm_usd': 1.0,
+                   'inv': 'DBE8',
+                   'inv_day': datetime.date(2021, 7, 6),
+                   'inv_nkl': 483895,
+                   'inv_reg': datetime.date(2021, 7, 6),
+                   'inv_txt': 'лидер сч 268                                      ',
+                   'krb_usd': 1.0,
+                   'notes': '',
+                   'peo': 0,
+                   'sum_inv': 6277477.43,
+                   'sum_krb': 45008310.02,
+                   'sum_usd': 16872163.69,
+                   'taking_day': None,
+                   'tax_nds': 1,
+                   'tax_proc': 1.0,
+                   'tax_tam': 0,
+                   'user_id': 22}
+        self.assertEqual(
+            get_data_for_uninet_base.get_data_from_pass(PATH_BASE_TEST + 'invoice.DBF', lambda row: row.INV)[
+                'DBE8'], _result)
 
 
 def load_tests(loader, tests, ignore):
