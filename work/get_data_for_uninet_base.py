@@ -6,7 +6,7 @@ CODEPAGE = 'cp1251'
 FILTR_FIRM_UNINET_HB = (150, 183)
 FILTER_GROUP_KM_HB = ('KM', 'HB')
 
-import dbf, os, datetime
+import dbf, os, datetime, csv
 
 
 def get_firm(path_base: str, filter_id_firm: tuple = None) -> dict:
@@ -58,7 +58,16 @@ def get_data_from_pass(file_name: str, key_tabl=lambda row: row.GROUP + str(row.
     return data
 
 
-def main_uninet(path):
+def main_uninet(path: str, file_name_out: str, paht_out: str = None):
+    """
+    Формируем финальную таблицу для выдачи.
+    :param path: путь к базе
+    :param file_name_out: имя файла с результатом в формате .csv
+    :param paht_out: путь файла результата
+    """
+    if not paht_out:
+        paht_out = path
+
     warehous = get_data_from_pass(path + 'warehous.dbf', lambda row: row.INV, key_field='KOL_SKL',
                                   filter_group=FILTER_GROUP_KM_HB)
     print('warehous создан')
@@ -69,16 +78,16 @@ def main_uninet(path):
     firm = {150: 'Uninet USA', 183: 'H&B'}
 
     uninet = []
-    header = ('товарная_группа', 'код_товара', 'код_прихода', 'накладная', 'дата', 'поставщик', 'модель',
-              'наименование', 'фирма', 'приход', 'склад', 'свободно', 'резерв', 'выписано', 'оплачено', 'usd_закупка',
-              'грн_закупка', 'usd_a', 'usd_b', 'usd_c', 'usd_d', 'usd_розница')
-    uninet.append(header)
+    header = [('товарная_группа', 'код_товара', 'код_прихода', 'накладная', 'дата', 'поставщик', 'модель',
+               'наименование', 'фирма', 'приход', 'склад', 'свободно', 'резерв', 'выписано', 'оплачено', 'usd_закупка',
+               'грн_закупка', 'usd_a', 'usd_b', 'usd_c', 'usd_d', 'usd_розница')]
     count = 0
     for inv, row in warehous.items():
         group_cod = row['group'] + str(row['cod'])
         row_out = (row['group'],
                    row['cod'],
                    inv,
+                   invoice[inv]['inv_txt'].strip(),
                    invoice[inv]['inv_day'].strftime('%d.%m.%Y'),
                    invoice[inv]['cust'],
                    goods[group_cod]['model'].strip(),
@@ -90,19 +99,31 @@ def main_uninet(path):
                    warehous[inv]['kol_rezerv'],
                    warehous[inv]['kol_sf'],
                    warehous[inv]['kol_sale'],
-                   warehous[inv]['price_usd'],
-                   warehous[inv]['price_krb'],
-                   goods[group_cod]['price_a'],
-                   goods[group_cod]['price_b'],
-                   goods[group_cod]['price_c'],
-                   goods[group_cod]['price_d'],
-                   goods[group_cod]['price_sale'],
+                   str(warehous[inv]['price_usd']).replace('.', ','),
+                   str(warehous[inv]['price_krb']).replace('.', ','),
+                   str(goods[group_cod]['price_a']).replace('.', ','),
+                   str(goods[group_cod]['price_b']).replace('.', ','),
+                   str(goods[group_cod]['price_c']).replace('.', ','),
+                   str(goods[group_cod]['price_d']).replace('.', ','),
+                   str(goods[group_cod]['price_sale']).replace('.', ','),
                    )
         uninet.append(row_out)
         if count > 4: break
         count += 1
-        pass
+
+    uninet.sort(key=lambda j: (j[0], j[1]))
+    uninet = header + uninet
+
     print(uninet)
+
+    if not os.path.isdir(paht_out):
+        raise FileNotFoundError(f'Нет такого пути {paht_out}')
+
+    with open(paht_out + file_name_out, 'w') as f:
+        ff = csv.writer(f, delimiter=';', lineterminator='\n')
+        for row in uninet:
+            ff.writerow(row)
+    print(f'Результат записан в {paht_out + file_name_out}')
 
 
 def cut_tabl(file_name, namber_row):
@@ -125,11 +146,8 @@ def cut_tabl(file_name, namber_row):
 
 
 if __name__ == '__main__':
-    # import doctest
-    #
-    # doctest.testmod()
 
-    main_uninet(PATH_BASE)
+    main_uninet(PATH_BASE, 'stock_uninet.csv')
 
     # invoice = get_data_from_pass(PATH_BASE_TEST + 'invoice.DBF', lambda row: row.INV)
     # print(invoice['DBE8'])
