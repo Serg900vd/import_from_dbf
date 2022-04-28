@@ -58,6 +58,53 @@ def get_data_from_pass(file_name: str, key_tabl=lambda row: row.GROUP + str(row.
     return data
 
 
+def main_uninet(path):
+    warehous = get_data_from_pass(path + 'warehous.dbf', lambda row: row.INV, key_field='KOL_SKL',
+                                  filter_group=FILTER_GROUP_KM_HB)
+    print('warehous создан')
+    invoice = get_data_from_pass(path + 'invoice.DBF', lambda row: row.INV)
+    print('invoice создан')
+    goods = get_data_from_pass(path + 'goods.dbf', key_field='SHOW_PRG', filter_group=FILTER_GROUP_KM_HB)
+    print('goods создан')
+    firm = {150: 'Uninet USA', 183: 'H&B'}
+
+    uninet = []
+    header = ('товарная_группа', 'код_товара', 'код_прихода', 'накладная', 'дата', 'поставщик', 'модель',
+              'наименование', 'фирма', 'приход', 'склад', 'свободно', 'резерв', 'выписано', 'оплачено', 'usd_закупка',
+              'грн_закупка', 'usd_a', 'usd_b', 'usd_c', 'usd_d', 'usd_розница')
+    uninet.append(header)
+    count = 0
+    for inv, row in warehous.items():
+        group_cod = row['group'] + str(row['cod'])
+        row_out = (row['group'],
+                   row['cod'],
+                   inv,
+                   invoice[inv]['inv_day'].strftime('%d.%m.%Y'),
+                   invoice[inv]['cust'],
+                   goods[group_cod]['model'].strip(),
+                   goods[group_cod]['model_txt'].strip(),
+                   firm[goods[group_cod]['firm']],
+                   warehous[inv]['kol'],
+                   warehous[inv]['kol_skl'],
+                   warehous[inv]['kol_skl'] - warehous[inv]['kol_rezerv'],
+                   warehous[inv]['kol_rezerv'],
+                   warehous[inv]['kol_sf'],
+                   warehous[inv]['kol_sale'],
+                   warehous[inv]['price_usd'],
+                   warehous[inv]['price_krb'],
+                   goods[group_cod]['price_a'],
+                   goods[group_cod]['price_b'],
+                   goods[group_cod]['price_c'],
+                   goods[group_cod]['price_d'],
+                   goods[group_cod]['price_sale'],
+                   )
+        uninet.append(row_out)
+        if count > 4: break
+        count += 1
+        pass
+    print(uninet)
+
+
 def cut_tabl(file_name, namber_row):
     """
     Обрезка файлов для тестов
@@ -78,17 +125,21 @@ def cut_tabl(file_name, namber_row):
 
 
 if __name__ == '__main__':
-    import doctest
+    # import doctest
+    #
+    # doctest.testmod()
 
-    doctest.testmod()
+    main_uninet(PATH_BASE)
 
-    invoice = get_data_from_pass(PATH_BASE_TEST + 'invoice.DBF', lambda row: row.INV)
-    print(invoice['DBE8'])
-
-    goods = get_data_from_pass(PATH_BASE_TEST + 'goods.dbf', key_field='SHOW_PRG', filter_group=FILTER_GROUP_KM_HB)
-    print(goods['HB812'])  # ['HB812']
-
-    warehous = get_data_from_pass(PATH_BASE_TEST + 'warehous.dbf', key_field='KOL_SKL', filter_group=FILTER_GROUP_KM_HB)
-    print(warehous)  # ['KM1196']
+    # invoice = get_data_from_pass(PATH_BASE_TEST + 'invoice.DBF', lambda row: row.INV)
+    # print(invoice['DBE8'])
+    #
+    # goods = get_data_from_pass(PATH_BASE_TEST + 'goods.dbf', key_field='SHOW_PRG', filter_group=FILTER_GROUP_KM_HB)
+    # print(goods['HB812'])  # ['HB812']
+    #
+    # warehous = get_data_from_pass(PATH_BASE_TEST + 'warehous.dbf', key_field='KOL_SKL', filter_group=FILTER_GROUP_KM_HB)
+    # warehous = get_data_from_pass(PATH_BASE_TEST + 'warehous.dbf', lambda row: row.INV, key_field='KOL_SKL',
+    #                               filter_group=FILTER_GROUP_KM_HB)
+    # print(warehous)  # ['KM1196']
 
     # cut_tabl('invoice.DBF', 13600)
