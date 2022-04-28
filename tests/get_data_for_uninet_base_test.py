@@ -1,5 +1,5 @@
 from unittest import TestCase, main
-import doctest, os, datetime
+import os, datetime
 from work import get_data_for_uninet_base
 
 if os.getcwd().split('\\')[-1] == 'tests':
@@ -121,11 +121,6 @@ class Get_data_from_passTest(TestCase):
         self.assertEqual(
             get_data_for_uninet_base.get_data_from_pass(PATH_BASE_TEST + 'invoice.DBF', lambda row: row.INV)[
                 'DBE8'], _result)
-
-
-def load_tests(loader, tests, ignore):
-    tests.addTests(doctest.DocTestSuite(get_data_for_uninet_base))
-    return tests
 
 
 if __name__ == '__main__':
