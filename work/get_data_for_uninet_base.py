@@ -15,10 +15,6 @@ def get_firm(path_base: str, filter_id_firm: tuple = None) -> dict:
     :param path_base: путь к базе
     :param filter_id_firm: (150, 183) коды FIRM которые необходимо отфильтровать
     :return: dict
-    >>> get_firm(PATH_BASE, (150, 183))
-    {150: 'Uninet USA', 183: 'H&B'}
-    >>> get_firm(PATH_BASE, (150, ))
-    {150: 'Uninet USA'}
     """
     file = path_base + 'firm.dbf'
     if not os.path.isfile(file):
@@ -33,29 +29,29 @@ def get_firm(path_base: str, filter_id_firm: tuple = None) -> dict:
     return firm
 
 
-def get_data_from_pass(file_name: str, key_tabl=lambda row: row.GROUP + str(row.COD), key_field: str = 0,
+def get_data_from_pass(file_name: str, key_tabl=lambda row: row.GROUP + str(row.COD) + row.INV, key_field: str = 0,
                        filter_group: tuple = None) -> dict:
     """
-    Возвращает словарь в словаре по ключу groupcod
+    Возвращает словарь по ключу key_tabl с вложенными строками в виде словаря {поле : значение ...}
     :param file_name: pass + file_name.dbf
-    :param key_tabl: lambda row: row.GROUP + str(row.COD) ключ таблицы
+    :param key_tabl: lambda row: row.GROUP + str(row.COD) + row.INV (ключ таблицы по умолчанию)
     :param key_field: 'SHOW_PRG' Имя поля или индекс. Значение True включает строку в результат
     :param filter_group: ('KM', 'HB') кортеж с значениями поля GROUP которые необходимо отфильтровать
-    :return: {key_tabl : {'group': 'KM', 'cod': 750, 'groupid': 695, ...(все поля таблицы)}}
+    :return: {key_tabl : {'group': 'KM', 'cod': 750, 'groupid': 695, ...(все поля таблицы)}, ...}
     """
     if not os.path.isfile(file_name):
         raise FileNotFoundError(f'Нет необходимого файла {file_name}')
-    data = {}
+    result = {}
     f = dbf.Table(file_name, codepage=CODEPAGE)
     with f.open() as ff:
         field_names = ff.field_names
         for row in ff:
             if row and not dbf.is_deleted(row) and row[key_field] and (not filter_group or row.GROUP in filter_group):
-                group_cod_feilds = {}
+                feilds = {}
                 for j, feild in enumerate(row):
-                    group_cod_feilds[field_names[j].lower()] = feild
-                data[key_tabl(row)] = group_cod_feilds
-    return data
+                    feilds[field_names[j].lower()] = feild
+                result[key_tabl(row)] = feilds
+    return result
 
 
 def main_uninet(path: str, file_name_out: str, paht_out: str = None):
@@ -68,12 +64,12 @@ def main_uninet(path: str, file_name_out: str, paht_out: str = None):
     if not paht_out:
         paht_out = path
 
-    warehous = get_data_from_pass(path + 'warehous.dbf', lambda row: row.INV, key_field='KOL_SKL',
-                                  filter_group=FILTER_GROUP_KM_HB)
+    warehous = get_data_from_pass(path + 'warehous.dbf', key_field='KOL_SKL', filter_group=FILTER_GROUP_KM_HB)
     print('warehous создан')
     invoice = get_data_from_pass(path + 'invoice.DBF', lambda row: row.INV)
     print('invoice создан')
-    goods = get_data_from_pass(path + 'goods.dbf', key_field='SHOW_PRG', filter_group=FILTER_GROUP_KM_HB)
+    goods = get_data_from_pass(path + 'goods.dbf', key_tabl=lambda row: row.GROUP + str(row.COD), key_field='SHOW_PRG',
+                               filter_group=FILTER_GROUP_KM_HB)
     print('goods создан')
     firm = {150: 'Uninet USA', 183: 'H&B'}
 
@@ -82,7 +78,8 @@ def main_uninet(path: str, file_name_out: str, paht_out: str = None):
                'наименование', 'фирма', 'приход', 'склад', 'свободно', 'резерв', 'выписано', 'оплачено', 'usd_закупка',
                'грн_закупка', 'usd_a', 'usd_b', 'usd_c', 'usd_d', 'usd_розница')]
     count = 0
-    for inv, row in warehous.items():
+    for group_cod_inv, row in warehous.items():
+        inv = row['inv']
         group_cod = row['group'] + str(row['cod'])
         row_out = (row['group'],
                    row['cod'],
@@ -93,14 +90,14 @@ def main_uninet(path: str, file_name_out: str, paht_out: str = None):
                    goods[group_cod]['model'].strip(),
                    goods[group_cod]['model_txt'].strip(),
                    firm[goods[group_cod]['firm']],
-                   warehous[inv]['kol'],
-                   warehous[inv]['kol_skl'],
-                   warehous[inv]['kol_skl'] - warehous[inv]['kol_rezerv'],
-                   warehous[inv]['kol_rezerv'],
-                   warehous[inv]['kol_sf'],
-                   warehous[inv]['kol_sale'],
-                   str(warehous[inv]['price_usd']).replace('.', ','),
-                   str(warehous[inv]['price_krb']).replace('.', ','),
+                   warehous[group_cod_inv]['kol'],
+                   warehous[group_cod_inv]['kol_skl'],
+                   warehous[group_cod_inv]['kol_skl'] - warehous[group_cod_inv]['kol_rezerv'],
+                   warehous[group_cod_inv]['kol_rezerv'],
+                   warehous[group_cod_inv]['kol_sf'],
+                   warehous[group_cod_inv]['kol_sale'],
+                   str(warehous[group_cod_inv]['price_usd']).replace('.', ','),
+                   str(warehous[group_cod_inv]['price_krb']).replace('.', ','),
                    str(goods[group_cod]['price_a']).replace('.', ','),
                    str(goods[group_cod]['price_b']).replace('.', ','),
                    str(goods[group_cod]['price_c']).replace('.', ','),
@@ -108,13 +105,11 @@ def main_uninet(path: str, file_name_out: str, paht_out: str = None):
                    str(goods[group_cod]['price_sale']).replace('.', ','),
                    )
         uninet.append(row_out)
-        if count > 4: break
-        count += 1
+        # if count > 4: break
+        # count += 1
 
     uninet.sort(key=lambda j: (j[0], j[1]))
     uninet = header + uninet
-
-    print(uninet)
 
     if not os.path.isdir(paht_out):
         raise FileNotFoundError(f'Нет такого пути {paht_out}')
@@ -129,6 +124,7 @@ def main_uninet(path: str, file_name_out: str, paht_out: str = None):
 def cut_tabl(file_name, namber_row):
     """
     Обрезка файлов для тестов
+        # cut_tabl('invoice.DBF', 13600)
     :param file_name:
     :param namber_row: номер строки по которую обрезаем
     :return:
@@ -145,9 +141,49 @@ def cut_tabl(file_name, namber_row):
     print(f'В файле {file_name} записи с 0 по {namber_row} удалены. \n Результат в дирректории {PATH_BASE_TEST}')
 
 
-if __name__ == '__main__':
+def creat_tabl_related_master(file_name_master: str, file_name_slave: str, key_tabl,
+                              key_tabl_master=lambda row: row.GROUP + str(row.COD) + row.INV):
+    """
+        Создание файла file_name_slave cо всеми записями с зависимостями от file_name_master
+        Для тестов
+    Путь источник PATH_BASE для исходного файла file_name_slave
+    Путь результата PATH_BASE_TEST
+        # creat_tabl_related_master('warehous.DBF', 'invoice.DBF', lambda row: row['inv'])
+        # creat_tabl_related_master('warehous.DBF', 'goods.DBF', lambda row: row['group'] + str(row['cod']))
+        # creat_tabl_related_master('goods.DBF','firm.DBF', lambda row: row['firm'],lambda row: row.GROUP + str(row.COD))
+    :param file_name_master: Имя файла таблицы master
+    :param file_name_slave: Имя файла таблицы slave
+    :param key_tabl: lambda row: row['inv'] Функция ключа для таблицы slave
+    :param key_tabl_master: lambda row: row['group'] + str(row['cod']) + row['inv'] Функция ключа для таблицы master
+    :return:
+    """
+    master = get_data_from_pass(PATH_BASE_TEST + file_name_master, key_tabl=key_tabl_master)
+    master_keys = set(key_tabl(row) for row in master.values())
+    # master_keys = {2, 183, 12, 7, 41, 39, 204, 9, 150, 50}  # all firms
+    # print(master_keys)
 
-    main_uninet(PATH_BASE, 'stock_uninet.csv')
+    if not os.path.isfile(PATH_BASE + file_name_slave):
+        raise FileNotFoundError(f'Нет необходимого файла {PATH_BASE + file_name_slave}')
+
+    f = dbf.Table(PATH_BASE + file_name_slave, codepage=CODEPAGE)
+    with f.open() as ff:
+        g = ff.new(PATH_BASE_TEST + file_name_slave)
+        with g.open(mode=dbf.READ_WRITE) as gg:
+            print(gg.field_names)
+            for row in ff:
+                if key_tabl(row) in master_keys:
+                    gg.append(row)
+                    # print(row)
+                    # print('-' * 30)
+
+    print(f'Результат в {PATH_BASE_TEST} {file_name_slave}')
+
+
+if __name__ == '__main__':
+    main_uninet(PATH_BASE_TEST, 'stock_uninet.csv')
+
+    # invoice = get_data_from_pass(PATH_BASE_TEST + 'firm.DBF', lambda row: row.FIRM, 'REC_OFF')
+    # print(invoice)
 
     # invoice = get_data_from_pass(PATH_BASE_TEST + 'invoice.DBF', lambda row: row.INV)
     # print(invoice['DBE8'])
@@ -155,9 +191,7 @@ if __name__ == '__main__':
     # goods = get_data_from_pass(PATH_BASE_TEST + 'goods.dbf', key_field='SHOW_PRG', filter_group=FILTER_GROUP_KM_HB)
     # print(goods['HB812'])  # ['HB812']
     #
-    # warehous = get_data_from_pass(PATH_BASE_TEST + 'warehous.dbf', key_field='KOL_SKL', filter_group=FILTER_GROUP_KM_HB)
-    # warehous = get_data_from_pass(PATH_BASE_TEST + 'warehous.dbf', lambda row: row.INV, key_field='KOL_SKL',
-    #                               filter_group=FILTER_GROUP_KM_HB)
+    # warehous = get_data_from_pass(PATH_BASE_TEST + 'warehous.dbf',)
+    # key_field='KOL_SKL',
+    # filter_group=FILTER_GROUP_KM_HB)
     # print(warehous)  # ['KM1196']
-
-    # cut_tabl('invoice.DBF', 13600)

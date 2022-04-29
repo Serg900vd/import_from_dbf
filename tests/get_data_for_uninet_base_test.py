@@ -18,8 +18,8 @@ class Get_firmTest(TestCase):
         self.assertNotEqual(get_data_for_uninet_base.get_firm(PATH_BASE_TEST, (150, 204)),
                             {150: 'Uninet USA', 183: 'H&B'})
 
-    def test_olansi(self):
-        self.assertEqual(get_data_for_uninet_base.get_firm(PATH_BASE_TEST, (204,)), {204: 'Olansi'})
+    def test_katun(self):
+        self.assertEqual(get_data_for_uninet_base.get_firm(PATH_BASE_TEST, (7,)), {7: 'Katun'})
 
 
 class Get_data_from_passTest(TestCase):
@@ -45,17 +45,17 @@ class Get_data_from_passTest(TestCase):
         self.assertEqual(
             get_data_for_uninet_base.get_data_from_pass(PATH_BASE_TEST + 'warehous.dbf', key_field='KOL_SKL',
                                                         filter_group=FILTER_GROUP_KM_HB)[
-                'KM1196'], _result)
+                'KM1196DBL8'], _result)
 
     def test_goods(self):
-        _result = {'cod': 809,
+        _result = {'cod': 1196,
                    'cond_id': 0,
                    'cond_str': '          ',
                    'curr': '   ',
                    'dsn_id': 0,
-                   'firm': 183,
-                   'group': 'HB',
-                   'groupid': 783,
+                   'firm': 150,
+                   'group': 'KM',
+                   'groupid': 786,
                    'kpr1': 0.0,
                    'kpr2': 0.0,
                    'kpr3': 0.0,
@@ -64,22 +64,22 @@ class Get_data_from_passTest(TestCase):
                    'label_txt': '                              ',
                    'mark': ' ',
                    'min_qty': 0,
-                   'model': '476427              ',
-                   'model_txt': 'HP CLJ Pro M452/MFP M377/477 Чіп Червоний картріджа 2,3k '
-                                'CF413A                                     ',
+                   'model': '21284               ',
+                   'model_txt': 'Xerox Phaser 6510 WC 6515 Чорний Тонер 105g/5500стор Black '
+                                'toner                                    ',
                    'price_a': 0.0,
-                   'price_b': 1.1,
+                   'price_b': 9.5,
                    'price_bas': 0.0,
-                   'price_c': 1.15,
-                   'price_d': 1.2,
+                   'price_c': 9.8,
+                   'price_d': 10.0,
                    'price_dm': 0.0,
                    'price_opt': 0.0,
-                   'price_sale': 1.5,
-                   'prod_code': '8443991000  ',
+                   'price_sale': 11.0,
+                   'prod_code': '3707909000  ',
                    'profit': 0,
-                   'public_mod': 'Чип Красный картриджа HP CLJ Pro M452/MFP M377/477 2,3k chip '
-                                 'Magenta CF413A',
-                   'public_txt': '',
+                   'public_mod': 'Xerox Phaser 6510 WC 6515 Черный Тонер 105g/5500стр Black '
+                                 'toner',
+                   'public_txt': 'Произведен и расфасован в США.',
                    'show_prg': True,
                    'show_site': True,
                    'size': 0,
@@ -89,30 +89,31 @@ class Get_data_from_passTest(TestCase):
                    'url': '',
                    'warranty': 0}
         self.assertEqual(
-            get_data_for_uninet_base.get_data_from_pass(PATH_BASE_TEST + 'goods.dbf', key_field='SHOW_PRG',
-                                                        filter_group=FILTER_GROUP_KM_HB)[
-                'HB809'], _result)
+            get_data_for_uninet_base.get_data_from_pass(PATH_BASE_TEST + 'goods.dbf',
+                                                        key_tabl=lambda row: row.GROUP + str(row.COD),
+                                                        key_field='SHOW_PRG',
+                                                        filter_group=FILTER_GROUP_KM_HB)['KM1196'], _result)
 
     def test_invoice(self):
         _result = {'app_num': 0,
                    'auto_id': 0,
-                   'cond': 2,
-                   'condition': 'ПРОДАЖИ   ',
+                   'cond': 0,
+                   'condition': '          ',
                    'contract': '                    ',
                    'curr': '001',
                    'cust': 1377,
                    'dm_usd': 1.0,
-                   'inv': 'DBE8',
-                   'inv_day': datetime.date(2021, 7, 6),
-                   'inv_nkl': 483895,
-                   'inv_reg': datetime.date(2021, 7, 6),
-                   'inv_txt': 'лидер сч 268                                      ',
+                   'inv': 'DBM1',
+                   'inv_day': datetime.date(2022, 2, 10),
+                   'inv_nkl': 486848,
+                   'inv_reg': datetime.date(2022, 2, 10),
+                   'inv_txt': 'лидер сч 54                                       ',
                    'krb_usd': 1.0,
                    'notes': '',
                    'peo': 0,
-                   'sum_inv': 6277477.43,
-                   'sum_krb': 45008310.02,
-                   'sum_usd': 16872163.69,
+                   'sum_inv': 0.0,
+                   'sum_krb': 11812.5,
+                   'sum_usd': 502.65,
                    'taking_day': None,
                    'tax_nds': 1,
                    'tax_proc': 1.0,
@@ -120,7 +121,7 @@ class Get_data_from_passTest(TestCase):
                    'user_id': 22}
         self.assertEqual(
             get_data_for_uninet_base.get_data_from_pass(PATH_BASE_TEST + 'invoice.DBF', lambda row: row.INV)[
-                'DBE8'], _result)
+                'DBM1'], _result)
 
 
 if __name__ == '__main__':
