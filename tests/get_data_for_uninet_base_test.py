@@ -1,6 +1,7 @@
 from unittest import TestCase, main
 import os, datetime
 from work import get_data_for_uninet_base
+from work.get_data_for_uninet_base import main_uninet
 
 if os.getcwd().split('\\')[-1] == 'tests':
     PATH_BASE_TEST = "dbf\\"
@@ -122,6 +123,15 @@ class Get_data_from_passTest(TestCase):
         self.assertEqual(
             get_data_for_uninet_base.get_data_from_pass(PATH_BASE_TEST + 'invoice.DBF', lambda row: row.INV)[
                 'DBM1'], _result)
+
+    def test_main_uninet(self):
+        file_name = 'stock_uninet.csv'
+        get_data_for_uninet_base.main_uninet(PATH_BASE_TEST, file_name)
+        with open(PATH_BASE_TEST + file_name) as test, open(PATH_BASE_TEST + 'backup\\' + file_name) as pattern:
+            file_test = test.read()
+            file_pattern = pattern.read()
+
+        self.assertEqual(file_test, file_pattern)
 
 
 if __name__ == '__main__':
