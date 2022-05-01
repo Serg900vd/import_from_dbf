@@ -1,7 +1,6 @@
 from unittest import TestCase, main
 import os, datetime
 from work import get_data_for_uninet_base
-from work.get_data_for_uninet_base import main_uninet
 
 if os.getcwd().split('\\')[-1] == 'tests':
     PATH_BASE_TEST = "dbf\\"
