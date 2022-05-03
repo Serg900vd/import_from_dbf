@@ -6,7 +6,11 @@ CODEPAGE = 'cp1251'
 FILTR_FIRM_UNINET_HB = (150, 183)
 FILTER_GROUP_KM_HB = ('KM', 'HB')
 
-import dbf, os, datetime, csv
+import dbf
+import os
+import datetime
+import csv
+from sys import argv
 
 
 def get_firm(path_base: str, filter_id_firm: tuple = None) -> dict:
@@ -96,13 +100,13 @@ def main_uninet(path: str, file_name_out: str, paht_out: str = None):
                    warehous[group_cod_inv]['kol_rezerv'],
                    warehous[group_cod_inv]['kol_sf'],
                    warehous[group_cod_inv]['kol_sale'],
-                   str(warehous[group_cod_inv]['price_usd']).replace('.', ','),
-                   str(warehous[group_cod_inv]['price_krb']).replace('.', ','),
-                   str(goods[group_cod]['price_a']).replace('.', ','),
-                   str(goods[group_cod]['price_b']).replace('.', ','),
-                   str(goods[group_cod]['price_c']).replace('.', ','),
-                   str(goods[group_cod]['price_d']).replace('.', ','),
-                   str(goods[group_cod]['price_sale']).replace('.', ','),
+                   warehous[group_cod_inv]['price_usd'],
+                   warehous[group_cod_inv]['price_krb'],
+                   goods[group_cod]['price_a'],
+                   goods[group_cod]['price_b'],
+                   goods[group_cod]['price_c'],
+                   goods[group_cod]['price_d'],
+                   goods[group_cod]['price_sale'],
                    )
         uninet.append(row_out)
         # if count > 4: break
@@ -115,7 +119,7 @@ def main_uninet(path: str, file_name_out: str, paht_out: str = None):
         raise FileNotFoundError(f'Нет такого пути {paht_out}')
 
     with open(paht_out + file_name_out, 'w') as f:
-        ff = csv.writer(f, delimiter=';', lineterminator='\n')
+        ff = csv.writer(f, delimiter=',', lineterminator='\n')
         for row in uninet:
             ff.writerow(row)
     print(f'Результат записан в {paht_out + file_name_out}')
@@ -180,7 +184,7 @@ def creat_tabl_related_master(file_name_master: str, file_name_slave: str, key_t
 
 
 if __name__ == '__main__':
-    main_uninet(PATH_BASE_TEST, 'stock_uninet.csv')
+    main_uninet(PATH_BASE, 'stock_uninet.csv')
 
     # invoice = get_data_from_pass(PATH_BASE_TEST + 'firm.DBF', lambda row: row.FIRM, 'REC_OFF')
     # print(invoice)
