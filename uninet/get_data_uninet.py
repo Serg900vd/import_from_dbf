@@ -8,7 +8,6 @@ FILTER_GROUP_KM_HB = ('KM', 'HB')
 
 import dbf
 import os
-import datetime
 import csv
 from sys import argv
 
@@ -183,9 +182,28 @@ def creat_tabl_related_master(file_name_master: str, file_name_slave: str, key_t
     print(f'Результат в {PATH_BASE_TEST} {file_name_slave}')
 
 
-if __name__ == '__main__':
-    main_uninet(PATH_BASE, 'stock_uninet.csv')
+def main():
+    # Для создания .exe запустить:
+    # pyinstaller get_data_uninet.py --onefile
 
+    argvlen = len(argv)
+    if argvlen == 1:
+        path_base = path_result = PATH_BASE_TEST
+    elif argvlen == 2:
+        path_base = path_result = argv[1]
+    elif argvlen == 3:
+        path_base, path_result = argv[1], argv[2]
+
+    # path_base, path_result = argv[1], argv[2]
+    print('Путь к базе ', path_base)
+    main_uninet(path_base, 'stock_uninet.csv', path_result)
+
+
+if __name__ == '__main__':
+    main()
+
+    # main_uninet(PATH_BASE, 'stock_uninet.csv')
+    #
     # invoice = get_data_from_pass(PATH_BASE_TEST + 'firm.DBF', lambda row: row.FIRM, 'REC_OFF')
     # print(invoice)
 
