@@ -5,6 +5,7 @@
       <excludeFolder url="file://$MODULE_DIR$/venv" />
       <excludeFolder url="file://$MODULE_DIR$/uninet/dist" />
       <excludeFolder url="file://$MODULE_DIR$/uninet/build" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/dictionaries" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.8 (import_from_dbf)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
