@@ -16,7 +16,7 @@ class HTTPError(Exception):
     pass
 
 
-class EvoClientExample(object):
+class PromClient(object):
 
     def __init__(self, token):
         self.token = token
@@ -71,7 +71,7 @@ def main():
     if not AUTH_TOKEN:
         raise Exception('Sorry, there\'s no any AUTH_TOKEN!')
 
-    api_example = EvoClientExample(AUTH_TOKEN)
+    api_example = PromClient(AUTH_TOKEN)
 
     order_list = api_example.get_order_list()
     if not order_list['orders']:
