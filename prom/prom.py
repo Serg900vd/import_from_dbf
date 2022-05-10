@@ -2,15 +2,12 @@
 # Доступные методы API:
 # https://prom.ua/cloud-cgi/static/uaprom-static/docs/swagger/index.html
 
-import json
 import http.client
+import json
 import pprint
-from pickle import GET
 
-from aenum import Enum
-
-from config import HOST
 from config import AUTH_TOKEN
+from config import HOST
 
 
 class HTTPError(Exception):
@@ -38,11 +35,19 @@ class PromClient(object):
         response_data = response.read()
         return json.loads(response_data.decode())
 
-    def get_products_list(self, limit=None):
+    def get_products_list(self, limit: int = None, last_id: int = None, group_id: int = None) -> dict:
+        """
+        Получить список товаров
+        :param limit: int Ограничение количества товаров в ответе.
+        :param last_id: int Ограничить выборку товаров с идентификаторами не выше указанного.
+        :param group_id: int Идентификатор группы. По-умолчанию - идентификатор корневой группы компании.
+        :return: dict
+        """
         url = '/api/v1/products/list'
         method = 'GET'
-        if limit:
-            url = f'{url}?limit={limit}'
+        if limit or last_id or group_id:
+            url = f'{url}?' + f'limit={limit}&' * bool(limit) + f'last_id={last_id}&' * bool(
+                last_id) + f'group_id={group_id}' * bool(group_id)
         return self.make_request(method, url)
 
 
@@ -53,7 +58,7 @@ def main():
 
     api_prom = PromClient(AUTH_TOKEN)
 
-    product_list = api_prom.get_products_list(5)
+    product_list = api_prom.get_products_list(2, group_id=81223949)
     if not product_list['products']:
         raise Exception('Sorry, there\'s no any product!')
 
