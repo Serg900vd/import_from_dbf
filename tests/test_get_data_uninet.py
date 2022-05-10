@@ -1,5 +1,7 @@
+import datetime
+import os
 from unittest import TestCase, main
-import os, datetime
+
 from uninet import get_data_uninet
 
 if os.getcwd().split('\\')[-1] == 'tests':
@@ -12,7 +14,7 @@ FILTR_FIRM_UNINET_HB = (150, 183)
 FILTER_GROUP_KM_HB = ('KM', 'HB')
 
 
-class Get_firmTest(TestCase):
+class TestGet_firm(TestCase):
     def test_uninet_hb(self):
         self.assertEqual(get_data_uninet.get_firm(PATH_BASE_TEST, (150, 183)), {150: 'Uninet USA', 183: 'H&B'})
         self.assertNotEqual(get_data_uninet.get_firm(PATH_BASE_TEST, (150, 204)),
@@ -22,7 +24,7 @@ class Get_firmTest(TestCase):
         self.assertEqual(get_data_uninet.get_firm(PATH_BASE_TEST, (7,)), {7: 'Katun'})
 
 
-class Get_data_from_passTest(TestCase):
+class TestGet_data_from_pass(TestCase):
     def test_warehous(self):
         _result = {'cod': 1196,
                    'code': 'KM1196DBL8',
@@ -44,7 +46,7 @@ class Get_data_from_passTest(TestCase):
                    'tax_tam': None}
         self.assertEqual(
             get_data_uninet.get_data_from_pass(PATH_BASE_TEST + 'warehous.dbf', key_field='KOL_SKL',
-                                                        filter_group=FILTER_GROUP_KM_HB)[
+                                               filter_group=FILTER_GROUP_KM_HB)[
                 'KM1196DBL8'], _result)
 
     def test_goods(self):
@@ -90,9 +92,9 @@ class Get_data_from_passTest(TestCase):
                    'warranty': 0}
         self.assertEqual(
             get_data_uninet.get_data_from_pass(PATH_BASE_TEST + 'goods.dbf',
-                                                        key_tabl=lambda row: row.GROUP + str(row.COD),
-                                                        key_field='SHOW_PRG',
-                                                        filter_group=FILTER_GROUP_KM_HB)['KM1196'], _result)
+                                               key_tabl=lambda row: row.GROUP + str(row.COD),
+                                               key_field='SHOW_PRG',
+                                               filter_group=FILTER_GROUP_KM_HB)['KM1196'], _result)
 
     def test_invoice(self):
         _result = {'app_num': 0,
