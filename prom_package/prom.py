@@ -10,6 +10,7 @@ import pprint
 from prom_package.config import AUTH_TOKEN
 from prom_package.constants import HOST
 
+
 class HTTPError(Exception):
     pass
 
@@ -50,8 +51,13 @@ class PromClient(object):
                 last_id) + f'group_id={group_id}' * bool(group_id)
         return self.make_request(method, url)
 
-    def get_product_id(self, id):
+    def get_product_id(self, id: int):
         url = f'/api/v1/products/{id}'
+        method = 'GET'
+        return self.make_request(method, url)
+
+    def get_product_external_id(self, external_id: str):
+        url = f'/api/v1/products/by_external_id/{external_id}'
         method = 'GET'
         return self.make_request(method, url)
 
@@ -68,7 +74,10 @@ def main():
     #     raise Exception('Sorry, there\'s no any product!')
     # pprint.pprint(product_list)
 
-    product_item = api_prom.get_product_id(1060003497)
+    # product_item = api_prom.get_product_id(1060003497)
+    # pprint.pprint(product_item)
+
+    product_item = api_prom.get_product_external_id('476388')
     pprint.pprint(product_item)
 
     # # Order example data. Requred to be setup to get example uninet
