@@ -44,7 +44,7 @@ class PromClient(object):
         return self.make_request(method, url)
 
     def get_order(self, order_id):
-        url = '/api/v1/orders/{id}'
+        url = f'/api/v1/orders/{id}'
         method = 'GET'
 
         return self.make_request(method, url.format(id=order_id))
