@@ -1,3 +1,4 @@
+# Коза :)
 # https://github.com/evo-company/company-api-example/blob/master/python/api_python3-5_example.py
 # Доступные методы API:
 # https://prom.ua/cloud-cgi/static/uaprom-static/docs/swagger/index.html
@@ -6,9 +7,8 @@ import http.client
 import json
 import pprint
 
-from config import AUTH_TOKEN
-from config import HOST
-
+from prom_package.config import AUTH_TOKEN
+from prom_package.constants import HOST
 
 class HTTPError(Exception):
     pass
