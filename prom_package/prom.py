@@ -50,6 +50,11 @@ class PromClient(object):
                 last_id) + f'group_id={group_id}' * bool(group_id)
         return self.make_request(method, url)
 
+    def get_product_id(self, id):
+        url = f'/api/v1/products/{id}'
+        method = 'GET'
+        return self.make_request(method, url)
+
 
 def main():
     # Initialize Client
@@ -58,11 +63,13 @@ def main():
 
     api_prom = PromClient(AUTH_TOKEN)
 
-    product_list = api_prom.get_products_list(2, group_id=81223949)
-    if not product_list['products']:
-        raise Exception('Sorry, there\'s no any product!')
+    # product_list = api_prom.get_products_list(2, group_id=81223949)
+    # if not product_list['products']:
+    #     raise Exception('Sorry, there\'s no any product!')
+    # pprint.pprint(product_list)
 
-    pprint.pprint(product_list)
+    product_item = api_prom.get_product_id(1060003497)
+    pprint.pprint(product_item)
 
     # # Order example data. Requred to be setup to get example uninet
     # order_id = order_list['orders'][0]['id']
