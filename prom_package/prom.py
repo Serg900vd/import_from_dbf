@@ -15,6 +15,10 @@ class HTTPError(Exception):
     pass
 
 
+class REQUESTError(Exception):
+    pass
+
+
 class PromClient(object):
 
     def __init__(self, token):
@@ -67,6 +71,15 @@ class PromClient(object):
         body = products
         return self.make_request(method, url, body)
 
+    def set_products_list_external_id(self, products_external_id: list):
+        """
+        "id": "string",  <--- product_external_id
+        """
+        url = f'/api/v1/products/edit_by_external_id'
+        method = 'POST'
+        body = products_external_id
+        return self.make_request(method, url, body)
+
 
 def main_read():
     # Initialize Client
@@ -106,7 +119,7 @@ def main_write():
     api_prom = PromClient(AUTH_TOKEN_WRITE)
 
     # test product id 1616486427
-    # 'external_id' NOT WRITING
+    # 'external_id' 'test_HB770' -- READ ONLY
     products_list = [{'id': 1616486427,
                       'external_id': 'test_HB770',
                       'presence': 'available',
@@ -118,8 +131,10 @@ def main_write():
     response = api_prom.set_products_list_id(products_list)
     pprint.pprint(response)
 
-if __name__ == '__main__':
 
+
+
+if __name__ == '__main__':
     # main_write()
 
     main_read()
