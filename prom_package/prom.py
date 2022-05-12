@@ -7,7 +7,7 @@ import http.client
 import json
 import pprint
 
-from prom_package.config import AUTH_TOKEN
+from prom_package.config import AUTH_TOKEN_READ, AUTH_TOKEN_WRITE
 from prom_package.constants import HOST
 
 
@@ -61,24 +61,31 @@ class PromClient(object):
         method = 'GET'
         return self.make_request(method, url)
 
+    def set_products_list_id(self, products: list):
+        url = f'/api/v1/products/edit'
+        method = 'POST'
+        body = products
+        return self.make_request(method, url, body)
 
-def main():
+
+def main_read():
     # Initialize Client
-    if not AUTH_TOKEN:
-        raise Exception('Sorry, there\'s no any AUTH_TOKEN!')
-
-    api_prom = PromClient(AUTH_TOKEN)
+    if not AUTH_TOKEN_READ:
+        raise Exception('Sorry, there\'s no any AUTH_TOKEN_READ!')
+    api_prom = PromClient(AUTH_TOKEN_READ)
 
     # product_list = api_prom.get_products_list(2, group_id=81223949)
     # if not product_list['products']:
     #     raise Exception('Sorry, there\'s no any product!')
     # pprint.pprint(product_list)
 
-    # product_item = api_prom.get_product_id(1060003497)
-    # pprint.pprint(product_item)
-
-    product_item = api_prom.get_product_external_id('476388')
+    # test external_id 'test_HB770'
+    product_item = api_prom.get_product_external_id('test_HB770')
     pprint.pprint(product_item)
+
+    # test product id 1616486427
+    # product_item = api_prom.get_product_id(1616486427)
+    # pprint.pprint(product_item)
 
     # # Order example data. Requred to be setup to get example uninet
     # order_id = order_list['orders'][0]['id']
@@ -92,5 +99,27 @@ def main():
     # pprint.pprint(api_prom.get_order(order_id))
 
 
+def main_write():
+    # Initialize Client
+    if not AUTH_TOKEN_WRITE:
+        raise Exception('Sorry, there\'s no any AUTH_TOKEN_WRITE!')
+    api_prom = PromClient(AUTH_TOKEN_WRITE)
+
+    # test product id 1616486427
+    # 'external_id' NOT WRITING
+    products_list = [{'id': 1616486427,
+                      'external_id': 'test_HB770',
+                      'presence': 'available',
+                      'price': 8.5,
+                      'prices': [{'minimum_order_quantity': 5.0, 'price': 7.0}],
+                      'sku': 'test_HB770',
+                      'status': 'on_display',
+                      }]
+    response = api_prom.set_products_list_id(products_list)
+    pprint.pprint(response)
+
 if __name__ == '__main__':
-    main()
+
+    # main_write()
+
+    main_read()
