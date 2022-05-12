@@ -69,7 +69,7 @@ class PromClient(object):
 def main():
     # Initialize Client
     if not AUTH_TOKEN:
-        raise Exception('Sorry, there\'s no any AUTH_TOKEN!')
+        raise Exception('Sorry, there\'s no any AUTH_TOKEN_READ!')
 
     api_example = PromClient(AUTH_TOKEN)
 
