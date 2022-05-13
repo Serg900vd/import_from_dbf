@@ -32,9 +32,10 @@ PRODUCT_KEYS = {'keywords', 'status', 'is_variation', 'sku', 'variation_base_id'
 # Run tests for integration contract on the real API server
 @skipIf(SKIP_REAL, 'Skipping tests that hit the real API server.')
 class TestIntegrationContractPromProduct(TestCase):
-    def setUp(self) -> None:
+    @classmethod
+    def setUpClass(cls) -> None:
         # Initialize Client
-        self.api_prom = PromClient(AUTH_TOKEN_WRITE)
+        cls.api_prom = PromClient(AUTH_TOKEN_WRITE)
 
     def test_1_product_keys(self):
         product_received = self.api_prom.get_product_id(1616486427)['product']
