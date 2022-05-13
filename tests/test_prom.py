@@ -23,6 +23,10 @@ RESET_PRODUCT_ID_1616486427 = {'id': 1616486427,
                                'sku': 'test_HB770',  # -- READ ONLY
                                'status': 'draft',
                                }
+PRODUCT_KEYS = {'keywords', 'status', 'is_variation', 'sku', 'variation_base_id', 'presence', 'external_id',
+                'selling_type', 'prices', 'price', 'group', 'currency', 'minimum_order_quantity', 'measure_unit',
+                'images', 'date_modified', 'variation_group_id', 'description', 'main_image', 'discount',
+                'quantity_in_stock', 'regions', 'category', 'name', 'id', 'name_multilang'}
 
 
 # Run tests for integration contract on the real API server
@@ -33,10 +37,10 @@ class TestIntegrationContractPromProduct(TestCase):
         self.api_prom = PromClient(AUTH_TOKEN_WRITE)
 
     def test_1_product_keys(self):
-        # TODO Keys test
-        # keys_test = set(product_set.keys()).issubset(set(product_received.keys()))
-        # self.assert_(keys_test,'')
-        pass
+        product_received = self.api_prom.get_product_id(1616486427)['product']
+        keys_received_set = set(product_received.keys())
+        keys_test = set(PRODUCT_KEYS).issubset(keys_received_set)
+        self.assert_(keys_test, '')
 
     def test_2_reset_product_id_1616486427(self):
         product_set = RESET_PRODUCT_ID_1616486427
