@@ -51,8 +51,10 @@ class PromClient:
         url = '/api/v1/products/list'
         method = 'GET'
         if limit or last_id or group_id:
-            url = f'{url}?' + f'limit={limit}&' * bool(limit) + f'last_id={last_id}&' * bool(
-                last_id) + f'group_id={group_id}' * bool(group_id)
+            url = f'{url}?' + \
+                  f'limit={limit}&' * bool(limit) + \
+                  f'last_id={last_id}&' * bool(last_id) + \
+                  f'group_id={group_id}' * bool(group_id)
         return self.make_request(method, url)
 
     def get_product_id(self, id: int):
@@ -130,8 +132,6 @@ def main_write():
                       }]
     response = api_prom.set_products_list_id(products_list)
     pprint.pprint(response)
-
-
 
 
 if __name__ == '__main__':
