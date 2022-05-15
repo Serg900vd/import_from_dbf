@@ -6,30 +6,62 @@ CODEPAGE = 'cp1251'
 FILTR_FIRM_UNINET_HB = (150, 183)
 FILTER_GROUP_KM_HB = ('KM', 'HB')
 
-import dbf
-import os
 import csv
+import os
 from sys import argv
 
+import dbf
 
-def get_firm(path_base: str, filter_id_firm: tuple = None) -> dict:
-    """
-    Возвращает, из файла firm.dbf, словарь в котором ключ поле FIRM, значение поле FIRM_TXT
-    :param path_base: путь к базе
-    :param filter_id_firm: (150, 183) коды FIRM которые необходимо отфильтровать
-    :return: dict
-    """
-    file = path_base + 'firm.dbf'
-    if not os.path.isfile(file):
-        raise FileNotFoundError(f'Нет необходимого файла {file}')
-    firm = {}
-    f = dbf.Table(file, codepage=CODEPAGE)
-    with f.open() as ff:
-        for row in ff:
-            if row and not dbf.is_deleted(row) and not row.REC_OFF and (
-                    not filter_id_firm or row.FIRM in filter_id_firm):
-                firm[row.FIRM] = row.FIRM_TXT.strip()
-    return firm
+
+class BasePassDBF:
+    def __init__(self, path_base, codepage):
+        self.path_base = path_base
+        self.codepage = codepage
+        self.warehous = {}
+        self.invoice = {}
+        self.goods = {}
+        self.firm = {}
+        self.filter_id_firm = None
+
+    def set_firm(self, filter_id_firm: tuple = None) -> bool:
+        """
+        Возвращает, из файла firm.dbf, словарь в котором ключ поле FIRM, значение поле FIRM_TXT
+        :param path_base: путь к базе
+        :param filter_id_firm: (150, 183) коды FIRM которые необходимо отфильтровать
+        :return: bool
+        """
+        _file = self.path_base + 'firm.dbf'
+        if not os.path.isfile(_file):
+            raise FileNotFoundError(f'Нет необходимого файла {_file}')
+        _firm = {}
+        f = dbf.Table(_file, codepage=self.codepage)
+        with f.open() as ff:
+            for row in ff:
+                if row and not dbf.is_deleted(row) and not row.REC_OFF and (
+                        not filter_id_firm or row.FIRM in filter_id_firm):
+                    _firm[row.FIRM] = row.FIRM_TXT.strip()
+        self.firm = _firm
+        return bool(_firm)
+
+
+# def get_firm(path_base: str, filter_id_firm: tuple = None) -> dict:
+#     """
+#     Возвращает, из файла firm.dbf, словарь в котором ключ поле FIRM, значение поле FIRM_TXT
+#     :param path_base: путь к базе
+#     :param filter_id_firm: (150, 183) коды FIRM которые необходимо отфильтровать
+#     :return: dict
+#     """
+#     file = path_base + 'firm.dbf'
+#     if not os.path.isfile(file):
+#         raise FileNotFoundError(f'Нет необходимого файла {file}')
+#     firm = {}
+#     f = dbf.Table(file, codepage=CODEPAGE)
+#     with f.open() as ff:
+#         for row in ff:
+#             if row and not dbf.is_deleted(row) and not row.REC_OFF and (
+#                     not filter_id_firm or row.FIRM in filter_id_firm):
+#                 firm[row.FIRM] = row.FIRM_TXT.strip()
+#     return firm
 
 
 def get_data_from_pass(file_name: str, key_tabl=lambda row: row.GROUP + str(row.COD) + row.INV, key_field: str = 0,
@@ -57,6 +89,20 @@ def get_data_from_pass(file_name: str, key_tabl=lambda row: row.GROUP + str(row.
     return result
 
 
+def load_tables_dbf(path: str):
+    warehous = get_data_from_pass(path + 'warehous.dbf', key_field='KOL_SKL', filter_group=FILTER_GROUP_KM_HB)
+    print('warehous loaded')
+
+    invoice = get_data_from_pass(path + 'invoice.DBF', lambda row: row.INV)
+    print('invoice loaded')
+
+    goods = get_data_from_pass(path + 'goods.dbf', key_tabl=lambda row: row.GROUP + str(row.COD), key_field='SHOW_PRG',
+                               filter_group=FILTER_GROUP_KM_HB)
+    print('goods loaded')
+
+    return warehous, invoice, goods
+
+
 def main_uninet(path: str, file_name_out: str, paht_out: str = None):
     """
     Формируем финальную таблицу для выдачи.
@@ -67,13 +113,9 @@ def main_uninet(path: str, file_name_out: str, paht_out: str = None):
     if not paht_out:
         paht_out = path
 
-    warehous = get_data_from_pass(path + 'warehous.dbf', key_field='KOL_SKL', filter_group=FILTER_GROUP_KM_HB)
-    print('warehous создан')
-    invoice = get_data_from_pass(path + 'invoice.DBF', lambda row: row.INV)
-    print('invoice создан')
-    goods = get_data_from_pass(path + 'goods.dbf', key_tabl=lambda row: row.GROUP + str(row.COD), key_field='SHOW_PRG',
-                               filter_group=FILTER_GROUP_KM_HB)
-    print('goods создан')
+    # Загружаем табдицы
+    warehous, invoice, goods = load_tables_dbf(path)
+
     firm = {150: 'Uninet USA', 183: 'H&B'}
 
     uninet = []

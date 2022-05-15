@@ -3,6 +3,7 @@ import os
 from unittest import TestCase, main
 
 from uninet import get_data_uninet
+from uninet.get_data_uninet import BasePassDBF
 
 if os.getcwd().split('\\')[-1] == 'tests':
     PATH_BASE_TEST = "dbf\\"
@@ -14,14 +15,29 @@ FILTR_FIRM_UNINET_HB = (150, 183)
 FILTER_GROUP_KM_HB = ('KM', 'HB')
 
 
-class TestGet_firm(TestCase):
-    def test_uninet_hb(self):
-        self.assertEqual(get_data_uninet.get_firm(PATH_BASE_TEST, (150, 183)), {150: 'Uninet USA', 183: 'H&B'})
-        self.assertNotEqual(get_data_uninet.get_firm(PATH_BASE_TEST, (150, 204)),
-                            {150: 'Uninet USA', 183: 'H&B'})
+class TestBasePassDBF(TestCase):
+    def setUp(self) -> None:
+        # Initialize Base Data
+        self.bd = BasePassDBF(PATH_BASE_TEST, CODEPAGE)
 
-    def test_katun(self):
-        self.assertEqual(get_data_uninet.get_firm(PATH_BASE_TEST, (7,)), {7: 'Katun'})
+    def test_set_firm_uninet_hb(self):
+        self.bd.set_firm((150, 183))
+        self.assertEqual(self.bd.firm, {150: 'Uninet USA', 183: 'H&B'})
+        self.assertNotEqual(self.bd.firm, {150: 'Uninet USA', 184: 'H&B'})
+
+    def test_set_firm_katun(self):
+        self.bd.set_firm((7,))
+        self.assertEqual(self.bd.firm, {7: 'Katun'})
+
+
+# class TestGet_firm(TestCase):
+#     def test_uninet_hb(self):
+#         self.assertEqual(get_data_uninet.get_firm(PATH_BASE_TEST, (150, 183)), {150: 'Uninet USA', 183: 'H&B'})
+#         self.assertNotEqual(get_data_uninet.get_firm(PATH_BASE_TEST, (150, 204)),
+#                             {150: 'Uninet USA', 183: 'H&B'})
+#
+#     def test_katun(self):
+#         self.assertEqual(get_data_uninet.get_firm(PATH_BASE_TEST, (7,)), {7: 'Katun'})
 
 
 class TestGet_data_from_pass(TestCase):
