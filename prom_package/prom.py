@@ -19,7 +19,7 @@ class REQUESTError(Exception):
     pass
 
 
-class PromClient(object):
+class PromClient:
 
     def __init__(self, token):
         self.token = token
