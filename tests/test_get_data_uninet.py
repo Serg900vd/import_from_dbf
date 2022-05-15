@@ -61,8 +61,8 @@ class TestGet_data_from_pass(TestCase):
                    'tax_ack': None,
                    'tax_tam': None}
         self.assertEqual(
-            get_data_uninet.get_data_from_pass(PATH_BASE_TEST + 'warehous.dbf', key_field='KOL_SKL',
-                                               filter_group=FILTER_GROUP_KM_HB)[
+            BasePassDBF.get_data_from_pass(PATH_BASE_TEST + 'warehous.dbf', CODEPAGE, key_field='KOL_SKL',
+                                           filter_group=FILTER_GROUP_KM_HB)[
                 'KM1196DBL8'], _result)
 
     def test_goods(self):
@@ -107,10 +107,9 @@ class TestGet_data_from_pass(TestCase):
                    'url': '',
                    'warranty': 0}
         self.assertEqual(
-            get_data_uninet.get_data_from_pass(PATH_BASE_TEST + 'goods.dbf',
-                                               key_tabl=lambda row: row.GROUP + str(row.COD),
-                                               key_field='SHOW_PRG',
-                                               filter_group=FILTER_GROUP_KM_HB)['KM1196'], _result)
+            BasePassDBF.get_data_from_pass(PATH_BASE_TEST + 'goods.dbf', CODEPAGE,
+                                           key_tabl=lambda row: row.GROUP + str(row.COD), key_field='SHOW_PRG',
+                                           filter_group=FILTER_GROUP_KM_HB)['KM1196'], _result)
 
     def test_invoice(self):
         _result = {'app_num': 0,
@@ -138,7 +137,7 @@ class TestGet_data_from_pass(TestCase):
                    'tax_tam': 0,
                    'user_id': 22}
         self.assertEqual(
-            get_data_uninet.get_data_from_pass(PATH_BASE_TEST + 'invoice.DBF', lambda row: row.INV)[
+            BasePassDBF.get_data_from_pass(PATH_BASE_TEST + 'invoice.DBF', CODEPAGE, lambda row: row.INV)[
                 'DBM1'], _result)
 
     def test_main_uninet(self):
