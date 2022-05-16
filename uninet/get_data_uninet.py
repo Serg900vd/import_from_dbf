@@ -100,6 +100,21 @@ class BasePassDBF:
         self.set_firm()
         print('firm loaded')
 
+    def get_warehous_grcod_filter(self, group_cod):
+        return [row for row in self.warehous.values() if row['group'] + str(row['cod']) == group_cod]
+
+    def get_warehous_grcod_sum(self, group_cod):
+        _group_cod_list = self.get_warehous_grcod_filter(group_cod)
+
+        _parameters = ['kol', 'kol_otkaz', 'kol_rezerv', 'kol_sale', 'kol_sf', 'kol_skl', 'old_sale']
+        _group_cod_sum = {'group_cod': group_cod, 'kol': 0, 'kol_otkaz': 0, 'kol_rezerv': 0, 'kol_sale': 0,
+                         'kol_sf': 0, 'kol_skl': 0, 'old_sale': 0}
+
+        for row in _group_cod_list:
+            for param in _parameters:
+                _group_cod_sum[param] += row[param]
+        return _group_cod_sum
+
 
 def load_tables_dbf_uninet(path: str):
     warehous = BasePassDBF.get_data_from_pass(path + 'warehous.dbf', CODEPAGE, key_field='KOL_SKL',
