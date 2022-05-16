@@ -85,6 +85,22 @@ class BasePassDBF:
         print('goods loaded')
 
 
+def load_tables_dbf_uninet(path: str):
+    warehous = BasePassDBF.get_data_from_pass(path + 'warehous.dbf', CODEPAGE, key_field='KOL_SKL',
+                                              filter_group=FILTER_GROUP_KM_HB)
+    print('warehous loaded')
+
+    invoice = BasePassDBF.get_data_from_pass(path + 'invoice.DBF', CODEPAGE, lambda row: row.INV)
+    print('invoice loaded')
+
+    goods = BasePassDBF.get_data_from_pass(path + 'goods.dbf', CODEPAGE, key_tabl=lambda row: row.GROUP + str(row.COD),
+                                           key_field='SHOW_PRG',
+                                           filter_group=FILTER_GROUP_KM_HB)
+    print('goods loaded')
+
+    return warehous, invoice, goods
+
+
 def main_uninet(path: str, file_name_out: str, paht_out: str = None):
     """
     Формируем финальную таблицу для выдачи.
@@ -96,10 +112,7 @@ def main_uninet(path: str, file_name_out: str, paht_out: str = None):
         paht_out = path
 
     # Загружаем табдицы
-    # warehous, invoice, goods = load_tables_dbf(path)
-    bd = BasePassDBF(path, CODEPAGE)
-    bd.load_tables_dbf()
-    warehous, invoice, goods = bd.warehous, bd.invoice, bd.goods
+    warehous, invoice, goods = load_tables_dbf_uninet(path)
 
     firm = {150: 'Uninet USA', 183: 'H&B'}
 
