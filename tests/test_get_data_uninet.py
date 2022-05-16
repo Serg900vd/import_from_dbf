@@ -62,8 +62,7 @@ class TestGet_data_from_pass(TestCase):
                    'tax_tam': None}
         self.assertEqual(
             BasePassDBF.get_data_from_pass(PATH_BASE_TEST + 'warehous.dbf', CODEPAGE, key_field='KOL_SKL',
-                                           filter_group=FILTER_GROUP_KM_HB)[
-                'KM1196DBL8'], _result)
+                                           filter_group=FILTER_GROUP_KM_HB)['KM1196DBL8'], _result)
 
     def test_goods(self):
         _result = {'cod': 1196,

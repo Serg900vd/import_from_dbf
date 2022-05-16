@@ -1,16 +1,16 @@
 # Обновление данных для UNINET base.xls
 #
-PATH_BASE = "d:\\Kotik\\work\\2012_toner_base\\"
-PATH_BASE_TEST = "..\\tests\\dbf\\"
-CODEPAGE = 'cp1251'
-FILTR_FIRM_UNINET_HB = (150, 183)
-FILTER_GROUP_KM_HB = ('KM', 'HB')
-
 import csv
 import os
 from sys import argv
 
 import dbf
+
+PATH_BASE = "d:\\Kotik\\work\\2012_toner_base\\"
+PATH_BASE_TEST = "..\\tests\\dbf\\"
+CODEPAGE = 'cp1251'
+FILTR_FIRM_UNINET_HB = (150, 183)
+FILTER_GROUP_KM_HB = ('KM', 'HB')
 
 
 class BasePassDBF:
@@ -43,13 +43,14 @@ class BasePassDBF:
         self.firm = _firm
         return bool(_firm)
 
-    def get_data_from_pass(file_name: str, codepage,
-                           key_tabl=lambda row: row.GROUP + str(row.COD) + row.INV,
-                           key_field: str = 0, filter_group: tuple = None) -> dict:
+    @classmethod
+    def get_data_from_pass(cls, file_name: str, codepage: str, key_tabl=lambda row: row.GROUP + str(row.COD) + row.INV,
+                           key_field: str = 0,
+                           filter_group: tuple = None) -> dict:
         """
         Возвращает словарь по ключу key_tabl с вложенными строками в виде словаря {поле : значение ...}
-        :param codepage:
-        :param file_name: pass + file_name.dbf
+        :param file_name: path + file_name.dbf
+        :param codepage: 'cp1251'
         :param key_tabl: lambda row: row.GROUP + str(row.COD) + row.INV (ключ таблицы по умолчанию)
         :param key_field: 'SHOW_PRG' Имя поля или индекс. Значение True включает строку в результат
         :param filter_group: ('KM', 'HB') кортеж с значениями поля GROUP которые необходимо отфильтровать
@@ -70,65 +71,18 @@ class BasePassDBF:
                     result[key_tabl(row)] = feilds
         return result
 
+    def load_tables_dbf(self):
+        self.warehous = self.get_data_from_pass(self.path_base + 'warehous.dbf', self.codepage, key_field='KOL_SKL',
+                                                filter_group=FILTER_GROUP_KM_HB)
+        print('warehous loaded')
 
-# def get_firm(path_base: str, filter_id_firm: tuple = None) -> dict:
-#     """
-#     Возвращает, из файла firm.dbf, словарь в котором ключ поле FIRM, значение поле FIRM_TXT
-#     :param path_base: путь к базе
-#     :param filter_id_firm: (150, 183) коды FIRM которые необходимо отфильтровать
-#     :return: dict
-#     """
-#     file = path_base + 'firm.dbf'
-#     if not os.path.isfile(file):
-#         raise FileNotFoundError(f'Нет необходимого файла {file}')
-#     firm = {}
-#     f = dbf.Table(file, codepage=CODEPAGE)
-#     with f.open() as ff:
-#         for row in ff:
-#             if row and not dbf.is_deleted(row) and not row.REC_OFF and (
-#                     not filter_id_firm or row.FIRM in filter_id_firm):
-#                 firm[row.FIRM] = row.FIRM_TXT.strip()
-#     return firm
+        self.invoice = self.get_data_from_pass(self.path_base + 'invoice.DBF', self.codepage, lambda row: row.INV)
+        print('invoice loaded')
 
-
-# def get_data_from_pass(file_name: str, key_tabl=lambda row: row.GROUP + str(row.COD) + row.INV, key_field: str = 0,
-#                        filter_group: tuple = None) -> dict:
-#     """
-#     Возвращает словарь по ключу key_tabl с вложенными строками в виде словаря {поле : значение ...}
-#     :param file_name: pass + file_name.dbf
-#     :param key_tabl: lambda row: row.GROUP + str(row.COD) + row.INV (ключ таблицы по умолчанию)
-#     :param key_field: 'SHOW_PRG' Имя поля или индекс. Значение True включает строку в результат
-#     :param filter_group: ('KM', 'HB') кортеж с значениями поля GROUP которые необходимо отфильтровать
-#     :return: {key_tabl : {'group': 'KM', 'cod': 750, 'groupid': 695, ...(все поля таблицы)}, ...}
-#     """
-#     if not os.path.isfile(file_name):
-#         raise FileNotFoundError(f'Нет необходимого файла {file_name}')
-#     result = {}
-#     f = dbf.Table(file_name, codepage=CODEPAGE)
-#     with f.open() as ff:
-#         field_names = ff.field_names
-#         for row in ff:
-#             if row and not dbf.is_deleted(row) and row[key_field] and (not filter_group or row.GROUP in filter_group):
-#                 feilds = {}
-#                 for j, feild in enumerate(row):
-#                     feilds[field_names[j].lower()] = feild
-#                 result[key_tabl(row)] = feilds
-#     return result
-
-
-def load_tables_dbf(path: str):
-    warehous = BasePassDBF.get_data_from_pass(path + 'warehous.dbf', CODEPAGE, key_field='KOL_SKL',
-                                              filter_group=FILTER_GROUP_KM_HB)
-    print('warehous loaded')
-
-    invoice = BasePassDBF.get_data_from_pass(path + 'invoice.DBF', CODEPAGE, lambda row: row.INV)
-    print('invoice loaded')
-
-    goods = BasePassDBF.get_data_from_pass(path + 'goods.dbf', CODEPAGE, key_tabl=lambda row: row.GROUP + str(row.COD),
-                                           key_field='SHOW_PRG', filter_group=FILTER_GROUP_KM_HB)
-    print('goods loaded')
-
-    return warehous, invoice, goods
+        self.goods = self.get_data_from_pass(self.path_base + 'goods.dbf', self.codepage,
+                                             key_tabl=lambda row: row.GROUP + str(row.COD),
+                                             key_field='SHOW_PRG', filter_group=FILTER_GROUP_KM_HB)
+        print('goods loaded')
 
 
 def main_uninet(path: str, file_name_out: str, paht_out: str = None):
@@ -142,7 +96,10 @@ def main_uninet(path: str, file_name_out: str, paht_out: str = None):
         paht_out = path
 
     # Загружаем табдицы
-    warehous, invoice, goods = load_tables_dbf(path)
+    # warehous, invoice, goods = load_tables_dbf(path)
+    bd = BasePassDBF(path, CODEPAGE)
+    bd.load_tables_dbf()
+    warehous, invoice, goods = bd.warehous, bd.invoice, bd.goods
 
     firm = {150: 'Uninet USA', 183: 'H&B'}
 
@@ -223,14 +180,15 @@ def creat_tabl_related_master(file_name_master: str, file_name_slave: str, key_t
     Путь результата PATH_BASE_TEST
         # creat_tabl_related_master('warehous.DBF', 'invoice.DBF', lambda row: row['inv'])
         # creat_tabl_related_master('warehous.DBF', 'goods.DBF', lambda row: row['group'] + str(row['cod']))
-        # creat_tabl_related_master('goods.DBF','firm.DBF', lambda row: row['firm'],lambda row: row.GROUP + str(row.COD))
+        # creat_tabl_related_master('goods.DBF','firm.DBF', lambda row: row['firm'],
+        # lambda row: row.GROUP + str(row.COD))
     :param file_name_master: Имя файла таблицы master
     :param file_name_slave: Имя файла таблицы slave
     :param key_tabl: lambda row: row['inv'] Функция ключа для таблицы slave
     :param key_tabl_master: lambda row: row['group'] + str(row['cod']) + row['inv'] Функция ключа для таблицы master
     :return:
     """
-    master = BasePassDBF.get_data_from_pass(PATH_BASE_TEST + file_name_master,CODEPAGE, key_tabl=key_tabl_master)
+    master = BasePassDBF.get_data_from_pass(PATH_BASE_TEST + file_name_master, CODEPAGE, key_tabl=key_tabl_master)
     master_keys = set(key_tabl(row) for row in master.values())
     # master_keys = {2, 183, 12, 7, 41, 39, 204, 9, 150, 50}  # all firms
     # print(master_keys)
