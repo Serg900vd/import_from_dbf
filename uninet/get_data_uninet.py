@@ -9,27 +9,37 @@ import dbf
 PATH_BASE = "d:\\Kotik\\work\\2012_toner_base\\"
 PATH_BASE_TEST = "..\\tests\\dbf\\"
 CODEPAGE = 'cp1251'
-FILTR_FIRM_UNINET_HB = (150, 183)
+FILTR_FIRM_UNINET_KM_HB = (150, 183)
 FILTER_GROUP_KM_HB = ('KM', 'HB')
 
 
 class BasePassDBF:
-    def __init__(self, path_base, codepage):
+    def __init__(self, path_base, codepage, filter_id_firm=None, key_field_warehous=0, filter_group: tuple = None):
         self.path_base = path_base
         self.codepage = codepage
+        self.filter_id_firm = filter_id_firm
+        self.key_field_warehous = key_field_warehous
+        self.filter_group = filter_group
         self.warehous = {}
         self.invoice = {}
         self.goods = {}
         self.firm = {}
-        self.filter_id_firm = None
 
-    def set_firm(self, filter_id_firm: tuple = None) -> bool:
+    def __repr__(self):
+        text = f'Parameters [path_base= {self.path_base}, codepage: "{self.codepage}", ' \
+               f'filter_id_firm: {self.filter_id_firm}, key_field_warehous: "{self.key_field_warehous}", ' \
+               f'self.filter_group: {self.filter_group}]'
+        return text
+
+    def set_firm(self, filter_id_firm=None) -> bool:
         """
         Возвращает, из файла firm.dbf, словарь в котором ключ поле FIRM, значение поле FIRM_TXT
         Результат передает в параметр self.firm
         :param filter_id_firm: (150, 183) коды FIRM которые необходимо отфильтровать
         :return: bool
         """
+        if not filter_id_firm:
+            filter_id_firm = self.filter_id_firm
         _file = self.path_base + 'firm.dbf'
         if not os.path.isfile(_file):
             raise FileNotFoundError(f'Нет необходимого файла {_file}')
@@ -72,8 +82,11 @@ class BasePassDBF:
         return result
 
     def load_tables_dbf(self):
-        self.warehous = self.get_data_from_pass(self.path_base + 'warehous.dbf', self.codepage, key_field='KOL_SKL',
-                                                filter_group=FILTER_GROUP_KM_HB)
+        print(str(self))
+
+        self.warehous = self.get_data_from_pass(self.path_base + 'warehous.dbf', self.codepage,
+                                                key_field=self.key_field_warehous,
+                                                filter_group=self.filter_group)
         print('warehous loaded')
 
         self.invoice = self.get_data_from_pass(self.path_base + 'invoice.DBF', self.codepage, lambda row: row.INV)
@@ -81,8 +94,11 @@ class BasePassDBF:
 
         self.goods = self.get_data_from_pass(self.path_base + 'goods.dbf', self.codepage,
                                              key_tabl=lambda row: row.GROUP + str(row.COD),
-                                             key_field='SHOW_PRG', filter_group=FILTER_GROUP_KM_HB)
+                                             key_field='SHOW_PRG', filter_group=self.filter_group)
         print('goods loaded')
+
+        self.set_firm()
+        print('firm loaded')
 
 
 def load_tables_dbf_uninet(path: str):
@@ -111,10 +127,16 @@ def main_uninet(path: str, file_name_out: str, paht_out: str = None):
     if not paht_out:
         paht_out = path
 
-    # Загружаем табдицы
-    warehous, invoice, goods = load_tables_dbf_uninet(path)
+    # Быстрое решение через функцию load_tables_dbf_uninet()
+    # Загружаем таблицы
+    # warehous, invoice, goods = load_tables_dbf_uninet(path)
+    # firm = {150: 'Uninet USA', 183: 'H&B'}
 
-    firm = {150: 'Uninet USA', 183: 'H&B'}
+    # Initialize Base Data for Uninet
+    bd = BasePassDBF(path, CODEPAGE, FILTR_FIRM_UNINET_KM_HB, 'KOL_SKL', FILTER_GROUP_KM_HB)
+    # Load tables
+    bd.load_tables_dbf()
+    warehous, invoice, goods, firm = bd.warehous, bd.invoice, bd.goods, bd.firm
 
     uninet = []
     header = [('товарная_группа', 'код_товара', 'код_прихода', 'накладная', 'дата', 'поставщик', 'модель',
