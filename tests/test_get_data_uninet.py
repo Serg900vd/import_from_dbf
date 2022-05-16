@@ -30,16 +30,6 @@ class TestBasePassDBF(TestCase):
         self.assertEqual(self.bd.firm, {7: 'Katun'})
 
 
-# class TestGet_firm(TestCase):
-#     def test_uninet_hb(self):
-#         self.assertEqual(get_data_uninet.get_firm(PATH_BASE_TEST, (150, 183)), {150: 'Uninet USA', 183: 'H&B'})
-#         self.assertNotEqual(get_data_uninet.get_firm(PATH_BASE_TEST, (150, 204)),
-#                             {150: 'Uninet USA', 183: 'H&B'})
-#
-#     def test_katun(self):
-#         self.assertEqual(get_data_uninet.get_firm(PATH_BASE_TEST, (7,)), {7: 'Katun'})
-
-
 class TestGet_data_from_pass(TestCase):
     def test_warehous(self):
         _result = {'cod': 1196,
