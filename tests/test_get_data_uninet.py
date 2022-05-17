@@ -29,8 +29,17 @@ class TestBasePassDBF(TestCase):
         self.bd.set_firm((7,))
         self.assertEqual(self.bd.firm, {7: 'Katun'})
 
+    def test_load_tables_dbf(self):
+        self.bd.key_field_warehous = 'KOL_SKL'
+        self.bd.load_tables_dbf()
+        self.assert_(self.bd.warehous)
+        self.assert_(self.bd.invoice)
+        self.assert_(self.bd.goods)
+        self.assert_(self.bd.firm)
 
-class TestGet_data_from_pass(TestCase):
+
+class TestBasePassDBF_get_data_from_pass(TestCase):
+    # The method get_data_from_pass() is @classmethod
     def test_warehous(self):
         _result = {'cod': 1196,
                    'code': 'KM1196DBL8',
@@ -129,6 +138,8 @@ class TestGet_data_from_pass(TestCase):
             BasePassDBF.get_data_from_pass(PATH_BASE_TEST + 'invoice.DBF', CODEPAGE, lambda row: row.INV)[
                 'DBM1'], _result)
 
+
+class Test_Main_uninet(TestCase):
     def test_main_uninet(self):
         file_name = 'stock_uninet.csv'
         get_data_uninet.main_uninet(PATH_BASE_TEST, file_name)
