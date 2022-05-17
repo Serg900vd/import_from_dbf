@@ -15,7 +15,7 @@ FILTR_FIRM_UNINET_HB = (150, 183)
 FILTER_GROUP_KM_HB = ('KM', 'HB')
 
 
-class TestBasePassDBF(TestCase):
+class TestBasePassDBF_a(TestCase):
     def setUp(self) -> None:
         # Initialize Base Data
         self.bd = BasePassDBF(PATH_BASE_TEST, CODEPAGE)
@@ -29,13 +29,36 @@ class TestBasePassDBF(TestCase):
         self.bd.set_firm((7,))
         self.assertEqual(self.bd.firm, {7: 'Katun'})
 
+
+class TestBasePassDBF_b(TestCase):
+    bd = None
+
+    @classmethod
+    def setUpClass(cls):
+        # Initialize Base Data
+        cls.bd = BasePassDBF(PATH_BASE_TEST, CODEPAGE, key_field_warehous='KOL_SKL')
+        cls.bd.load_tables_dbf()
+
     def test_load_tables_dbf(self):
-        self.bd.key_field_warehous = 'KOL_SKL'
-        self.bd.load_tables_dbf()
         self.assert_(self.bd.warehous)
         self.assert_(self.bd.invoice)
         self.assert_(self.bd.goods)
         self.assert_(self.bd.firm)
+
+    def test_get_warehous_grcod_filter(self):
+        _result = [
+            {'inv': 'DBL8', 'group': 'KM', 'cod': 1129, 'kol': 2, 'price_usd': 1.0, 'price_inv': 0.0, 'kol_skl': 5,
+             'kol_rezerv': 0, 'kol_sale': 0, 'kol_sf': 0, 'kol_otkaz': 0, 'code': 'KM1129DBL8', 'price_krb': 89.44,
+             'tax_tam': None, 'tax_ack': None, 'size_inv': '', 'size_skl': '', 'old_sale': 0}]
+
+        self.assertEqual(self.bd.get_warehous_grcod_filter('KM1129')[0], _result[0])
+
+    def test_get_warehous_grcod_sum(self):
+        _result = {'group_cod': 'KM1129', 'kol': 2, 'kol_otkaz': 0, 'kol_rezerv': 0, 'kol_sale': 0, 'kol_sf': 0,
+                   'kol_skl': 5, 'old_sale': 0}
+        aa = self.bd.get_warehous_grcod_sum('KM1129')
+        self.assertEqual(self.bd.get_warehous_grcod_sum('KM1129'), _result)
+        pass
 
 
 class TestBasePassDBF_get_data_from_pass(TestCase):
