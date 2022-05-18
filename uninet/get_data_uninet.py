@@ -27,7 +27,7 @@ class BasePassDBF:
         self.firm = {}
 
     def __repr__(self):
-        text = f'Parameters [path_base= {self.path_base}, codepage: "{self.codepage}", ' \
+        text = f'{self.__class__.__name__} [path_base= {self.path_base}, codepage: "{self.codepage}", ' \
                f'filter_id_firm: {self.filter_id_firm}, key_field_warehous: "{self.key_field_warehous}", ' \
                f'self.filter_group: {self.filter_group}]'
         return text
@@ -45,8 +45,8 @@ class BasePassDBF:
         if not os.path.isfile(_file):
             raise FileNotFoundError(f'Нет необходимого файла {_file}')
         _firm = {}
-        f = dbf.Table(_file, codepage=self.codepage)
-        with f.open() as ff:
+        with dbf.Table(_file, codepage=self.codepage) as f:
+            ff = f.open()
             for row in ff:
                 if row and not dbf.is_deleted(row) and not row.REC_OFF and (
                         not filter_id_firm or row.FIRM in filter_id_firm):
@@ -70,8 +70,8 @@ class BasePassDBF:
         if not os.path.isfile(file_name):
             raise FileNotFoundError(f'Нет необходимого файла {file_name}')
         result = {}
-        f = dbf.Table(file_name, codepage=codepage)
-        with f.open() as ff:
+        with dbf.Table(file_name, codepage=codepage) as f:
+            ff = f.open()
             field_names = ff.field_names
             for row in ff:
                 if row and not dbf.is_deleted(row) and row[key_field] and (

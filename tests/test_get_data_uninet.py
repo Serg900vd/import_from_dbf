@@ -1,9 +1,16 @@
 import datetime
 import os
-from unittest import TestCase, main
+from unittest import TestCase, main, skipUnless, skipIf
 
 from uninet import get_data_uninet
 from uninet.get_data_uninet import BasePassDBF
+
+# Base settings ...
+# No real base
+PATH_BASE = ""
+
+# For real base
+# PATH_BASE = "d:\\bases\\work\\pass_base\\"
 
 if os.getcwd().split('\\')[-1] == 'tests':
     PATH_BASE_TEST = "dbf\\"
@@ -15,10 +22,11 @@ FILTR_FIRM_UNINET_HB = (150, 183)
 FILTER_GROUP_KM_HB = ('KM', 'HB')
 
 
-class TestBasePassDBF_a(TestCase):
+class TestBasePassDBF_A(TestCase):
     def setUp(self) -> None:
         # Initialize Base Data
         self.bd = BasePassDBF(PATH_BASE_TEST, CODEPAGE)
+        print('TestBasePassDBF_A', self.bd)
 
     def test_set_firm_uninet_hb(self):
         self.bd.set_firm((150, 183))
@@ -30,29 +38,36 @@ class TestBasePassDBF_a(TestCase):
         self.assertEqual(self.bd.firm, {7: 'Katun'})
 
 
-class TestBasePassDBF_b(TestCase):
+class TestBasePassDBF_B(TestCase):
     bd = None
 
     @classmethod
     def setUpClass(cls):
         # Initialize Base Data
-        cls.bd = BasePassDBF(PATH_BASE_TEST, CODEPAGE, key_field_warehous='KOL_SKL')
+        if PATH_BASE:
+            path = PATH_BASE
+        else:
+            path = PATH_BASE_TEST
+        cls.bd = BasePassDBF(path, CODEPAGE, key_field_warehous='KOL_SKL')
         cls.bd.load_tables_dbf()
 
     def test_load_tables_dbf(self):
-        self.assert_(self.bd.warehous)
-        self.assert_(self.bd.invoice)
-        self.assert_(self.bd.goods)
-        self.assert_(self.bd.firm)
+        print('TestBasePassDBF_B', self.bd)
+        self.assertTrue(self.bd.warehous)
+        self.assertTrue(self.bd.invoice)
+        self.assertTrue(self.bd.goods)
+        self.assertTrue(self.bd.firm)
 
+    @skipIf(PATH_BASE, 'Skip for real base')
     def test_get_warehous_grcod_filter(self):
         _result = [
             {'inv': 'DBL8', 'group': 'KM', 'cod': 1129, 'kol': 2, 'price_usd': 1.0, 'price_inv': 0.0, 'kol_skl': 5,
              'kol_rezerv': 0, 'kol_sale': 0, 'kol_sf': 0, 'kol_otkaz': 0, 'code': 'KM1129DBL8', 'price_krb': 89.44,
              'tax_tam': None, 'tax_ack': None, 'size_inv': '', 'size_skl': '', 'old_sale': 0}]
 
-        self.assertEqual(self.bd.get_warehous_grcod_filter('KM1129')[0], _result[0])
+        self.assertEqual(self.bd.get_warehous_grcod_filter('KM1129'), _result)
 
+    @skipIf(PATH_BASE, 'Skip for real base')
     def test_get_warehous_grcod_sum(self):
         _result = {'group_cod': 'KM1129', 'kol': 2, 'kol_otkaz': 0, 'kol_rezerv': 0, 'kol_sale': 0, 'kol_sf': 0,
                    'kol_skl': 5, 'old_sale': 0}
@@ -60,6 +75,41 @@ class TestBasePassDBF_b(TestCase):
 
     def test_is_product_on_stock(self):
         self.assertEqual(self.bd.is_product_on_stock('KM1129'), True)
+
+    @skipUnless(PATH_BASE, 'Run for real base')
+    def test_get_warehous_grcod_filter_real(self):
+        print('TestBasePassDBF_B', self.bd)
+        _result_test1 = [{'inv': 'DBD8', 'group': 'KM', 'cod': 1182, 'kol': 50, 'price_usd': 6.31, 'price_inv': 4.25,
+                          'kol_skl': 22, 'kol_rezerv': 1, 'kol_sale': 27, 'kol_sf': 1, 'kol_otkaz': 0,
+                          'code': 'KM1182DBD8', 'price_krb': 122.62, 'tax_tam': None, 'tax_ack': None, 'size_inv': '',
+                          'size_skl': '', 'old_sale': 0},
+                         {'inv': 'DBI7', 'group': 'KM', 'cod': 1182, 'kol': 25, 'price_usd': 5.98, 'price_inv': 4.12,
+                          'kol_skl': 25, 'kol_rezerv': 0, 'kol_sale': 0, 'kol_sf': 0, 'kol_otkaz': 0,
+                          'code': 'KM1182DBI7', 'price_krb': 108.73, 'tax_tam': None, 'tax_ack': None, 'size_inv': '',
+                          'size_skl': '', 'old_sale': 0}]
+        _result_got = self.bd.get_warehous_grcod_filter('KM1182')
+        _result_test2 = [{'inv': 'DBD8', 'group': 'KM', 'cod': 1182, 'kol': 50, 'price_usd': 6.31, 'price_inv': 4.25,
+                          'kol_skl': 22, 'kol_rezerv': 1, 'kol_sale': 27, 'kol_sf': 1, 'kol_otkaz': 0,
+                          'code': 'KM1182DBD8', 'price_krb': 122.62, 'tax_tam': None, 'tax_ack': None, 'size_inv': '',
+                          'size_skl': '', 'old_sale': 0},
+                         {'inv': 'DBI7', 'group': 'KM', 'cod': 1182, 'kol': 25, 'price_usd': 5.98, 'price_inv': 4.12,
+                          'kol_skl': 23, 'kol_rezerv': 0, 'kol_sale': 0, 'kol_sf': 0, 'kol_otkaz': 0,
+                          'code': 'KM1182DBI7', 'price_krb': 108.73, 'tax_tam': None, 'tax_ack': None, 'size_inv': '',
+                          'size_skl': '', 'old_sale': 0}]
+        self.assertEqual(_result_got, _result_test1)
+        self.assertNotEqual(_result_got, _result_test2)
+
+    @skipUnless(PATH_BASE, 'Run for real base')
+    def test_get_warehous_grcod_sum_real(self):
+        _result_test = {'group_cod': 'KM1182', 'kol': 75, 'kol_otkaz': 0, 'kol_rezerv': 1, 'kol_sale': 27, 'kol_sf': 1,
+                        'kol_skl': 47, 'old_sale': 0}
+        _result_got = self.bd.get_warehous_grcod_sum('KM1182')
+        self.assertEqual(_result_got, _result_test)
+
+    @skipUnless(PATH_BASE, 'Run for real base')
+    def test_is_product_on_stock_real(self):
+        self.assertEqual(self.bd.is_product_on_stock('KM1182'), True)
+        self.assertEqual(self.bd.is_product_on_stock('KM1175'), False)
 
 
 class TestBasePassDBF_get_data_from_pass(TestCase):
@@ -168,6 +218,18 @@ class Test_Main_uninet(TestCase):
         file_name = 'stock_uninet.csv'
         get_data_uninet.main_uninet(PATH_BASE_TEST, file_name)
         with open(PATH_BASE_TEST + file_name) as test, open(PATH_BASE_TEST + 'backup\\' + file_name) as pattern:
+            file_test = test.read()
+            file_pattern = pattern.read()
+
+        self.assertEqual(file_test, file_pattern)
+
+
+@skipUnless(PATH_BASE, 'Run for real base')
+class Test_Main_uninet_REAL(TestCase):
+    def test_main_uninet(self):
+        file_name = 'stock_uninet.csv'
+        get_data_uninet.main_uninet(PATH_BASE, file_name)
+        with open(PATH_BASE + file_name) as test, open(PATH_BASE + 'backup\\' + file_name) as pattern:
             file_test = test.read()
             file_pattern = pattern.read()
 
