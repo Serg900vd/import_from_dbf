@@ -36,8 +36,9 @@ class PromClient:
         response = connection.getresponse()
         if response.status != 200:
             raise HTTPError('{}: {}'.format(response.status, response.reason))
-
         response_data = response.read()
+        connection.close()
+
         return json.loads(response_data.decode())
 
     def get_products_list(self, limit: int = None, last_id: int = None, group_id: int = None) -> dict:

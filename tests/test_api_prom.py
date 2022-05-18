@@ -41,7 +41,7 @@ class TestIntegrationContractPromProduct(TestCase):
         product_received = self.api_prom.get_product_id(1616486427)['product']
         keys_received_set = set(product_received.keys())
         keys_test = set(PRODUCT_KEYS).issubset(keys_received_set)
-        self.assert_(keys_test, f'Missing these product keys {PRODUCT_KEYS - keys_received_set}')
+        self.assertTrue(keys_test, f'Missing these product keys {PRODUCT_KEYS - keys_received_set}')
 
     def test_2_reset_product_id_1616486427(self):
         product_set = RESET_PRODUCT_ID_1616486427
@@ -51,7 +51,7 @@ class TestIntegrationContractPromProduct(TestCase):
         product_received = self.api_prom.get_product_id(1616486427)['product']
         # Value test
         for key, value in product_set.items():
-            self.assertEquals(value, product_received[key], f'Parameter {key} : {value} is not set')
+            self.assertEqual(value, product_received[key], f'Parameter {key} : {value} is not set')
 
     def test_3_set_product_id_1616486427(self):
         product_set = PRODUCT_ID_1616486427
