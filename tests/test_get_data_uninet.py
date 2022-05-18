@@ -56,9 +56,10 @@ class TestBasePassDBF_b(TestCase):
     def test_get_warehous_grcod_sum(self):
         _result = {'group_cod': 'KM1129', 'kol': 2, 'kol_otkaz': 0, 'kol_rezerv': 0, 'kol_sale': 0, 'kol_sf': 0,
                    'kol_skl': 5, 'old_sale': 0}
-        aa = self.bd.get_warehous_grcod_sum('KM1129')
         self.assertEqual(self.bd.get_warehous_grcod_sum('KM1129'), _result)
-        pass
+
+    def test_is_product_on_stock(self):
+        self.assertEqual(self.bd.is_product_on_stock('KM1129'), True)
 
 
 class TestBasePassDBF_get_data_from_pass(TestCase):

@@ -7,7 +7,7 @@ from typing import List
 
 import dbf
 
-PATH_BASE = "d:\\Kotik\\work\\2012_toner_base\\"
+PATH_BASE = "d:\\bases\\work\\pass_base\\"
 PATH_BASE_TEST = "..\\tests\\dbf\\"
 CODEPAGE = 'cp1251'
 FILTR_FIRM_UNINET_KM_HB = (150, 183)
@@ -126,6 +126,16 @@ class BasePassDBF:
             for param in _parameters:
                 _group_cod_sum[param] += row[param]
         return _group_cod_sum
+
+
+    def is_product_on_stock(self, group_cod: str) -> bool:
+        """
+        В наличие на складе?
+        :param group_cod:
+        :return:
+        """
+        product = self.get_warehous_grcod_sum(group_cod)
+        return product['kol_skl']-product['kol_rezerv'] > 0
 
 
 def load_tables_dbf_uninet(path: str):
