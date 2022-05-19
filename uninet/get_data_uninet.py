@@ -46,11 +46,11 @@ class BasePassDBF:
             raise FileNotFoundError(f'Нет необходимого файла {_file}')
         _firm = {}
         with dbf.Table(_file, codepage=self.codepage) as f:
-            ff = f.open()
-            for row in ff:
-                if row and not dbf.is_deleted(row) and not row.REC_OFF and (
-                        not filter_id_firm or row.FIRM in filter_id_firm):
-                    _firm[row.FIRM] = row.FIRM_TXT.strip()
+            with f.open() as ff:
+                for row in ff:
+                    if row and not dbf.is_deleted(row) and not row.REC_OFF and (
+                            not filter_id_firm or row.FIRM in filter_id_firm):
+                        _firm[row.FIRM] = row.FIRM_TXT.strip()
         self.firm = _firm
         return bool(_firm)
 
@@ -71,15 +71,15 @@ class BasePassDBF:
             raise FileNotFoundError(f'Нет необходимого файла {file_name}')
         result = {}
         with dbf.Table(file_name, codepage=codepage) as f:
-            ff = f.open()
-            field_names = ff.field_names
-            for row in ff:
-                if row and not dbf.is_deleted(row) and row[key_field] and (
-                        not filter_group or row.GROUP in filter_group):
-                    feilds = {}
-                    for j, feild in enumerate(row):
-                        feilds[field_names[j].lower()] = feild
-                    result[key_tabl(row)] = feilds
+            with f.open() as ff:
+                field_names = ff.field_names
+                for row in ff:
+                    if row and not dbf.is_deleted(row) and row[key_field] and (
+                            not filter_group or row.GROUP in filter_group):
+                        feilds = {}
+                        for j, feild in enumerate(row):
+                            feilds[field_names[j].lower()] = feild
+                        result[key_tabl(row)] = feilds
         return result
 
     def load_tables_dbf(self):
@@ -95,7 +95,7 @@ class BasePassDBF:
 
         self.goods = self.get_data_from_pass(self.path_base + 'goods.dbf', self.codepage,
                                              key_tabl=lambda row: row.GROUP + str(row.COD),
-                                             key_field='SHOW_PRG', filter_group=self.filter_group)
+                                             key_field='SHOW_SITE', filter_group=self.filter_group)
         print('goods loaded')
 
         self.set_firm()
