@@ -21,23 +21,30 @@ class REQUESTError(Exception):
 
 class PromClient:
 
-    def __init__(self, token):
+    def __init__(self, host, token):
+        self.host = host
         self.token = token
+        self.connection = None
 
     def make_request(self, method, url, body=None):
-        connection = http.client.HTTPSConnection(HOST)
 
         headers = {'Authorization': 'Bearer {}'.format(self.token),
                    'Content-type': 'application/json'}
         if body:
             body = json.dumps(body)
 
-        connection.request(method, url, body=body, headers=headers)
-        response = connection.getresponse()
-        if response.status != 200:
-            raise HTTPError('{}: {}'.format(response.status, response.reason))
-        response_data = response.read()
-        connection.close()
+        try:
+            self.connection = http.client.HTTPSConnection(self.host)
+            self.connection.request(method, url, body=body, headers=headers)
+            response = self.connection.getresponse()
+            if response.status != 200:
+                raise HTTPError('{}: {}'.format(response.status, response.reason))
+            response_data = response.read()
+        except:
+            raise
+        finally:
+            if self.connection:
+                self.connection.close()
 
         return json.loads(response_data.decode())
 
@@ -88,7 +95,7 @@ def main_read():
     # Initialize Client
     if not AUTH_TOKEN_READ:
         raise Exception('Sorry, there\'s no any AUTH_TOKEN_READ!')
-    api_prom = PromClient(AUTH_TOKEN_READ)
+    api_prom = PromClient(HOST, AUTH_TOKEN_READ)
 
     # product_list = api_prom.get_products_list(2, group_id=81223949)
     # if not product_list['products']:
@@ -119,7 +126,7 @@ def main_write():
     # Initialize Client
     if not AUTH_TOKEN_WRITE:
         raise Exception('Sorry, there\'s no any AUTH_TOKEN_WRITE!')
-    api_prom = PromClient(AUTH_TOKEN_WRITE)
+    api_prom = PromClient(HOST,AUTH_TOKEN_WRITE)
 
     # test product id 1616486427
     # 'external_id' 'test_HB770' -- READ ONLY
