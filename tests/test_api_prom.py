@@ -2,9 +2,9 @@ import copy
 from unittest import TestCase
 from unittest import skipIf
 
+from prom_package.api_prom import PromClient, REQUESTError, HTTPError
 from prom_package.config import AUTH_TOKEN_WRITE
 from prom_package.constants import SKIP_REAL, HOST
-from prom_package.api_prom import PromClient, REQUESTError
 
 # Product id 1616486427 for tests...
 PRODUCT_ID_1616486427 = {'id': 1616486427,
@@ -35,7 +35,7 @@ class TestIntegrationContractPromProduct(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         # Initialize Client
-        cls.api_prom = PromClient(HOST,AUTH_TOKEN_WRITE)
+        cls.api_prom = PromClient(HOST, AUTH_TOKEN_WRITE)
 
     def test_1_product_keys(self):
         product_received = self.api_prom.get_product_id(1616486427)['product']
@@ -71,3 +71,7 @@ class TestIntegrationContractPromProduct(TestCase):
             raise REQUESTError(response)
         product_received = self.api_prom.get_product_id(1616486427)['product']
         self.assertNotEqual(product_received['sku'], 'RESET')
+
+    def test_5_incorrect_token(self):
+        incorreckt_api_prom = PromClient(HOST, 'INCORRECT_TOKEN')
+        self.assertRaises(HTTPError, incorreckt_api_prom.get_product_id,1616486427 )
