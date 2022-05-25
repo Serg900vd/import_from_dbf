@@ -2,6 +2,7 @@
 # https://github.com/evo-company/company-api-example/blob/master/python/api_python3-5_example.py
 # Доступные методы API:
 # https://prom.ua/cloud-cgi/static/uaprom-static/docs/swagger/index.html
+# https://public-api.docs.prom.ua/#/
 
 import http.client
 import json
@@ -51,8 +52,9 @@ class PromClient:
     def get_products_list(self, limit: int = None, last_id: int = None, group_id: int = None) -> dict:
         """
         Получить список товаров
+        ! Больше 100 шт не выдает
         :param limit: int Ограничение количества товаров в ответе.
-        :param last_id: int Ограничить выборку товаров с идентификаторами не выше указанного.
+        :param last_id: int Ограничить выборку товаров с идентификаторами не выше указанного. Возвращает по 20шт
         :param group_id: int Идентификатор группы. По-умолчанию - идентификатор корневой группы компании.
         :return: dict
         """
@@ -126,7 +128,7 @@ def main_write():
     # Initialize Client
     if not AUTH_TOKEN_WRITE:
         raise Exception('Sorry, there\'s no any AUTH_TOKEN_WRITE!')
-    api_prom = PromClient(HOST,AUTH_TOKEN_WRITE)
+    api_prom = PromClient(HOST, AUTH_TOKEN_WRITE)
 
     # test product id 1616486427
     # 'external_id' 'test_HB770' -- READ ONLY
