@@ -5,7 +5,7 @@ from typing import List
 from prom_package.api_prom import PromClient
 from prom_package.constants import HOST
 from uninet.get_data_uninet import BasePassDBF, CODEPAGE
-from prom_package.config import PATH_BASE, AUTH_TOKEN_WRITE, LAST_PRODUCT_ID
+from prom_package.config import PATH_BASE, AUTH_TOKEN_PRODUCTS, LAST_PRODUCT_ID
 
 # Status constants
 STATUS_ON_DISPLAY = 'on_display'
@@ -36,7 +36,7 @@ def read_products_prom() -> List[dict]:
     Загружаем актуальный список товаров с сайта
     """
     last_id = LAST_PRODUCT_ID
-    api_prom = PromClient(HOST, AUTH_TOKEN_WRITE)
+    api_prom = PromClient(HOST, AUTH_TOKEN_PRODUCTS)
     product_lust_id = api_prom.get_product_id(last_id)  # last =1616486427  first = 628464896
     products_prom = [product_lust_id['product']]
 
@@ -112,7 +112,7 @@ def write_products_prom(products_changed_list: list):
                               ]
 
     if products_changed_list:
-        api_prom = PromClient(HOST, AUTH_TOKEN_WRITE)
+        api_prom = PromClient(HOST, AUTH_TOKEN_PRODUCTS)
         response = api_prom.set_products_list_id(products_changed_list)
         print(response)
         if response['errors']:

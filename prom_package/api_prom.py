@@ -8,7 +8,7 @@ import http.client
 import json
 import pprint
 
-from prom_package.config import AUTH_TOKEN_READ, AUTH_TOKEN_WRITE
+from prom_package.config import AUTH_TOKEN_PRODUCTS
 from prom_package.constants import HOST
 
 
@@ -95,9 +95,9 @@ class PromClient:
 
 def main_read():
     # Initialize Client
-    if not AUTH_TOKEN_READ:
-        raise Exception('Sorry, there\'s no any AUTH_TOKEN_READ!')
-    api_prom = PromClient(HOST, AUTH_TOKEN_READ)
+    if not AUTH_TOKEN_PRODUCTS:
+        raise Exception('Sorry, there\'s no any AUTH_TOKEN_PRODUCTS!')
+    api_prom = PromClient(HOST, AUTH_TOKEN_PRODUCTS)
 
     # product_list = api_prom.get_products_list(2, group_id=81223949)
     # if not product_list['products']:
@@ -126,9 +126,9 @@ def main_read():
 
 def main_write():
     # Initialize Client
-    if not AUTH_TOKEN_WRITE:
-        raise Exception('Sorry, there\'s no any AUTH_TOKEN_WRITE!')
-    api_prom = PromClient(HOST, AUTH_TOKEN_WRITE)
+    if not AUTH_TOKEN_PRODUCTS:
+        raise Exception('Sorry, there\'s no any AUTH_TOKEN_PRODUCTS!')
+    api_prom = PromClient(HOST, AUTH_TOKEN_PRODUCTS)
 
     # test product id 1616486427
     # 'external_id' 'test_HB770' -- READ ONLY

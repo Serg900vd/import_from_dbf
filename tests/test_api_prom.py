@@ -3,7 +3,7 @@ from unittest import TestCase
 from unittest import skipIf
 
 from prom_package.api_prom import PromClient, REQUESTError, HTTPError
-from prom_package.config import AUTH_TOKEN_WRITE
+from prom_package.config import AUTH_TOKEN_PRODUCTS
 from prom_package.constants import SKIP_REAL, HOST
 
 # Product id 1616486427 for tests...
@@ -35,7 +35,7 @@ class TestIntegrationContractPromProduct(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         # Initialize Client
-        cls.api_prom = PromClient(HOST, AUTH_TOKEN_WRITE)
+        cls.api_prom = PromClient(HOST, AUTH_TOKEN_PRODUCTS)
 
     def test_1_product_keys(self):
         product_received = self.api_prom.get_product_id(1616486427)['product']

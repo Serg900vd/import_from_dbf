@@ -2,14 +2,14 @@ import json
 from typing import List
 
 from prom_package.api_prom import PromClient
-from prom_package.config import AUTH_TOKEN_WRITE, LAST_PRODUCT_ID
+from prom_package.config import AUTH_TOKEN_PRODUCTS, LAST_PRODUCT_ID
 from prom_package.constants import HOST
 
 
 def temp_():
     # Загружаем актуальный список товаров с сайта
     last_id = LAST_PRODUCT_ID
-    api_prom = PromClient(HOST, AUTH_TOKEN_WRITE)
+    api_prom = PromClient(HOST, AUTH_TOKEN_PRODUCTS)
     product_lust_id = api_prom.get_product_id(last_id)  # last =1616486427  first = 628464896
     products_prom = [product_lust_id['product']]
 
@@ -47,7 +47,7 @@ def read_products_prom() -> List[dict]:
     Загружаем актуальный список товаров с сайта
     """
     last_id = LAST_PRODUCT_ID
-    api_prom = PromClient(HOST, AUTH_TOKEN_WRITE)
+    api_prom = PromClient(HOST, AUTH_TOKEN_PRODUCTS)
     product_lust_id = api_prom.get_product_id(last_id)  # last =1616486427  first = 628464896
     products_prom = [product_lust_id['product']]
 
