@@ -43,6 +43,7 @@ def read_products_prom() -> List[dict]:
     # last_id = 637872504  # Ограничить список
     # print('last_id = 637872504 # Ограничить список')
 
+    print(f'Prom read products:')
     while True:
         products_20 = api_prom.get_products_list(last_id=last_id)
         products_20 = products_20['products']
@@ -51,7 +52,8 @@ def read_products_prom() -> List[dict]:
         products_prom += products_20
         last_id = products_prom[-1]['id']
 
-        print(f'Prom read {len(products_prom)} products')
+        print(len(products_prom), end=', ')
+    print(' ')
     return products_prom
 
 
