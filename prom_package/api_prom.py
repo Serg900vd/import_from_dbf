@@ -8,8 +8,7 @@ import http.client
 import json
 import pprint
 
-from prom_package.config import AUTH_TOKEN_PRODUCTS
-from prom_package.constants import HOST
+from prom_package.config import AUTH_TOKEN_PRODUCTS, HOST
 
 
 class HTTPError(Exception):

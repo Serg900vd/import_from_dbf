@@ -3,8 +3,7 @@ from unittest import TestCase
 from unittest import skipIf
 
 from prom_package.api_prom import PromClient, REQUESTError, HTTPError
-from prom_package.config import AUTH_TOKEN_PRODUCTS
-from prom_package.constants import SKIP_REAL, HOST
+from prom_package.config import AUTH_TOKEN_PRODUCTS, HOST, SKIP_REAL
 
 # Product id 1616486427 for tests...
 PRODUCT_ID_1616486427 = {'id': 1616486427,

@@ -2,8 +2,7 @@ import json
 from typing import List
 
 from prom_package.api_prom import PromClient
-from prom_package.config import AUTH_TOKEN_PRODUCTS, LAST_PRODUCT_ID
-from prom_package.constants import HOST
+from prom_package.config import AUTH_TOKEN_PRODUCTS, LAST_PRODUCT_ID, HOST
 
 
 def temp_():

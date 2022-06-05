@@ -3,9 +3,8 @@ import pprint
 from typing import List
 
 from prom_package.api_prom import PromClient
-from prom_package.constants import HOST
 from uninet.get_data_uninet import BasePassDBF, CODEPAGE
-from prom_package.config import PATH_BASE, AUTH_TOKEN_PRODUCTS, LAST_PRODUCT_ID
+from prom_package.config import PATH_BASE, AUTH_TOKEN_PRODUCTS, LAST_PRODUCT_ID, HOST
 
 # Status constants
 STATUS_ON_DISPLAY = 'on_display'
@@ -134,5 +133,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    #  pyinstaller update_stock_on_prom.py --onefile
 
+    main()
+    pause = input('OK?')
