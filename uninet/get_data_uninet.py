@@ -10,8 +10,8 @@ import dbf
 # Read the start path
 PATH_UNINET = Path(__file__).parent
 
-PATH_BASE = Path("d:\\bases\\work\\pass_base\\")
-PATH_BASE_TEST = Path("..\\tests\\dbf\\")
+PATH_BASE = Path("d:/bases/work/pass_base/")
+PATH_BASE_TEST = Path("../tests/dbf/")
 CODEPAGE = 'cp1251'
 FILTR_FIRM_UNINET_KM_HB = (150, 183)
 FILTER_GROUP_KM_HB = ('KM', 'HB')

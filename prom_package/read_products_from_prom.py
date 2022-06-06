@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 from typing import List
 
 from prom_package.api_prom import PromClient
@@ -25,13 +26,14 @@ def temp_():
 
     products_prom = products_prom[:25]
     products_prom.sort(key=lambda x: x['id'])
-    with open('prom_recurse\\prom_products.json', 'w') as f:
+    file_products_prom = Path('prom_recurse/prom_products.json')
+    with file_products_prom.open('w') as f:
         # for line in products_prom:
         # f.write(f"{line['id']}\n")
         products_prom_json = json.dumps(products_prom)
         f.write(products_prom_json)
 
-    with open('prom_recurse\\prom_products.json') as f:
+    with file_products_prom.open() as f:
         products_prom_json_r = f.read()
         products_prom_r = json.loads(products_prom_json_r)
 
