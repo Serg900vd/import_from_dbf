@@ -1,25 +1,30 @@
 # Обновление данных для UNINET base.xls
 #
 import csv
-import os
+from pathlib import Path
 from sys import argv
 from typing import List
 
 import dbf
 
-PATH_BASE = "d:\\bases\\work\\pass_base\\"
-PATH_BASE_TEST = "..\\tests\\dbf\\"
+# Read the start path
+PATH_UNINET = Path(__file__).parent
+
+PATH_BASE = Path("d:\\bases\\work\\pass_base\\")
+PATH_BASE_TEST = Path("..\\tests\\dbf\\")
 CODEPAGE = 'cp1251'
 FILTR_FIRM_UNINET_KM_HB = (150, 183)
 FILTER_GROUP_KM_HB = ('KM', 'HB')
 
 
 class BasePassDBF:
-    def __init__(self, path_base, codepage, filter_id_firm=None, key_field_warehous=0, filter_group: tuple = None):
+    def __init__(self, path_base, codepage, filter_id_firm=None, key_field_warehous=0, key_field_goods=0,
+                 filter_group: tuple = None):
         self.path_base = path_base
         self.codepage = codepage
         self.filter_id_firm = filter_id_firm
         self.key_field_warehous = key_field_warehous
+        self.key_field_goods = key_field_goods
         self.filter_group = filter_group
         self.warehous = {}
         self.invoice = {}
@@ -28,7 +33,9 @@ class BasePassDBF:
 
     def __repr__(self):
         text = f'{self.__class__.__name__} [path_base= {self.path_base}, codepage: "{self.codepage}", ' \
-               f'filter_id_firm: {self.filter_id_firm}, key_field_warehous: "{self.key_field_warehous}", ' \
+               f'filter_id_firm: {self.filter_id_firm}, ' \
+               f'key_field_warehous: "{self.key_field_warehous}", ' \
+               f'key_field_goods: "{self.key_field_goods}",' \
                f'self.filter_group: {self.filter_group}]'
         return text
 
@@ -41,11 +48,11 @@ class BasePassDBF:
         """
         if not filter_id_firm:
             filter_id_firm = self.filter_id_firm
-        _file = self.path_base + 'firm.dbf'
-        if not os.path.isfile(_file):
+        _file = self.path_base / 'firm.dbf'
+        if not Path.is_file(_file):
             raise FileNotFoundError(f'Нет необходимого файла {_file}')
         _firm = {}
-        with dbf.Table(_file, codepage=self.codepage) as f:
+        with dbf.Table(str(_file), codepage=self.codepage) as f:
             with f.open() as ff:
                 for row in ff:
                     if row and not dbf.is_deleted(row) and not row.REC_OFF and (
@@ -55,7 +62,7 @@ class BasePassDBF:
         return bool(_firm)
 
     @classmethod
-    def get_data_from_pass(cls, file_name: str, codepage: str, key_tabl=lambda row: row.GROUP + str(row.COD) + row.INV,
+    def get_data_from_pass(cls, file_name: Path, codepage: str, key_tabl=lambda row: row.GROUP + str(row.COD) + row.INV,
                            key_field: str = 0,
                            filter_group: tuple = None) -> dict:
         """
@@ -67,10 +74,10 @@ class BasePassDBF:
         :param filter_group: ('KM', 'HB') кортеж с значениями поля GROUP которые необходимо отфильтровать
         :return: {key_tabl : {'group': 'KM', 'cod': 750, 'groupid': 695, ...(все поля таблицы)}, ...}
         """
-        if not os.path.isfile(file_name):
+        if not Path.is_file(file_name):
             raise FileNotFoundError(f'Нет необходимого файла {file_name}')
         result = {}
-        with dbf.Table(file_name, codepage=codepage) as f:
+        with dbf.Table(str(file_name), codepage=codepage) as f:
             with f.open() as ff:
                 field_names = ff.field_names
                 for row in ff:
@@ -85,17 +92,19 @@ class BasePassDBF:
     def load_tables_dbf(self):
         print(str(self))
 
-        self.warehous = self.get_data_from_pass(self.path_base + 'warehous.dbf', self.codepage,
+        self.warehous = self.get_data_from_pass(self.path_base / 'warehous.dbf', self.codepage,
                                                 key_field=self.key_field_warehous,
                                                 filter_group=self.filter_group)
         print('warehous loaded')
 
-        self.invoice = self.get_data_from_pass(self.path_base + 'invoice.DBF', self.codepage, lambda row: row.INV)
+        self.invoice = self.get_data_from_pass(self.path_base / 'invoice.DBF', self.codepage,
+                                               key_tabl=lambda row: row.INV)
         print('invoice loaded')
 
-        self.goods = self.get_data_from_pass(self.path_base + 'goods.dbf', self.codepage,
+        self.goods = self.get_data_from_pass(self.path_base / 'goods.dbf', self.codepage,
                                              key_tabl=lambda row: row.GROUP + str(row.COD),
-                                             key_field='SHOW_SITE', filter_group=self.filter_group)
+                                             key_field=self.key_field_goods,
+                                             filter_group=self.filter_group)
         print('goods loaded')
 
         self.set_firm()
@@ -127,7 +136,6 @@ class BasePassDBF:
                 _group_cod_sum[param] += row[param]
         return _group_cod_sum
 
-
     def is_product_on_stock(self, group_cod: str) -> bool:
         """
         В наличие на складе?
@@ -135,18 +143,18 @@ class BasePassDBF:
         :return:
         """
         product = self.get_warehous_grcod_sum(group_cod)
-        return product['kol_skl']-product['kol_rezerv'] > 0
+        return product['kol_skl'] - product['kol_rezerv'] > 0
 
 
-def load_tables_dbf_uninet(path: str):
-    warehous = BasePassDBF.get_data_from_pass(path + 'warehous.dbf', CODEPAGE, key_field='KOL_SKL',
+def load_tables_dbf_uninet(path: Path):
+    warehous = BasePassDBF.get_data_from_pass(path / 'warehous.dbf', CODEPAGE, key_field='KOL_SKL',
                                               filter_group=FILTER_GROUP_KM_HB)
     print('warehous loaded')
 
-    invoice = BasePassDBF.get_data_from_pass(path + 'invoice.DBF', CODEPAGE, lambda row: row.INV)
+    invoice = BasePassDBF.get_data_from_pass(path / 'invoice.DBF', CODEPAGE, key_tabl=lambda row: row.INV)
     print('invoice loaded')
 
-    goods = BasePassDBF.get_data_from_pass(path + 'goods.dbf', CODEPAGE, key_tabl=lambda row: row.GROUP + str(row.COD),
+    goods = BasePassDBF.get_data_from_pass(path / 'goods.dbf', CODEPAGE, key_tabl=lambda row: row.GROUP + str(row.COD),
                                            key_field='SHOW_PRG',
                                            filter_group=FILTER_GROUP_KM_HB)
     print('goods loaded')
@@ -154,7 +162,7 @@ def load_tables_dbf_uninet(path: str):
     return warehous, invoice, goods
 
 
-def main_uninet(path: str, file_name_out: str, paht_out: str = None):
+def main_uninet(path: Path, file_name_out: str, paht_out: Path = None):
     """
     Формируем финальную таблицу для выдачи.
     :param path: путь к базе
@@ -170,7 +178,7 @@ def main_uninet(path: str, file_name_out: str, paht_out: str = None):
     # firm = {150: 'Uninet USA', 183: 'H&B'}
 
     # Initialize Base Data for Uninet
-    bd = BasePassDBF(path, CODEPAGE, FILTR_FIRM_UNINET_KM_HB, 'KOL_SKL', FILTER_GROUP_KM_HB)
+    bd = BasePassDBF(path, CODEPAGE, FILTR_FIRM_UNINET_KM_HB, 'KOL_SKL', 0, FILTER_GROUP_KM_HB)
     # Load tables
     bd.load_tables_dbf()
     warehous, invoice, goods, firm = bd.warehous, bd.invoice, bd.goods, bd.firm
@@ -213,14 +221,14 @@ def main_uninet(path: str, file_name_out: str, paht_out: str = None):
     uninet.sort(key=lambda j: (j[0], j[1]))
     uninet = header + uninet
 
-    if not os.path.isdir(paht_out):
+    if not Path.is_dir(paht_out):
         raise FileNotFoundError(f'Нет такого пути {paht_out}')
 
-    with open(paht_out + file_name_out, 'w') as f:
+    with open(paht_out / file_name_out, 'w') as f:
         ff = csv.writer(f, delimiter=',', lineterminator='\n')
         for row in uninet:
             ff.writerow(row)
-    print(f'Результат записан в {paht_out + file_name_out}')
+    print(f'Результат записан в {paht_out / file_name_out}')
 
 
 def cut_tabl(file_name, namber_row):
@@ -231,11 +239,11 @@ def cut_tabl(file_name, namber_row):
     :param namber_row: номер строки по которую обрезаем
     :return:
     """
-    if not os.path.isfile(PATH_BASE + file_name):
-        raise FileNotFoundError(f'Нет необходимого файла {PATH_BASE + file_name}')
-    f = dbf.Table(PATH_BASE + file_name, codepage=CODEPAGE)
+    if not Path.is_file(PATH_BASE / file_name):
+        raise FileNotFoundError(f'Нет необходимого файла {PATH_BASE / file_name}')
+    f = dbf.Table(PATH_BASE / file_name, codepage=CODEPAGE)
     with f.open() as ff:
-        g = ff.new(PATH_BASE_TEST + file_name)
+        g = ff.new(PATH_BASE_TEST / file_name)
         with g.open(mode=dbf.READ_WRITE) as gg:
             for j, row in enumerate(ff):
                 if j > namber_row:
@@ -260,17 +268,17 @@ def creat_tabl_related_master(file_name_master: str, file_name_slave: str, key_t
     :param key_tabl_master: lambda row: row['group'] + str(row['cod']) + row['inv'] Функция ключа для таблицы master
     :return:
     """
-    master = BasePassDBF.get_data_from_pass(PATH_BASE_TEST + file_name_master, CODEPAGE, key_tabl=key_tabl_master)
+    master = BasePassDBF.get_data_from_pass(PATH_BASE_TEST / file_name_master, CODEPAGE, key_tabl=key_tabl_master)
     master_keys = set(key_tabl(row) for row in master.values())
     # master_keys = {2, 183, 12, 7, 41, 39, 204, 9, 150, 50}  # all firms
     # print(master_keys)
 
-    if not os.path.isfile(PATH_BASE + file_name_slave):
-        raise FileNotFoundError(f'Нет необходимого файла {PATH_BASE + file_name_slave}')
+    if not Path.is_file(PATH_BASE / file_name_slave):
+        raise FileNotFoundError(f'Нет необходимого файла {PATH_BASE / file_name_slave}')
 
-    f = dbf.Table(PATH_BASE + file_name_slave, codepage=CODEPAGE)
+    f = dbf.Table(PATH_BASE / file_name_slave, codepage=CODEPAGE)
     with f.open() as ff:
-        g = ff.new(PATH_BASE_TEST + file_name_slave)
+        g = ff.new(PATH_BASE_TEST / file_name_slave)
         with g.open(mode=dbf.READ_WRITE) as gg:
             print(gg.field_names)
             for row in ff:
@@ -290,9 +298,9 @@ def main():
     if argvlen == 1:
         path_base = path_result = PATH_BASE_TEST
     elif argvlen == 2:
-        path_base = path_result = argv[1]
+        path_base = path_result = Path(argv[1])
     elif argvlen == 3:
-        path_base, path_result = argv[1], argv[2]
+        path_base, path_result = Path(argv[1]), Path(argv[2])
 
     # path_base, path_result = argv[1], argv[2]
     print('Путь к базе ', path_base)

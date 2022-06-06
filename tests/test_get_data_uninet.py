@@ -1,21 +1,18 @@
 import datetime
-import os
+from pathlib import Path
 from unittest import TestCase, main, skipUnless, skipIf
 
 from uninet import get_data_uninet
-from uninet.get_data_uninet import BasePassDBF
+from uninet.get_data_uninet import BasePassDBF, PATH_UNINET
 
 # Base settings ...
 # No real base
 PATH_BASE = ""
 
 # For real base
-# PATH_BASE = "d:\\bases\\work\\pass_base\\"
+# PATH_BASE = Path("d:/bases/work/pass_base")
 
-if os.getcwd().split('\\')[-1] == 'tests':
-    PATH_BASE_TEST = "dbf\\"
-else:
-    PATH_BASE_TEST = "tests\\dbf\\"
+PATH_BASE_TEST = Path(__file__).parent / "dbf"
 
 CODEPAGE = 'cp1251'
 FILTR_FIRM_UNINET_HB = (150, 183)
@@ -80,7 +77,7 @@ class TestBasePassDBF_B(TestCase):
     def test_get_warehous_grcod_filter_real(self):
         print('TestBasePassDBF_B', self.bd)
         _result_test1 = [{'inv': 'DBD8', 'group': 'KM', 'cod': 1182, 'kol': 50, 'price_usd': 6.31, 'price_inv': 4.25,
-                          'kol_skl': 22, 'kol_rezerv': 1, 'kol_sale': 27, 'kol_sf': 1, 'kol_otkaz': 0,
+                          'kol_skl': 20, 'kol_rezerv': 0, 'kol_sale': 29, 'kol_sf': 0, 'kol_otkaz': 0,
                           'code': 'KM1182DBD8', 'price_krb': 122.62, 'tax_tam': None, 'tax_ack': None, 'size_inv': '',
                           'size_skl': '', 'old_sale': 0},
                          {'inv': 'DBI7', 'group': 'KM', 'cod': 1182, 'kol': 25, 'price_usd': 5.98, 'price_inv': 4.12,
@@ -101,8 +98,8 @@ class TestBasePassDBF_B(TestCase):
 
     @skipUnless(PATH_BASE, 'Run for real base')
     def test_get_warehous_grcod_sum_real(self):
-        _result_test = {'group_cod': 'KM1182', 'kol': 75, 'kol_otkaz': 0, 'kol_rezerv': 1, 'kol_sale': 27, 'kol_sf': 1,
-                        'kol_skl': 47, 'old_sale': 0}
+        _result_test = {'group_cod': 'KM1182', 'kol': 75, 'kol_otkaz': 0, 'kol_rezerv': 0, 'kol_sale': 29, 'kol_sf': 0,
+                        'kol_skl': 45, 'old_sale': 0}
         _result_got = self.bd.get_warehous_grcod_sum('KM1182')
         self.assertEqual(_result_got, _result_test)
 
@@ -134,7 +131,7 @@ class TestBasePassDBF_get_data_from_pass(TestCase):
                    'tax_ack': None,
                    'tax_tam': None}
         self.assertEqual(
-            BasePassDBF.get_data_from_pass(PATH_BASE_TEST + 'warehous.dbf', CODEPAGE, key_field='KOL_SKL',
+            BasePassDBF.get_data_from_pass(PATH_BASE_TEST / 'warehous.dbf', CODEPAGE, key_field='KOL_SKL',
                                            filter_group=FILTER_GROUP_KM_HB)['KM1196DBL8'], _result)
 
     def test_goods(self):
@@ -179,7 +176,7 @@ class TestBasePassDBF_get_data_from_pass(TestCase):
                    'url': '',
                    'warranty': 0}
         self.assertEqual(
-            BasePassDBF.get_data_from_pass(PATH_BASE_TEST + 'goods.dbf', CODEPAGE,
+            BasePassDBF.get_data_from_pass(PATH_BASE_TEST / 'goods.dbf', CODEPAGE,
                                            key_tabl=lambda row: row.GROUP + str(row.COD), key_field='SHOW_PRG',
                                            filter_group=FILTER_GROUP_KM_HB)['KM1196'], _result)
 
@@ -209,7 +206,7 @@ class TestBasePassDBF_get_data_from_pass(TestCase):
                    'tax_tam': 0,
                    'user_id': 22}
         self.assertEqual(
-            BasePassDBF.get_data_from_pass(PATH_BASE_TEST + 'invoice.DBF', CODEPAGE, lambda row: row.INV)[
+            BasePassDBF.get_data_from_pass(PATH_BASE_TEST / 'invoice.DBF', CODEPAGE, lambda row: row.INV)[
                 'DBM1'], _result)
 
 
@@ -217,7 +214,7 @@ class Test_Main_uninet(TestCase):
     def test_main_uninet(self):
         file_name = 'stock_uninet.csv'
         get_data_uninet.main_uninet(PATH_BASE_TEST, file_name)
-        with open(PATH_BASE_TEST + file_name) as test, open(PATH_BASE_TEST + 'backup\\' + file_name) as pattern:
+        with open(PATH_BASE_TEST / file_name) as test, open(PATH_BASE_TEST / 'backup' / file_name) as pattern:
             file_test = test.read()
             file_pattern = pattern.read()
 
@@ -229,7 +226,7 @@ class Test_Main_uninet_REAL(TestCase):
     def test_main_uninet(self):
         file_name = 'stock_uninet.csv'
         get_data_uninet.main_uninet(PATH_BASE, file_name)
-        with open(PATH_BASE + file_name) as test, open(PATH_BASE + 'backup\\' + file_name) as pattern:
+        with open(PATH_BASE / file_name) as test, open(PATH_BASE / 'backup' / file_name) as pattern:
             file_test = test.read()
             file_pattern = pattern.read()
 

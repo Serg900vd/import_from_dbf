@@ -6,7 +6,7 @@ from pathlib import Path
 PATH_PROM = Path(__file__).parent
 
 # Test base setting
-PATH_BASE_TEST = "..\\tests\\dbf\\"
+PATH_BASE_TEST = Path("../tests/dbf/")
 
 # For skipping tests that hit the real API server.
 SKIP_REAL = True
@@ -32,7 +32,6 @@ else:
     # ID на Prom последнего продукта.
     # Обновить при добавлении продуктов в каталог!
     LAST_PRODUCT_ID = config_prom['LAST_PRODUCT_ID']
-
 
 if __name__ == '__main__':
     print(f'HOST: {HOST}')

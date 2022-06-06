@@ -58,7 +58,7 @@ def read_products_prom() -> List[dict]:
 
 def get_prom_chang_list(products_prom: list) -> list:
     # Загружаем из базы dbf таблицы warehous.dbf, invoice.DBF, goods.dbf, firm.dbf
-    bd = BasePassDBF(PATH_BASE, CODEPAGE, key_field_warehous='KOL_SKL')
+    bd = BasePassDBF(PATH_BASE, CODEPAGE, key_field_warehous='KOL_SKL', key_field_goods='SHOW_SITE')
     bd.load_tables_dbf()
 
     # Проходим по списку товаров, находим с изменениями
@@ -76,7 +76,7 @@ def get_prom_chang_list(products_prom: list) -> list:
                 status = NOT_ON_DISPLAY
             price = bd.goods[group_cod]['price_sale']
             price_d = bd.goods[group_cod]['price_d']
-        except:
+        except KeyError:
             status = NOT_ON_DISPLAY
             price = p['price']
             price_d = p['prices'][0]['price']
