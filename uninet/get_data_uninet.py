@@ -3,7 +3,7 @@
 import csv
 from pathlib import Path
 from sys import argv
-from typing import List
+from typing import List, Union
 
 import dbf
 
@@ -18,7 +18,10 @@ FILTER_GROUP_KM_HB = ('KM', 'HB')
 
 
 class BasePassDBF:
-    def __init__(self, path_base, codepage, filter_id_firm=None, key_field_warehous=0, key_field_goods=0,
+    def __init__(self, path_base, codepage,
+                 filter_id_firm=None,
+                 key_field_warehous: Union[str, int] = 0,
+                 key_field_goods: Union[str, int] = 0,
                  filter_group: tuple = None):
         self.path_base = path_base
         self.codepage = codepage
@@ -63,7 +66,7 @@ class BasePassDBF:
 
     @classmethod
     def get_data_from_pass(cls, file_name: Path, codepage: str, key_tabl=lambda row: row.GROUP + str(row.COD) + row.INV,
-                           key_field: str = 0,
+                           key_field: Union[str, int] = 0,
                            filter_group: tuple = None) -> dict:
         """
         Возвращает словарь по ключу key_tabl с вложенными строками в виде словаря {поле : значение ...}
@@ -187,7 +190,7 @@ def main_uninet(path: Path, file_name_out: str, paht_out: Path = None):
     header = [('товарная_группа', 'код_товара', 'код_прихода', 'накладная', 'дата', 'поставщик', 'модель',
                'наименование', 'фирма', 'приход', 'склад', 'свободно', 'резерв', 'выписано', 'оплачено', 'usd_закупка',
                'грн_закупка', 'usd_a', 'usd_b', 'usd_c', 'usd_d', 'usd_розница')]
-    count = 0
+    # count = 0
     for group_cod_inv, row in warehous.items():
         inv = row['inv']
         group_cod = row['group'] + str(row['cod'])
@@ -293,11 +296,9 @@ def creat_tabl_related_master(file_name_master: str, file_name_slave: str, key_t
 def main():
     # Для создания .exe запустить:
     # pyinstaller get_data_uninet.py --onefile
-
+    path_base = path_result = PATH_BASE_TEST
     argvlen = len(argv)
-    if argvlen == 1:
-        path_base = path_result = PATH_BASE_TEST
-    elif argvlen == 2:
+    if argvlen == 2:
         path_base = path_result = Path(argv[1])
     elif argvlen == 3:
         path_base, path_result = Path(argv[1]), Path(argv[2])
