@@ -96,6 +96,7 @@ def write_products_prom(products_changed_list: list):
     """
     Записываем продукты с изменениями на Prom
     """
+    # Для теста ValueError
     _products_changed_list = [{'external_id': 'test_HB770',
                                'id': 1616486427,
                                'presence': 'ERRRORnot_available',
@@ -133,6 +134,7 @@ def main():
 
 
 if __name__ == '__main__':
+    #  prom_package
     #  pyinstaller update_stock_on_prom.py --onefile
 
     main()
