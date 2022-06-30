@@ -5,11 +5,14 @@ from pathlib import Path
 # Read the start path
 PATH_PROM = Path(__file__).parent
 
+# To compile .exe file
+# PATH_PROM = Path.cwd()
+
 # Test base setting
 PATH_BASE_TEST = Path("../tests/dbf/")
 
 # For skipping tests that hit the real API server.
-SKIP_REAL = True
+SKIP_REAL = False
 
 if SKIP_REAL:
     HOST = 'my.prom.ua'
