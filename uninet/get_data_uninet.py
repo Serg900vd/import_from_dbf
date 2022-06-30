@@ -77,7 +77,7 @@ class BasePassDBF:
         :param filter_group: ('KM', 'HB') кортеж с значениями поля GROUP которые необходимо отфильтровать
         :return: {key_tabl : {'group': 'KM', 'cod': 750, 'groupid': 695, ...(все поля таблицы)}, ...}
         """
-        if not Path.is_file(file_name):
+        if not file_name.is_file():
             raise FileNotFoundError(f'Нет необходимого файла {file_name}')
         result = {}
         with dbf.Table(str(file_name), codepage=codepage) as f:
