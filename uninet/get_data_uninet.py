@@ -3,7 +3,7 @@
 import csv
 from pathlib import Path
 from sys import argv
-from typing import List, Union
+from typing import List, Tuple
 
 import dbf
 
@@ -18,11 +18,11 @@ FILTER_GROUP_KM_HB = ('KM', 'HB')
 
 
 class BasePassDBF:
-    def __init__(self, path_base, codepage,
-                 filter_id_firm=None,
-                 key_field_warehous: Union[str, int] = 0,
-                 key_field_goods: Union[str, int] = 0,
-                 filter_group: tuple = None):
+    def __init__(self, path_base: Path, codepage: str,
+                 filter_id_firm: Tuple[int, ...] = None,
+                 key_field_warehous: str | int = 0,
+                 key_field_goods: str | int = 0,
+                 filter_group: Tuple[str, ...] = None):
         self.path_base = path_base
         self.codepage = codepage
         self.filter_id_firm = filter_id_firm
@@ -42,7 +42,7 @@ class BasePassDBF:
                f'self.filter_group: {self.filter_group}]'
         return text
 
-    def set_firm(self, filter_id_firm=None) -> bool:
+    def set_firm(self, filter_id_firm: Tuple[int, ...] = None) -> bool:
         """
         Возвращает, из файла firm.dbf, словарь в котором ключ поле FIRM, значение поле FIRM_TXT
         Результат передает в параметр self.firm
@@ -66,7 +66,7 @@ class BasePassDBF:
 
     @classmethod
     def get_data_from_pass(cls, file_name: Path, codepage: str, key_tabl=lambda row: row.GROUP + str(row.COD) + row.INV,
-                           key_field: Union[str, int] = 0,
+                           key_field: str | int = 0,
                            filter_group: tuple = None) -> dict:
         """
         Возвращает словарь по ключу key_tabl с вложенными строками в виде словаря {поле : значение ...}
@@ -165,7 +165,7 @@ def load_tables_dbf_uninet(path: Path):
     return warehous, invoice, goods
 
 
-def main_uninet(path: Path, file_name_out: str, paht_out: Path = None):
+def main_uninet(path: Path | None, file_name_out: str, paht_out: Path = None):
     """
     Формируем финальную таблицу для выдачи.
     :param path: путь к базе
@@ -234,7 +234,7 @@ def main_uninet(path: Path, file_name_out: str, paht_out: Path = None):
     print(f'Результат записан в {paht_out / file_name_out}')
 
 
-def cut_tabl(file_name, namber_row):
+def cut_tabl(file_name: Path, namber_row: int):
     """
     Обрезка файлов для тестов
         # cut_tabl('invoice.DBF', 13600)
@@ -254,7 +254,7 @@ def cut_tabl(file_name, namber_row):
     print(f'В файле {file_name} записи с 0 по {namber_row} удалены. \n Результат в дирректории {PATH_BASE_TEST}')
 
 
-def creat_tabl_related_master(file_name_master: str, file_name_slave: str, key_tabl,
+def creat_tabl_related_master(file_name_master: Path, file_name_slave: Path, key_tabl,
                               key_tabl_master=lambda row: row.GROUP + str(row.COD) + row.INV):
     """
         Создание файла file_name_slave cо всеми записями с зависимостями от file_name_master

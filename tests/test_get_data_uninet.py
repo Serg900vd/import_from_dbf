@@ -3,11 +3,11 @@ from pathlib import Path
 from unittest import TestCase, main, skipUnless, skipIf
 
 from uninet import get_data_uninet
-from uninet.get_data_uninet import BasePassDBF, PATH_UNINET
+from uninet.get_data_uninet import BasePassDBF
 
 # Base settings ...
 # No real base
-PATH_BASE = ""
+PATH_BASE = None
 
 # For real base
 # PATH_BASE = Path("d:/bases/work/pass_base")
@@ -15,11 +15,11 @@ PATH_BASE = ""
 PATH_BASE_TEST = Path(__file__).parent / "dbf"
 
 CODEPAGE = 'cp1251'
-FILTR_FIRM_UNINET_HB = (150, 183)
+FILTER_FIRM_UNINET_HB = (150, 183)
 FILTER_GROUP_KM_HB = ('KM', 'HB')
 
 
-class TestBasePassDBF_A(TestCase):
+class TestBasePassDBFaA(TestCase):
     def setUp(self) -> None:
         # Initialize Base Data
         self.bd = BasePassDBF(PATH_BASE_TEST, CODEPAGE)
@@ -35,7 +35,7 @@ class TestBasePassDBF_A(TestCase):
         self.assertEqual(self.bd.firm, {7: 'Katun'})
 
 
-class TestBasePassDBF_B(TestCase):
+class TestBasePassDBFbB(TestCase):
     bd = None
 
     @classmethod
@@ -109,7 +109,7 @@ class TestBasePassDBF_B(TestCase):
         self.assertEqual(self.bd.is_product_on_stock('KM1175'), False)
 
 
-class TestBasePassDBF_get_data_from_pass(TestCase):
+class TestBasePassDBFGetDataFromPass(TestCase):
     # The method get_data_from_pass() is @classmethod
     def test_warehous(self):
         _result = {'cod': 1196,
@@ -210,7 +210,7 @@ class TestBasePassDBF_get_data_from_pass(TestCase):
                 'DBM1'], _result)
 
 
-class Test_Main_uninet(TestCase):
+class TestMainUninet(TestCase):
     def test_main_uninet(self):
         file_name = 'stock_uninet.csv'
         get_data_uninet.main_uninet(PATH_BASE_TEST, file_name)
@@ -222,11 +222,11 @@ class Test_Main_uninet(TestCase):
 
 
 @skipUnless(PATH_BASE, 'Run for real base')
-class Test_Main_uninet_REAL(TestCase):
+class TestMainUninetREAL(TestCase):
     def test_main_uninet(self):
         file_name = 'stock_uninet.csv'
         get_data_uninet.main_uninet(PATH_BASE, file_name)
-        with open(PATH_BASE / file_name) as test, open(PATH_BASE / 'backup' / file_name) as pattern:
+        with (PATH_BASE / file_name).open() as test, (PATH_BASE / 'backup' / file_name).open() as pattern:
             file_test = test.read()
             file_pattern = pattern.read()
 
