@@ -93,6 +93,10 @@ class PromClient:
 
 
 def main_read():
+    """
+    Для разработки. Надо УДАЛИТЬ!
+    :return:
+    """
     # Initialize Client
     if not AUTH_TOKEN_PRODUCTS:
         raise Exception('Sorry, there\'s no any AUTH_TOKEN_PRODUCTS!')
@@ -124,6 +128,10 @@ def main_read():
 
 
 def main_write():
+    """
+    Для разработки. Надо УДАЛИТЬ!
+    :return:
+    """
     # Initialize Client
     if not AUTH_TOKEN_PRODUCTS:
         raise Exception('Sorry, there\'s no any AUTH_TOKEN_PRODUCTS!')
