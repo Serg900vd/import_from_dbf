@@ -21,12 +21,12 @@ class REQUESTError(Exception):
 
 class PromClient:
 
-    def __init__(self, host, token):
+    def __init__(self, host: str, token: str):
         self.host = host
         self.token = token
         self.connection = None
 
-    def make_request(self, method, url, body=None):
+    def make_request(self, method: str, url: str, body: list | dict = None) -> dict:
 
         headers = {'Authorization': 'Bearer {}'.format(self.token),
                    'Content-type': 'application/json'}
@@ -40,8 +40,8 @@ class PromClient:
             if response.status != 200:
                 raise HTTPError('{}: {}'.format(response.status, response.reason))
             response_data = response.read()
-        except:
-            raise
+        # except:
+        #     raise
         finally:
             if self.connection:
                 self.connection.close()
@@ -66,23 +66,23 @@ class PromClient:
                   f'group_id={group_id}' * bool(group_id)
         return self.make_request(method, url)
 
-    def get_product_id(self, id: int):
-        url = f'/api/v1/products/{id}'
+    def get_product_id(self, _id: int) -> dict:
+        url = f'/api/v1/products/{_id}'
         method = 'GET'
         return self.make_request(method, url)
 
-    def get_product_external_id(self, external_id: str):
+    def get_product_external_id(self, external_id: str) -> dict:
         url = f'/api/v1/products/by_external_id/{external_id}'
         method = 'GET'
         return self.make_request(method, url)
 
-    def set_products_list_id(self, products: list):
+    def set_products_list_id(self, products: list) -> dict:
         url = f'/api/v1/products/edit'
         method = 'POST'
         body = products
         return self.make_request(method, url, body)
 
-    def set_products_list_external_id(self, products_external_id: list):
+    def set_products_list_external_id(self, products_external_id: list) -> dict:
         """
         "id": "string",  <--- product_external_id
         """
