@@ -1,5 +1,6 @@
 #
 import pprint
+from dataclasses import dataclass, field, asdict
 from typing import List
 
 from prom_package.api_prom import PromClient
@@ -53,12 +54,23 @@ def read_products_prom() -> List[dict]:
     return products_prom
 
 
-def get_prom_chang_list(products_prom: list) -> list:
-    # Загружаем из базы dbf таблицы warehous.dbf, invoice.DBF, goods.dbf, firm.dbf
+def load_bd() -> BasePassDBF:
+    """
+    Загружаем из базы dbf таблицы warehous.dbf, invoice.DBF, goods.dbf, firm.dbf
+    :return:
+    """
     bd = BasePassDBF(PATH_BASE, CODEPAGE, key_field_warehous='KOL_SKL', key_field_goods='SHOW_SITE')
     bd.load_tables_dbf()
+    return bd
 
-    # Проходим по списку товаров, находим с изменениями
+
+def get_prom_chang_list(bd: BasePassDBF, products_prom: list) -> list:
+    """
+    Проходим по списку товаров, находим с изменениями.
+    :param bd:
+    :param products_prom:
+    :return:
+    """
     products_chang_list = []
     for p in products_prom:
         product_prom = {'id': p['id'], 'external_id': p['external_id'], 'presence': p['presence'], 'price': p['price'],
@@ -108,10 +120,14 @@ def write_products_prom(products_changed_list: list) -> bool:
 def main():
     # Получаем актуальный список товаров с сайта prom.ua
     last_id = LAST_PRODUCT_ID
+    # last_id = 637872504  # Gets a list with 21 items only
     products_prom = read_products_prom(last_id)
 
+    # Загружаем из базы dbf таблицы warehous.dbf, invoice.DBF, goods.dbf, firm.dbf
+    bd = load_bd()
+
     # Находим продукты с изменениями
-    products_changed_list = get_prom_chang_list(products_prom)
+    products_changed_list = get_prom_chang_list(bd, products_prom)
     pprint.pprint(f'products_changed_list = {products_changed_list}')
 
     # Записываем продукты с изменениями на Prom

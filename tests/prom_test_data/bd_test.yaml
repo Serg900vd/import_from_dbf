@@ -1,0 +1,687 @@
+goods:
+  HB368:
+    cod: 368
+    cond_id: 0
+    cond_str: '          '
+    curr: '   '
+    dsn_id: 0
+    firm: 183
+    group: HB
+    groupid: 661
+    kpr1: 0.0
+    kpr2: 0.0
+    kpr3: 0.0
+    kpr4: 0.0
+    kpr5: 0.0
+    label_txt: '                              '
+    mark: ' '
+    min_qty: 0
+    model: 'NY-WC423            '
+    model_txt: "Xerox WC 423/428 \u0427\u0456\u043F \u043A\u0430\u0440\u0442\u0440\
+      \u0456\u0434\u0436\u0430 Smart chip (113R00634)                            \
+      \                   "
+    price_a: 0.0
+    price_b: 2.8
+    price_bas: 0.0
+    price_c: 2.9
+    price_d: 3.0
+    price_dm: 0.0
+    price_opt: 0.0
+    price_sale: 4.0
+    prod_code: '8443991000  '
+    profit: 0
+    public_mod: "Xerox WC 423/428 \u0427\u0438\u043F \u043A\u0430\u0440\u0442\u0440\
+      \u0438\u0434\u0436\u0430 Smart chip (113R00634)"
+    public_txt: ''
+    show_prg: true
+    show_site: true
+    size: 0
+    tax_ack: 0
+    tax_tam: 0
+    testico: 1
+    url: ''
+    warranty: 0
+  KM377:
+    cod: 377
+    cond_id: 0
+    cond_str: '          '
+    curr: '   '
+    dsn_id: 0
+    firm: 150
+    group: KM
+    groupid: 505
+    kpr1: 0.0
+    kpr2: 0.0
+    kpr3: 0.0
+    kpr4: 0.0
+    kpr5: 0.0
+    label_txt: '                              '
+    mark: ' '
+    min_qty: 0
+    model: '5662                '
+    model_txt: "Brother TN 04, HL 2700 CN, MFC 9420 CN \u0427\u0435\u0440\u0432\u043E\
+      \u043D\u0438\u0439 \u0422\u043E\u043D\u0435\u0440 210g/6600\u0441\u0442\u043E\
+      \u0440 Magenta toner                   "
+    price_a: 0.0
+    price_b: 17.0
+    price_bas: 0.0
+    price_c: 17.5
+    price_d: 18.0
+    price_dm: 0.0
+    price_opt: 0.0
+    price_sale: 20.0
+    prod_code: '3707909000  '
+    profit: 0
+    public_mod: "Brother TN 04, HL 2700 CN, MFC 9420 CN \u041A\u0440\u0430\u0441\u043D\
+      \u044B\u0439 \u0422\u043E\u043D\u0435\u0440 210g/6600\u0441\u0442\u0440 Magenta\
+      \ toner                                        "
+    public_txt: "\u0422\u043E\u043D\u0435\u0440 Absolute Black\xAE \u0434\u043B\u044F\
+      \ Brother\xAE HL-2700 CN \u041A\u0440\u0430\u0441\u043D\u044B\u0439 OEM TN-04\u041C\
+      \ \u0442\u043E\u043D\u0435\u0440 \u043A\u0430\u0440\u0442\u0440\u0438\u0434\u0436\
+      \ \u0440\u0430\u0441\u0441\u0447\u0438\u0442\u0430\u043D \u043D\u0430 6,600\
+      \ \u0441\u0442\u0440\u0430\u043D\u0438\u0446 \u043F\u0440\u0438 5% \u0437\u0430\
+      \u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0438 \u0441\u0442\u0440\u0430\u043D\
+      \u0438\u0446\u044B. \u0427\u0438\u043F \u0442\u0440\u0435\u0431\u0443\u0435\u0442\
+      \u0441\u044F. \u041F\u0440\u043E\u0438\u0437\u0432\u0435\u0434\u0435\u043D \u0438\
+      \ \u0440\u0430\u0441\u0444\u0430\u0441\u043E\u0432\u0430\u043D \u0432 \u0421\
+      \u0428\u0410."
+    show_prg: true
+    show_site: true
+    size: 0
+    tax_ack: 0
+    tax_tam: 0
+    testico: 1
+    url: ''
+    warranty: 0
+  MK105:
+    cod: 105
+    cond_id: 0
+    cond_str: '          '
+    curr: '   '
+    dsn_id: 0
+    firm: 41
+    group: MK
+    groupid: 787
+    kpr1: 0.0
+    kpr2: 0.0
+    kpr3: 0.0
+    kpr4: 0.0
+    kpr5: 0.0
+    label_txt: '                              '
+    mark: ' '
+    min_qty: 0
+    model: 'A8DA150             '
+    model_txt: "C258/C308/C368 TN-324K \u0422\u043E\u043D\u0435\u0440-\u043A\u0430\
+      \u0440\u0442\u0440\u0456\u0434\u0436 \u0447\u043E\u0440\u043D\u0438\u0439 28000\u0441\
+      \u0442\u043E\u0440                                              "
+    price_a: 0.0
+    price_b: 0.0
+    price_bas: 0.0
+    price_c: 0.0
+    price_d: 49.0
+    price_dm: 0.0
+    price_opt: 0.0
+    price_sale: 54.0
+    prod_code: '3707909000  '
+    profit: 0
+    public_mod: "TN-324K \u041E\u0440\u0438\u0433 \u0422\u043E\u043D\u0435\u0440-\u043A\
+      \u0430\u0440\u0442\u0440\u0438\u0434\u0436 \u0447\u0435\u0440\u043D\u044B\u0439\
+      \ 28000\u0441\u0442\u0440 Konica-Minolta Bizhub C258/C308/C368"
+    public_txt: "TN-324K \u041E\u0440\u0438\u0433 \u0422\u043E\u043D\u0435\u0440-\u043A\
+      \u0430\u0440\u0442\u0440\u0438\u0434\u0436 \u0447\u0435\u0440\u043D\u044B\u0439\
+      \ 28000\u0441\u0442\u0440 Konica-Minolta Bizhub C258/C308/C368 TN324K"
+    show_prg: true
+    show_site: true
+    size: 0
+    tax_ack: 0
+    tax_tam: 0
+    testico: 1
+    url: ''
+    warranty: 0
+  MK106:
+    cod: 106
+    cond_id: 0
+    cond_str: '          '
+    curr: '   '
+    dsn_id: 0
+    firm: 41
+    group: MK
+    groupid: 787
+    kpr1: 0.0
+    kpr2: 0.0
+    kpr3: 0.0
+    kpr4: 0.0
+    kpr5: 0.0
+    label_txt: '                              '
+    mark: ' '
+    min_qty: 0
+    model: 'A8DA250             '
+    model_txt: "C258/C308/C368 TN-324Y \u0422\u043E\u043D\u0435\u0440-\u043A\u0430\
+      \u0440\u0442\u0440\u0456\u0434\u0436 \u0436\u043E\u0432\u0442\u0438\u0439 26000\u0441\
+      \u0442\u043E\u0440                                              "
+    price_a: 0.0
+    price_b: 0.0
+    price_bas: 0.0
+    price_c: 0.0
+    price_d: 124.0
+    price_dm: 0.0
+    price_opt: 0.0
+    price_sale: 129.0
+    prod_code: '3707909000  '
+    profit: 0
+    public_mod: "TN-324Y \u041E\u0440\u0438\u0433 \u0422\u043E\u043D\u0435\u0440-\u043A\
+      \u0430\u0440\u0442\u0440\u0438\u0434\u0436 \u0436\u0435\u043B\u0442\u044B\u0439\
+      \ 26000\u0441\u0442\u0440 Konica-Minolta Bizhub C258/C308/C368"
+    public_txt: "TN-324Y \u041E\u0440\u0438\u0433 \u0422\u043E\u043D\u0435\u0440-\u043A\
+      \u0430\u0440\u0442\u0440\u0438\u0434\u0436 \u0436\u0435\u043B\u0442\u044B\u0439\
+      \ 26000\u0441\u0442\u0440 Konica-Minolta Bizhub C258/C308/C368 TN324Y"
+    show_prg: true
+    show_site: true
+    size: 0
+    tax_ack: 0
+    tax_tam: 0
+    testico: 1
+    url: ''
+    warranty: 0
+  MK107:
+    cod: 107
+    cond_id: 0
+    cond_str: '          '
+    curr: '   '
+    dsn_id: 0
+    firm: 41
+    group: MK
+    groupid: 787
+    kpr1: 0.0
+    kpr2: 0.0
+    kpr3: 0.0
+    kpr4: 0.0
+    kpr5: 0.0
+    label_txt: '                              '
+    mark: ' '
+    min_qty: 0
+    model: 'A8DA350             '
+    model_txt: "C258/C308/C368 TN-324M \u0422\u043E\u043D\u0435\u0440-\u043A\u0430\
+      \u0440\u0442\u0440\u0456\u0434\u0436 \u0447\u0435\u0440\u0432\u043E\u043D\u0438\
+      \u0439 26000\u0441\u0442\u043E\u0440                                       \
+      \     "
+    price_a: 0.0
+    price_b: 0.0
+    price_bas: 0.0
+    price_c: 0.0
+    price_d: 124.0
+    price_dm: 0.0
+    price_opt: 0.0
+    price_sale: 129.0
+    prod_code: '3707909000  '
+    profit: 0
+    public_mod: "TN-324M \u041E\u0440\u0438\u0433 \u0422\u043E\u043D\u0435\u0440-\u043A\
+      \u0430\u0440\u0442\u0440\u0438\u0434\u0436 \u043A\u0440\u0430\u0441\u043D\u044B\
+      \u0439 26000\u0441\u0442\u0440 Konica-Minolta Bizhub C258/C308/C368"
+    public_txt: "TN-324M \u041E\u0440\u0438\u0433 \u0422\u043E\u043D\u0435\u0440-\u043A\
+      \u0430\u0440\u0442\u0440\u0438\u0434\u0436 \u043A\u0440\u0430\u0441\u043D\u044B\
+      \u0439 26000\u0441\u0442\u0440 Konica-Minolta Bizhub C258/C308/C368 TN324M"
+    show_prg: true
+    show_site: true
+    size: 0
+    tax_ack: 0
+    tax_tam: 0
+    testico: 1
+    url: ''
+    warranty: 0
+  MK108:
+    cod: 108
+    cond_id: 0
+    cond_str: '          '
+    curr: '   '
+    dsn_id: 0
+    firm: 41
+    group: MK
+    groupid: 787
+    kpr1: 0.0
+    kpr2: 0.0
+    kpr3: 0.0
+    kpr4: 0.0
+    kpr5: 0.0
+    label_txt: '                              '
+    mark: ' '
+    min_qty: 0
+    model: 'A8DA450             '
+    model_txt: "C258/C308/C368 TN-324C \u0422\u043E\u043D\u0435\u0440-\u043A\u0430\
+      \u0440\u0442\u0440\u0456\u0434\u0436 \u0441\u0438\u043D\u0456\u0439 26000\u0441\
+      \u0442\u043E\u0440                                               "
+    price_a: 0.0
+    price_b: 0.0
+    price_bas: 0.0
+    price_c: 0.0
+    price_d: 124.0
+    price_dm: 0.0
+    price_opt: 0.0
+    price_sale: 129.0
+    prod_code: '3707909000  '
+    profit: 0
+    public_mod: "TN-324C \u041E\u0440\u0438\u0433 \u0422\u043E\u043D\u0435\u0440-\u043A\
+      \u0430\u0440\u0442\u0440\u0438\u0434\u0436 \u0441\u0438\u043D\u0438\u0439 26000\u0441\
+      \u0442\u0440 Konica-Minolta Bizhub C258/C308/C368"
+    public_txt: "TN-324C \u041E\u0440\u0438\u0433 \u0422\u043E\u043D\u0435\u0440-\u043A\
+      \u0430\u0440\u0442\u0440\u0438\u0434\u0436 \u0441\u0438\u043D\u0438\u0439 26000\u0441\
+      \u0442\u0440 Konica-Minolta Bizhub C258/C308/C368 TN324C"
+    show_prg: true
+    show_site: true
+    size: 0
+    tax_ack: 0
+    tax_tam: 0
+    testico: 1
+    url: ''
+    warranty: 0
+  OL1:
+    cod: 1
+    cond_id: 0
+    cond_str: '          '
+    curr: '   '
+    dsn_id: 0
+    firm: 204
+    group: OL
+    groupid: 640
+    kpr1: 0.0
+    kpr2: 0.0
+    kpr3: 0.0
+    kpr4: 0.0
+    kpr5: 0.0
+    label_txt: '                              '
+    mark: ' '
+    min_qty: 0
+    model: 'K01C                '
+    model_txt: "\u041E\u0447\u0438\u0449\u0443\u0432\u0430\u0447 \u0456\u043E\u043D\
+      \u0456\u0437\u0430\u0442\u043E\u0440 \u043F\u043E\u0432\u0456\u0442\u0440\u044F\
+      \ (2 \u0432 1), \u043F\u043B\u043E\u0449\u0430 \u043F\u0440\u0438\u043C\u0456\
+      \u0449\u0435\u043D\u043D\u044F \u0434\u043E 25 \u043C2, \u0423\u0424-\u043B\u0430\
+      \u043C\u043F\u0430, \u043F\u0443\u043B\u044C\u0442 \u0414\u0423            \
+      \       "
+    price_a: 0.0
+    price_b: 88.28
+    price_bas: 0.0
+    price_c: 93.79
+    price_d: 99.31
+    price_dm: 0.0
+    price_opt: 0.0
+    price_sale: 110.35
+    prod_code: '8415830090  '
+    profit: 0
+    public_mod: "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u0435\u043B\u044C-\u0438\
+      \u043E\u043D\u0438\u0437\u0430\u0442\u043E\u0440 \u0432\u043E\u0437\u0434\u0443\
+      \u0445\u0430, 25 \u043C2, \u0423\u0424-\u043B\u0430\u043C\u043F\u0430, \u043F\
+      \u0443\u043B\u044C\u0442 \u0414\u0423"
+    public_txt: "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u0435\u043B\u044C + \u0438\
+      \u043E\u043D\u0438\u0437\u0430\u0442\u043E\u0440 \u0432\u043E\u0437\u0434\u0443\
+      \u0445\u0430 (2 \u0432 1), \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\
+      \u043D\u0430\u044F \u043F\u043B\u043E\u0449\u0430\u0434\u044C \u043F\u043E\u043C\
+      \u0435\u0449\u0435\u043D\u0438\u044F: 25 \u043C2, \u0423\u0424-\u043B\u0430\u043C\
+      \u043F\u0430, \u043F\u0443\u043B\u044C\u0442 \u0414\u0423\r\n\u041A\u0430\u0447\
+      \u0435\u0441\u0442\u0432\u043E: \u0432\u044B\u0441\u043E\u043A\u043E\u043F\u0440\
+      \u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044C\u043D\u044B\
+      \u0439 \u0444\u0438\u043B\u044C\u0442\u0440 HEPA \u043E\u0431\u0435\u0441\u043F\
+      \u0435\u0447\u0438\u0432\u0430\u0435\u0442 \u0447\u0438\u0441\u0442\u044B\u0439\
+      \ \u0432\u043E\u0437\u0434\u0443\u0445\r\n\u042D\u0444\u0444\u0435\u043A\u0442\
+      \u0438\u0432\u043D\u043E\u0441\u0442\u044C: \u043D\u0430\u0434\u0435\u0436\u043D\
+      \u044B\u0439, \u044D\u043A\u043E\u043D\u043E\u043C\u0438\u0447\u043D\u044B\u0439\
+      \ \u0438 \u0442\u0438\u0445\u0438\u0439 \u0434\u0432\u0438\u0433\u0430\u0442\
+      \u0435\u043B\u044C \u0444\u0438\u0440\u043C\u044B GREE\r\n\u041C\u0430\u043B\
+      \u044B\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C \u0448\u0443\u043C\u0430\
+      : 18 \u0434\u0411 ~ 55 \u0434\u0411 ( \u043D\u0435 \u0431\u0443\u0434\u0435\u0442\
+      \ \u0431\u0435\u0441\u043F\u043E\u043A\u043E\u0438\u0442\u044C \u0412\u0430\u0448\
+      \ \u0441\u043E\u043D)"
+    show_prg: true
+    show_site: true
+    size: 0
+    tax_ack: 0
+    tax_tam: 0
+    testico: 7
+    url: ''
+    warranty: 12
+  OL2:
+    cod: 2
+    cond_id: 0
+    cond_str: '          '
+    curr: '   '
+    dsn_id: 0
+    firm: 204
+    group: OL
+    groupid: 640
+    kpr1: 0.0
+    kpr2: 0.0
+    kpr3: 0.0
+    kpr4: 0.0
+    kpr5: 0.0
+    label_txt: '                              '
+    mark: ' '
+    min_qty: 0
+    model: 'K02B                '
+    model_txt: "\u041E\u0447\u0438\u0449\u0443\u0432\u0430\u0447 \u0437\u0432\u043E\
+      \u043B\u043E\u0436\u0443\u0432\u0430\u0447 \u0456\u043E\u043D\u0456\u0437\u0430\
+      \u0442\u043E\u0440 \u043F\u043E\u0432\u0456\u0442\u0440\u044F (3 \u0432 1),\
+      \ \u043F\u043B\u043E\u0449\u0430 \u043F\u0440\u0438\u043C\u0456\u0449\u0435\u043D\
+      \u043D\u044F \u0434\u043E 36 \u043C2, \u0423\u0424-\u043B\u0430\u043C\u043F\u0430\
+      , \u043F\u0443\u043B\u044C\u0442 \u0414\u0423        "
+    price_a: 0.0
+    price_b: 140.58
+    price_bas: 0.0
+    price_c: 149.37
+    price_d: 158.16
+    price_dm: 0.0
+    price_opt: 0.0
+    price_sale: 175.73
+    prod_code: '8415830090  '
+    profit: 0
+    public_mod: "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u0435\u043B\u044C-\u0443\
+      \u0432\u043B\u0430\u0436\u043D\u0438\u0442\u0435\u043B\u044C-\u0438\u043E\u043D\
+      \u0438\u0437\u0430\u0442\u043E\u0440 \u0432\u043E\u0437\u0434\u0443\u0445\u0430\
+      \ (3 \u0432 1), 36 \u043C2, \u0423\u0424-\u043B\u0430\u043C\u043F\u0430, \u043F\
+      \u0443\u043B\u044C\u0442 \u0414\u0423"
+    public_txt: "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u0435\u043B\u044C+\u0443\
+      \u0432\u043B\u0430\u0436\u043D\u0438\u0442\u0435\u043B\u044C+\u0438\u043E\u043D\
+      \u0438\u0437\u0430\u0442\u043E\u0440 \u0432\u043E\u0437\u0434\u0443\u0445\u0430\
+      \ (3 \u0432 1), \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\
+      \u0430\u044F \u043F\u043B\u043E\u0449\u0430\u0434\u044C \u043F\u043E\u043C\u0435\
+      \u0449\u0435\u043D\u0438\u044F: 36 \u043C2, \u0423\u0424-\u043B\u0430\u043C\u043F\
+      \u0430, \u043F\u0443\u043B\u044C\u0442 \u0414\u0423\r\n\u041A\u0430\u0447\u0435\
+      \u0441\u0442\u0432\u043E: \u0432\u044B\u0441\u043E\u043A\u043E\u043F\u0440\u043E\
+      \u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439\
+      \ \u0444\u0438\u043B\u044C\u0442\u0440 HEPA \u043E\u0431\u0435\u0441\u043F\u0435\
+      \u0447\u0438\u0432\u0430\u0435\u0442 \u0447\u0438\u0441\u0442\u044B\u0439 \u0432\
+      \u043E\u0437\u0434\u0443\u0445\r\n\u042D\u0444\u0444\u0435\u043A\u0442\u0438\
+      \u0432\u043D\u043E\u0441\u0442\u044C: \u043D\u0430\u0434\u0435\u0436\u043D\u044B\
+      \u0439, \u044D\u043A\u043E\u043D\u043E\u043C\u0438\u0447\u043D\u044B\u0439 \u0438\
+      \ \u0442\u0438\u0445\u0438\u0439 \u0434\u0432\u0438\u0433\u0430\u0442\u0435\u043B\
+      \u044C \u0444\u0438\u0440\u043C\u044B GREE"
+    show_prg: true
+    show_site: true
+    size: 0
+    tax_ack: 0
+    tax_tam: 0
+    testico: 7
+    url: ''
+    warranty: 12
+  SK12:
+    cod: 12
+    cond_id: 0
+    cond_str: '          '
+    curr: '   '
+    dsn_id: 0
+    firm: 9
+    group: SK
+    groupid: 644
+    kpr1: 0.0
+    kpr2: 0.0
+    kpr3: 0.0
+    kpr4: 0.0
+    kpr5: 0.0
+    label_txt: '                              '
+    mark: ' '
+    min_qty: 0
+    model: 'FZ-C150HFE          '
+    model_txt: "HEPA \u043F\u0438\u043B\u043E\u0432\u043B\u043E\u0432\u043B\u044E\u044E\
+      \u0447\u0438\u0439 \u0444\u0456\u043B\u044C\u0442\u0440 (5 \u0440\u043E\u043A\
+      i\u0432 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u0430\u043D\u043D\u044F\
+      ) \u0434\u043B\u044F KC860 \u0442\u0430 KC-C150E                           \
+      \  "
+    price_a: 0.0
+    price_b: 0.0
+    price_bas: 0.0
+    price_c: 30.0
+    price_d: 30.0
+    price_dm: 0.0
+    price_opt: 0.0
+    price_sale: 30.0
+    prod_code: '8421392000  '
+    profit: 0
+    public_mod: "\u041F\u044B\u043B\u0435\u0443\u043B\u0430\u0432\u043B\u0438\u0432\
+      \u0430\u044E\u0449\u0438\u0439 \u0444\u0438\u043B\u044C\u0442\u0440 HEPA (5\
+      \ \u043B\u0435\u0442 \u0441\u043B\u0443\u0436\u0431\u044B) \u0434\u043B\u044F\
+      \ Sharp KC860, KC-C150E"
+    public_txt: ''
+    show_prg: true
+    show_site: true
+    size: 0
+    tax_ack: 0
+    tax_tam: 0
+    testico: 1
+    url: ''
+    warranty: 0
+  SK13:
+    cod: 13
+    cond_id: 0
+    cond_str: '          '
+    curr: '   '
+    dsn_id: 0
+    firm: 9
+    group: SK
+    groupid: 644
+    kpr1: 0.0
+    kpr2: 0.0
+    kpr3: 0.0
+    kpr4: 0.0
+    kpr5: 0.0
+    label_txt: '                              '
+    mark: ' '
+    min_qty: 0
+    model: 'FZ-C150DFE          '
+    model_txt: "\u0414\u0435\u0437\u043E\u0434\u043E\u0440\u0443\u044E\u0447\u0438\
+      \u0439 \u0444\u0456\u043B\u044C\u0442\u0440 \u0449\u043E \u043C\u0438\u0454\u0442\
+      \u044C\u0441\u044F \"Deodorizing Filter\" (2 \u0440\u043E\u043A\u0438 \u0432\
+      \u0438\u043A\u043E\u0440\u0438\u0441\u0442\u0430\u043D\u043D\u044F) \u0434\u043B\
+      \u044F KC860 \u0442\u0430 KC-C150E     "
+    price_a: 0.0
+    price_b: 0.0
+    price_bas: 0.0
+    price_c: 20.0
+    price_d: 20.0
+    price_dm: 0.0
+    price_opt: 0.0
+    price_sale: 20.0
+    prod_code: '8421392000  '
+    profit: 0
+    public_mod: "\u0414\u0435\u0437\u043E\u0434\u0435\u0440\u0438\u0440\u0443\u044E\
+      \u0449\u0438\u0439 \u0444\u0438\u043B\u044C\u0442\u0440 \u043A\u043E\u0442\u043E\
+      \u0440\u044B\u0439 \u043C\u043E\u0435\u0442\u0441\u044F \u0434\u043B\u044F Sharp\
+      \ KC860, KC-C150E"
+    public_txt: ''
+    show_prg: true
+    show_site: true
+    size: 0
+    tax_ack: 0
+    tax_tam: 0
+    testico: 1
+    url: ''
+    warranty: 0
+warehous:
+  HB368CYB8:
+    cod: 368
+    code: 'HB368CYB8 '
+    group: HB
+    inv: CYB8
+    kol: 10
+    kol_otkaz: 0
+    kol_rezerv: 0
+    kol_sale: 0
+    kol_sf: 0
+    kol_skl: 4
+    old_sale: 0
+    price_inv: 1.8
+    price_krb: 0.0
+    price_usd: 2.16
+    size_inv: ''
+    size_skl: ''
+    tax_ack: null
+    tax_tam: null
+  KM377CWL4:
+    cod: 377
+    code: 'KM377CWL4 '
+    group: KM
+    inv: CWL4
+    kol: 1
+    kol_otkaz: 0
+    kol_rezerv: 0
+    kol_sale: 0
+    kol_sf: 0
+    kol_skl: 1
+    old_sale: 0
+    price_inv: 0.0
+    price_krb: 0.0
+    price_usd: 15.05
+    size_inv: ''
+    size_skl: ''
+    tax_ack: null
+    tax_tam: null
+  MK105DBJ4:
+    cod: 105
+    code: 'MK105DBJ4 '
+    group: MK
+    inv: DBJ4
+    kol: 2
+    kol_otkaz: 0
+    kol_rezerv: 0
+    kol_sale: 0
+    kol_sf: 0
+    kol_skl: 2
+    old_sale: 0
+    price_inv: 0.0
+    price_krb: 972.5
+    price_usd: 43.71
+    size_inv: ''
+    size_skl: ''
+    tax_ack: null
+    tax_tam: null
+  MK106CZW2:
+    cod: 106
+    code: 'MK106CZW2 '
+    group: MK
+    inv: CZW2
+    kol: 2
+    kol_otkaz: 0
+    kol_rezerv: 0
+    kol_sale: 1
+    kol_sf: 0
+    kol_skl: 1
+    old_sale: 0
+    price_inv: 0.0
+    price_krb: 2532.5
+    price_usd: 111.73
+    size_inv: ''
+    size_skl: ''
+    tax_ack: null
+    tax_tam: null
+  MK107DAC0:
+    cod: 107
+    code: 'MK107DAC0 '
+    group: MK
+    inv: DAC0
+    kol: 1
+    kol_otkaz: 0
+    kol_rezerv: 0
+    kol_sale: 0
+    kol_sf: 0
+    kol_skl: 1
+    old_sale: 0
+    price_inv: 0.0
+    price_krb: 2510.0
+    price_usd: 114.09
+    size_inv: ''
+    size_skl: ''
+    tax_ack: null
+    tax_tam: null
+  MK108DBJ4:
+    cod: 108
+    code: 'MK108DBJ4 '
+    group: MK
+    inv: DBJ4
+    kol: 1
+    kol_otkaz: 0
+    kol_rezerv: 0
+    kol_sale: 0
+    kol_sf: 0
+    kol_skl: 1
+    old_sale: 0
+    price_inv: 0.0
+    price_krb: 2490.0
+    price_usd: 111.9
+    size_inv: ''
+    size_skl: ''
+    tax_ack: null
+    tax_tam: null
+  OL1DAT3:
+    cod: 1
+    code: 'OL1DAT3   '
+    group: OL
+    inv: DAT3
+    kol: 150
+    kol_otkaz: 0
+    kol_rezerv: 0
+    kol_sale: 64
+    kol_sf: 0
+    kol_skl: 82
+    old_sale: 0
+    price_inv: 49.5
+    price_krb: 1484.26
+    price_usd: 66.13
+    size_inv: ''
+    size_skl: ''
+    tax_ack: null
+    tax_tam: null
+  OL2DAT3:
+    cod: 2
+    code: 'OL2DAT3   '
+    group: OL
+    inv: DAT3
+    kol: 199
+    kol_otkaz: 0
+    kol_rezerv: 0
+    kol_sale: 164
+    kol_sf: 0
+    kol_skl: 30
+    old_sale: 0
+    price_inv: 80.0
+    price_krb: 2398.81
+    price_usd: 106.88
+    size_inv: ''
+    size_skl: ''
+    tax_ack: null
+    tax_tam: null
+  SK12DBM4:
+    cod: 12
+    code: 'SK12DBM4  '
+    group: SK
+    inv: DBM4
+    kol: 3
+    kol_otkaz: 0
+    kol_rezerv: 0
+    kol_sale: 0
+    kol_sf: 0
+    kol_skl: 3
+    old_sale: 0
+    price_inv: 0.0
+    price_krb: 0.0
+    price_usd: 0.01
+    size_inv: ''
+    size_skl: ''
+    tax_ack: null
+    tax_tam: null
+  SK13DBM4:
+    cod: 13
+    code: 'SK13DBM4  '
+    group: SK
+    inv: DBM4
+    kol: 4
+    kol_otkaz: 0
+    kol_rezerv: 0
+    kol_sale: 0
+    kol_sf: 0
+    kol_skl: 4
+    old_sale: 0
+    price_inv: 0.0
+    price_krb: 0.0
+    price_usd: 0.01
+    size_inv: ''
+    size_skl: ''
+    tax_ack: null
+    tax_tam: null

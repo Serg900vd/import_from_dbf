@@ -1,0 +1,88 @@
+- external_id: SK23
+  id: 636927361
+  presence: not_available
+  price: 65.0
+  prices:
+  - minimum_order_quantity: 2.0
+    price: 60.0
+  status: not_on_display
+- external_id: SK24
+  id: 636927215
+  presence: not_available
+  price: 45.0
+  prices:
+  - minimum_order_quantity: 2.0
+    price: 40.0
+  status: not_on_display
+- external_id: SK27
+  id: 636919586
+  presence: not_available
+  price: 37.0
+  prices:
+  - minimum_order_quantity: 2.0
+    price: 33.0
+  status: not_on_display
+- external_id: SK25
+  id: 636916884
+  presence: not_available
+  price: 80.0
+  prices:
+  - minimum_order_quantity: 2.0
+    price: 75.0
+  status: not_on_display
+- external_id: SK26
+  id: 636223998
+  presence: not_available
+  price: 50.0
+  prices:
+  - minimum_order_quantity: 2.0
+    price: 45.0
+  status: not_on_display
+- external_id: KM376
+  id: 635413814
+  presence: not_available
+  price: 20.0
+  prices:
+  - minimum_order_quantity: 5.0
+    price: 18.0
+  status: not_on_display
+- external_id: KM375
+  id: 634776855
+  presence: not_available
+  price: 20.0
+  prices:
+  - minimum_order_quantity: 5.0
+    price: 18.0
+  status: not_on_display
+- external_id: OL6
+  id: 628473798
+  presence: not_available
+  price: 16.73
+  prices:
+  - minimum_order_quantity: 2.0
+    price: 15.06
+  status: not_on_display
+- external_id: OL4
+  id: 628473462
+  presence: not_available
+  price: 15.62
+  prices:
+  - minimum_order_quantity: 2.0
+    price: 14.05
+  status: not_on_display
+- external_id: OL5
+  id: 628472731
+  presence: not_available
+  price: 16.73
+  prices:
+  - minimum_order_quantity: 2.0
+    price: 15.06
+  status: not_on_display
+- external_id: OL3
+  id: 628472046
+  presence: not_available
+  price: 15.62
+  prices:
+  - minimum_order_quantity: 2.0
+    price: 14.05
+  status: not_on_display
