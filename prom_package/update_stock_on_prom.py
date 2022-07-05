@@ -3,8 +3,8 @@ import pprint
 from typing import List
 
 from prom_package.api_prom import PromClient
-from uninet.get_data_uninet import BasePassDBF, CODEPAGE
 from prom_package.config import PATH_BASE, AUTH_TOKEN_PRODUCTS, LAST_PRODUCT_ID, HOST
+from uninet.get_data_uninet import BasePassDBF, CODEPAGE
 
 # Status constants
 STATUS_ON_DISPLAY = 'on_display'
@@ -92,34 +92,20 @@ def get_prom_chang_list(products_prom: list) -> list:
     return products_chang_list
 
 
-def write_products_prom(products_changed_list: list):
+def write_products_prom(products_changed_list: list) -> bool:
     """
     Записываем продукты с изменениями на Prom
     """
-    # Для теста ValueError
-    _products_changed_list = [{'external_id': 'test_HB770',
-                               'id': 1616486427,
-                               'presence': 'ERRRORnot_available',
-                               'price': 8.5,
-                               'prices': [{'minimum_order_quantity': 5.0, 'price': 8.0}],
-                               'status': 'not_on_display'},
-                              {'external_id': 'OL6',
-                               'id': 628473798,
-                               'presence': 'not_available',
-                               'price': 16.73,
-                               'prices': [{'minimum_order_quantity': 2.0, 'price': 15.06}],
-                               'status': 'on_display'},
-                              ]
-
     if products_changed_list:
         api_prom = PromClient(HOST, AUTH_TOKEN_PRODUCTS)
         response = api_prom.set_products_list_id(products_changed_list)
         print(response)
         if response['errors']:
             raise ValueError(f'errors: {response["errors"]}')
+        return True
     else:
         print(f'products_changed_list is empty {products_changed_list}')
-
+        return False
 
 def main():
     # Получаем актуальный список товаров с сайта prom.ua
