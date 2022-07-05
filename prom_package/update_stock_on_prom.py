@@ -32,15 +32,12 @@ PRESENCE_NOT_AVAILABLE = 'not_available'
 
 def read_products_prom() -> List[dict]:
     """
-    Загружаем актуальный список товаров с сайта
+    Загружаем актуальный список товаров с сайта.
+    По 20шт. начиная с последнего (last_id)
     """
-    last_id = LAST_PRODUCT_ID
     api_prom = PromClient(HOST, AUTH_TOKEN_PRODUCTS)
     product_lust_id = api_prom.get_product_id(last_id)  # last =1616486427  first = 628464896
     products_prom = [product_lust_id['product']]
-
-    # last_id = 637872504  # Ограничить список
-    # print('last_id = 637872504 # Ограничить список')
 
     print(f'Prom read products:')
     while True:
@@ -107,9 +104,11 @@ def write_products_prom(products_changed_list: list) -> bool:
         print(f'products_changed_list is empty {products_changed_list}')
         return False
 
+
 def main():
     # Получаем актуальный список товаров с сайта prom.ua
-    products_prom = read_products_prom()
+    last_id = LAST_PRODUCT_ID
+    products_prom = read_products_prom(last_id)
 
     # Находим продукты с изменениями
     products_changed_list = get_prom_chang_list(products_prom)

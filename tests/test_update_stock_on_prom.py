@@ -1,7 +1,12 @@
+from pathlib import Path
 from unittest import TestCase, skipIf
 
-from prom_package.config import SKIP_REAL
-from prom_package.update_stock_on_prom import write_products_prom
+import yaml
+
+from prom_package.config import SKIP_REAL, PATH_PROM
+from prom_package.update_stock_on_prom import write_products_prom, read_products_prom
+
+PATH_TESTS = PATH_PROM.parent / 'tests'
 
 
 @skipIf(SKIP_REAL, 'Skipping tests that hit the real API server.')
@@ -40,3 +45,16 @@ class TestWriteProductsProm(TestCase):
                                       'status': 'on_display'},
                                      ]
         self.assertRaises(ValueError, write_products_prom, err_products_changed_list)
+
+
+@skipIf(SKIP_REAL, 'Skipping tests that hit the real API server.')
+class TestReadProductsProm(TestCase):
+    def test_read_products_prom(self):
+        last_id = 637872504  # Gets a list with 21 items only
+        products_prom = read_products_prom(last_id)
+        path_data = PATH_TESTS / 'prom_test_data/products_prom_test.yaml'
+        with open(Path(path_data)) as f:
+            # yaml.dump(products_prom, f, default_flow_style=False)
+            products_prom_test = yaml.safe_load(f)
+
+        self.assertListEqual(products_prom_test, products_prom)
