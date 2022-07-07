@@ -16,22 +16,30 @@ PRESENCE_AVAILABLE = 'available'
 PRESENCE_NOT_AVAILABLE = 'not_available'
 
 
-# @dataclass
-# class Product:
-#     id: int
-#     external_id: str
-#     presence: Presence = Presence.NOT_AVAILABLE
-#     price: float = 0.0
-#     prices: List[dict] = field(default_factory=list)
-#     status: Status = Status.DRAFT
-#
-#     def _init__(self):
-#         self.prices = [{'minimum_order_quantity': 0.0, 'price': 0.0}]
-#
-#     def price_d(self, price_d):
-#         self.prices[0]['price'] = price_d
+@dataclass
+class Product:
+    id: int = 0
+    external_id: str = ''
+    presence: str = PRESENCE_NOT_AVAILABLE  # Presence = Presence.NOT_AVAILABLE
+    price: float = 0.0
+    prices: List[dict] = field(default_factory=list)
+    status: str = NOT_ON_DISPLAY  # Status = Status.DRAFT
 
-def read_products_prom() -> List[dict]:
+    def __post_init__(self,):
+        if not self.prices:
+            self.prices.append({'minimum_order_quantity': 0.0, 'price': 0.0})
+
+    def set_price_min_order(self, quantity):
+        self.prices[0]['minimum_order_quantity'] = quantity
+
+    def set_price_d(self, price_d):
+        self.prices[0]['price'] = price_d
+
+    def get_price_d(self):
+        return self.prices[0]['price']
+
+
+def read_products_prom(last_id: int) -> List[dict]:
     """
     Загружаем актуальный список товаров с сайта.
     По 20шт. начиная с последнего (last_id)
@@ -73,31 +81,30 @@ def get_prom_chang_list(bd: BasePassDBF, products_prom: list) -> list:
     """
     products_chang_list = []
     for p in products_prom:
-        product_prom = {'id': p['id'], 'external_id': p['external_id'], 'presence': p['presence'], 'price': p['price'],
-                        'prices': p['prices'], 'status': p['status']}
-        id = p['id']
+        product_prom = Product(p['id'], p['external_id'], p['presence'], p['price'], p['prices'], p['status'])
+
         group_cod = p['external_id']
         presence = PRESENCE_AVAILABLE if bd.is_product_on_stock(group_cod) else PRESENCE_NOT_AVAILABLE
+        product_bd = Product(p['id'], group_cod, presence)
         try:
             if bd.goods[group_cod]['show_site']:
-                status = STATUS_ON_DISPLAY
+                product_bd.status = STATUS_ON_DISPLAY
             else:
-                status = NOT_ON_DISPLAY
-            price = bd.goods[group_cod]['price_sale']
+                product_bd.status = NOT_ON_DISPLAY
+            product_bd.price = bd.goods[group_cod]['price_sale']
             price_d = bd.goods[group_cod]['price_d']
         except KeyError:
-            status = NOT_ON_DISPLAY
-            price = p['price']
+            product_bd.status = NOT_ON_DISPLAY
+            product_bd.price = p['price']
             price_d = p['prices'][0]['price']
 
-        prices = [{'minimum_order_quantity': p['prices'][0]['minimum_order_quantity'], 'price': price_d}]
-        product_bd = {'id': id, 'external_id': group_cod, 'presence': presence, 'price': price, 'prices': prices,
-                      'status': status}
+        product_bd.set_price_min_order(p['prices'][0]['minimum_order_quantity'])
+        product_bd.set_price_d(price_d)
+
         if product_prom != product_bd:
-            products_chang_list.append(product_bd)
+            products_chang_list.append(asdict(product_bd))
 
     print(f'{len(products_chang_list)} products with changes')
-
     return products_chang_list
 
 
