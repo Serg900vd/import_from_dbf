@@ -1,4 +1,14 @@
+# The module updates the product data on the prom.ua website according to the local dbf database.
+# The following parameters are updated: visibility status, availability status, prices.
 #
+# You need to create a settings file "config_prom.txt" in the following format:
+# {
+#  "HOST": "my.prom.ua",
+#  "AUTH_TOKEN_PRODUCTS": "my_token",
+#  "PATH_BASE": "path_to_base",
+#  "LAST_PRODUCT_ID": int_last_product_id_on_prom_catalog
+# }
+
 import pprint
 from dataclasses import dataclass, field, asdict
 from typing import List
@@ -20,10 +30,10 @@ PRESENCE_NOT_AVAILABLE = 'not_available'
 class Product:
     id: int = 0
     external_id: str = ''
-    presence: str = PRESENCE_NOT_AVAILABLE  # Presence = Presence.NOT_AVAILABLE
+    presence: str = PRESENCE_NOT_AVAILABLE
     price: float = 0.0
     prices: List[dict] = field(default_factory=list)
-    status: str = NOT_ON_DISPLAY  # Status = Status.DRAFT
+    status: str = NOT_ON_DISPLAY
 
     def __post_init__(self,):
         if not self.prices:
@@ -41,9 +51,13 @@ class Product:
 
 def read_products_prom(last_id: int) -> List[dict]:
     """
-    Загружаем актуальный список товаров с сайта.
-    По 20шт. начиная с последнего (last_id)
+    Download the current list of products from the site.
+    Iterations in 20 pcs. starting from the last (last_id) in reverse order.
+    :param last_id:
+    :return:
     """
+    # A query without parameters returns a list with only 100 products.
+    # There is no way to get the whole list.
     api_prom = PromClient(HOST, AUTH_TOKEN_PRODUCTS)
     product_lust_id = api_prom.get_product_id(last_id)  # last =1616486427  first = 628464896
     products_prom = [product_lust_id['product']]
@@ -64,7 +78,7 @@ def read_products_prom(last_id: int) -> List[dict]:
 
 def load_bd() -> BasePassDBF:
     """
-    Загружаем из базы dbf таблицы warehous.dbf, invoice.DBF, goods.dbf, firm.dbf
+    Load the tables warehous.dbf, invoice.DBF, goods.dbf, firm.dbf from the dbf database.
     :return:
     """
     bd = BasePassDBF(PATH_BASE, CODEPAGE, key_field_warehous='KOL_SKL', key_field_goods='SHOW_SITE')
@@ -74,7 +88,7 @@ def load_bd() -> BasePassDBF:
 
 def get_prom_chang_list(bd: BasePassDBF, products_prom: list) -> list:
     """
-    Проходим по списку товаров, находим с изменениями.
+    Go through the list of goods, find products with changes.
     :param bd:
     :param products_prom:
     :return:
@@ -110,7 +124,9 @@ def get_prom_chang_list(bd: BasePassDBF, products_prom: list) -> list:
 
 def write_products_prom(products_changed_list: list) -> bool:
     """
-    Записываем продукты с изменениями на Prom
+    Record products with changes on Prom
+    :param products_changed_list:
+    :return:
     """
     if products_changed_list:
         api_prom = PromClient(HOST, AUTH_TOKEN_PRODUCTS)
@@ -125,25 +141,27 @@ def write_products_prom(products_changed_list: list) -> bool:
 
 
 def main():
-    # Получаем актуальный список товаров с сайта prom.ua
+    # Get an up-to-date list of goods from the site prom.ua
     last_id = LAST_PRODUCT_ID
     # last_id = 637872504  # Gets a list with 21 items only
     products_prom = read_products_prom(last_id)
 
-    # Загружаем из базы dbf таблицы warehous.dbf, invoice.DBF, goods.dbf, firm.dbf
+    # Load the tables warehous.dbf, invoice.DBF, goods.dbf, firm.dbf from the dbf database
     bd = load_bd()
 
-    # Находим продукты с изменениями
+    # Find products with changes
     products_changed_list = get_prom_chang_list(bd, products_prom)
     pprint.pprint(f'products_changed_list = {products_changed_list}')
 
-    # Записываем продукты с изменениями на Prom
+    # Record products with changes on Prom
     write_products_prom(products_changed_list)
 
 
 if __name__ == '__main__':
-    #  prom_package
-    #  pyinstaller update_stock_on_prom.py --onefile
+    # To compile .exe file:
+    #  config.py set: PATH_PROM = Path.cwd()
+    #  Command:
+    #   pyinstaller update_stock_on_prom.py --onefile
 
     main()
     pause = input('OK?')
