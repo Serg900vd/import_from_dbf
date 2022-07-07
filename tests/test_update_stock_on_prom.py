@@ -66,12 +66,15 @@ class TestGetPromChangedList(TestCase):
         path_data = PATH_TESTS / 'prom_test_data/products_prom_test.yaml'
         with open(Path(path_data)) as f:
             products_prom_test = yaml.safe_load(f)
+
         path_data = PATH_TESTS / 'prom_test_data/products_changed_list_test.yaml'
         with open(Path(path_data)) as f:
             products_changed_list_test = yaml.safe_load(f)
+
         path_data = PATH_TESTS / 'prom_test_data/bd_test.yaml'
         with open(Path(path_data)) as f:
             bd_test = yaml.safe_load(f)
+
         bd = BasePassDBF(PATH_BASE, CODEPAGE, key_field_warehous='KOL_SKL', key_field_goods='SHOW_SITE')
         bd.goods = bd_test['goods']
         bd.warehous = bd_test['warehous']
