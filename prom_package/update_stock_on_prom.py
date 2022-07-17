@@ -8,14 +8,17 @@
 #  "PATH_BASE": "path_to_base",
 #  "LAST_PRODUCT_ID": int_last_product_id_on_prom_catalog
 # }
-
+import logging
+import logging.config
 import pprint
 from dataclasses import dataclass, field, asdict
 from typing import List
 
 from prom_package.api_prom import PromClient
-from prom_package.config import PATH_BASE, AUTH_TOKEN_PRODUCTS, LAST_PRODUCT_ID, HOST
+from prom_package.config import PATH_BASE, AUTH_TOKEN_PRODUCTS, LAST_PRODUCT_ID, HOST, DEBUG_MODE
 from uninet.get_data_uninet import BasePassDBF, CODEPAGE
+
+_logger = logging.getLogger('prom')
 
 # Status constants
 STATUS_ON_DISPLAY = 'on_display'
@@ -63,6 +66,7 @@ def read_products_prom(last_id: int) -> List[dict]:
     products_prom = [product_lust_id['product']]
 
     print(f'Prom read products:')
+    _logger.debug('Starts read_products_prom:')
     while True:
         products_20 = api_prom.get_products_list(last_id=last_id)
         products_20 = products_20['products']
@@ -72,6 +76,7 @@ def read_products_prom(last_id: int) -> List[dict]:
         last_id = products_prom[-1]['id']
 
         print(len(products_prom), end=', ')
+        _logger.debug('Prom read products: %s', len(products_prom))
     print(' ')
     return products_prom
 
@@ -118,7 +123,8 @@ def get_prom_chang_list(bd: BasePassDBF, products_prom: list) -> list:
         if product_prom != product_bd:
             products_chang_list.append(asdict(product_bd))
 
-    print(f'{len(products_chang_list)} products with changes')
+    # print(f'{len(products_chang_list)} products with changes')
+    _logger.info('%s products with changes', len(products_chang_list))
     return products_chang_list
 
 
@@ -132,11 +138,14 @@ def write_products_prom(products_changed_list: list) -> bool:
         api_prom = PromClient(HOST, AUTH_TOKEN_PRODUCTS)
         response = api_prom.set_products_list_id(products_changed_list)
         print(response)
+        _logger.info('processed_ids: %s', response['processed_ids'])
         if response['errors']:
+            _logger.warning('ERRORS: %s', response['errors'])
             raise ValueError(f'errors: {response["errors"]}')
         return True
     else:
         print(f'products_changed_list is empty {products_changed_list}')
+        _logger.info('products_changed_list is empty %s', products_changed_list)
         return False
 
 

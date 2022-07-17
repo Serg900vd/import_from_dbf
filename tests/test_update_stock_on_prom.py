@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 from unittest import TestCase, skipIf
 
@@ -7,6 +8,7 @@ from prom_package.config import SKIP_REAL, PATH_PROM, PATH_BASE
 from prom_package.update_stock_on_prom import write_products_prom, read_products_prom, get_prom_chang_list
 from uninet.get_data_uninet import BasePassDBF, CODEPAGE
 
+_logger = logging.getLogger('prom')
 PATH_TESTS = PATH_PROM.parent / 'tests'
 
 
@@ -81,3 +83,10 @@ class TestGetPromChangedList(TestCase):
 
         products_changed_list = get_prom_chang_list(bd, products_prom_test)
         self.assertListEqual(products_changed_list, products_changed_list_test)
+
+
+class TestLogging(TestCase):
+    def test_logging(self):
+        _logger.debug('hello_2')
+
+
