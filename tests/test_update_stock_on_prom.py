@@ -4,11 +4,12 @@ from unittest import TestCase, skipIf
 
 import yaml
 
-from prom_package.config import SKIP_REAL, PATH_PROM, PATH_BASE
+from prom_package.config import SKIP_REAL, PATH_PROM, PATH_BASE, DEBUG_MODE
 from prom_package.update_stock_on_prom import write_products_prom, read_products_prom, get_prom_chang_list
 from uninet.get_data_uninet import BasePassDBF, CODEPAGE
 
-_logger = logging.getLogger('prom')
+if DEBUG_MODE:
+    logging.root.setLevel('DEBUG')
 PATH_TESTS = PATH_PROM.parent / 'tests'
 
 
@@ -87,6 +88,6 @@ class TestGetPromChangedList(TestCase):
 
 class TestLogging(TestCase):
     def test_logging(self):
-        _logger.debug('hello_2')
+        logging.debug('TestLogging')
 
 

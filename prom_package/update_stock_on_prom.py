@@ -10,15 +10,13 @@
 # }
 import logging
 import logging.config
-import pprint
 from dataclasses import dataclass, field, asdict
+from time import time
 from typing import List
 
 from prom_package.api_prom import PromClient
-from prom_package.config import PATH_BASE, AUTH_TOKEN_PRODUCTS, LAST_PRODUCT_ID, HOST, DEBUG_MODE
+from prom_package.config import PATH_BASE, AUTH_TOKEN_PRODUCTS, LAST_PRODUCT_ID, HOST, DEBUG_MODE, LOGGING
 from uninet.get_data_uninet import BasePassDBF, CODEPAGE
-
-_logger = logging.getLogger('prom')
 
 # Status constants
 STATUS_ON_DISPLAY = 'on_display'
@@ -38,7 +36,7 @@ class Product:
     prices: List[dict] = field(default_factory=list)
     status: str = NOT_ON_DISPLAY
 
-    def __post_init__(self,):
+    def __post_init__(self, ):
         if not self.prices:
             self.prices.append({'minimum_order_quantity': 0.0, 'price': 0.0})
 
@@ -65,8 +63,7 @@ def read_products_prom(last_id: int) -> List[dict]:
     product_lust_id = api_prom.get_product_id(last_id)  # last =1616486427  first = 628464896
     products_prom = [product_lust_id['product']]
 
-    print(f'Prom read products:')
-    _logger.debug('Starts read_products_prom:')
+    logging.debug('Start read_products_prom:')
     while True:
         products_20 = api_prom.get_products_list(last_id=last_id)
         products_20 = products_20['products']
@@ -75,9 +72,7 @@ def read_products_prom(last_id: int) -> List[dict]:
         products_prom += products_20
         last_id = products_prom[-1]['id']
 
-        print(len(products_prom), end=', ')
-        _logger.debug('Prom read products: %s', len(products_prom))
-    print(' ')
+        logging.debug('Prom read products: %s', len(products_prom))
     return products_prom
 
 
@@ -123,8 +118,8 @@ def get_prom_chang_list(bd: BasePassDBF, products_prom: list) -> list:
         if product_prom != product_bd:
             products_chang_list.append(asdict(product_bd))
 
-    # print(f'{len(products_chang_list)} products with changes')
-    _logger.info('%s products with changes', len(products_chang_list))
+    logging.info('%s products with changes', len(products_chang_list))
+    # logging.debug('products_changed_list = %s', products_chang_list)
     return products_chang_list
 
 
@@ -137,19 +132,30 @@ def write_products_prom(products_changed_list: list) -> bool:
     if products_changed_list:
         api_prom = PromClient(HOST, AUTH_TOKEN_PRODUCTS)
         response = api_prom.set_products_list_id(products_changed_list)
-        print(response)
-        _logger.info('processed_ids: %s', response['processed_ids'])
+        logging.info('processed_ids: %s', response['processed_ids'])
         if response['errors']:
-            _logger.warning('ERRORS: %s', response['errors'])
+            logging.warning('ERRORS: %s', response['errors'])
             raise ValueError(f'errors: {response["errors"]}')
         return True
     else:
-        print(f'products_changed_list is empty {products_changed_list}')
-        _logger.info('products_changed_list is empty %s', products_changed_list)
+        logging.info('products_changed_list is empty %s', products_changed_list)
         return False
 
 
+def _logging_config():
+    logging.config.dictConfig(LOGGING)
+    if DEBUG_MODE:
+        logging.root.setLevel('DEBUG')
+        for handler in logging.root.handlers:
+            if handler.name == 'to_console':
+                handler.setLevel('DEBUG')
+
+
 def main():
+    _logging_config()
+    time_start = time()
+    logging.info('----START----')
+
     # Get an up-to-date list of goods from the site prom.ua
     last_id = LAST_PRODUCT_ID
     # last_id = 637872504  # Gets a list with 21 items only
@@ -160,10 +166,14 @@ def main():
 
     # Find products with changes
     products_changed_list = get_prom_chang_list(bd, products_prom)
-    pprint.pprint(f'products_changed_list = {products_changed_list}')
 
     # Record products with changes on Prom
     write_products_prom(products_changed_list)
+
+    time_run = time() - time_start
+    logging.info('----FINISH----\n----RUN TIME: %s s.', time_run)
+    # if DEBUG_MODE:
+    #     pause = input('OK?')
 
 
 if __name__ == '__main__':
@@ -173,4 +183,3 @@ if __name__ == '__main__':
     #   pyinstaller update_stock_on_prom.py --onefile
 
     main()
-    pause = input('OK?')
