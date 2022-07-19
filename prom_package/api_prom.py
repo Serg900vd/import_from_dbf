@@ -7,6 +7,7 @@
 import http.client
 import json
 import pprint
+from typing import Union
 
 from prom_package.config import AUTH_TOKEN_PRODUCTS, HOST
 
@@ -26,7 +27,7 @@ class PromClient:
         self.token = token
         self.connection = None
 
-    def make_request(self, method: str, url: str, body: list | dict = None) -> dict:
+    def make_request(self, method: str, url: str, body: Union[list, dict] = None) -> dict:
 
         headers = {'Authorization': 'Bearer {}'.format(self.token),
                    'Content-type': 'application/json'}

@@ -3,7 +3,7 @@
 import csv
 from pathlib import Path
 from sys import argv
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 import dbf
 
@@ -20,8 +20,8 @@ FILTER_GROUP_KM_HB = ('KM', 'HB')
 class BasePassDBF:
     def __init__(self, path_base: Path, codepage: str,
                  filter_id_firm: Tuple[int, ...] = None,
-                 key_field_warehous: str | int = 0,
-                 key_field_goods: str | int = 0,
+                 key_field_warehous: Union[str, int] = 0,
+                 key_field_goods: Union[str, int] = 0,
                  filter_group: Tuple[str, ...] = None):
         self.path_base = path_base
         self.codepage = codepage
@@ -66,7 +66,7 @@ class BasePassDBF:
 
     @classmethod
     def get_data_from_pass(cls, file_name: Path, codepage: str, key_tabl=lambda row: row.GROUP + str(row.COD) + row.INV,
-                           key_field: str | int = 0,
+                           key_field: Union[str, int] = 0,
                            filter_group: tuple = None) -> dict:
         """
         Возвращает словарь по ключу key_tabl с вложенными строками в виде словаря {поле : значение ...}
@@ -165,7 +165,7 @@ def load_tables_dbf_uninet(path: Path):
     return warehous, invoice, goods
 
 
-def main_uninet(path: Path | None, file_name_out: str, paht_out: Path = None):
+def main_uninet(path: Union[Path, None], file_name_out: str, paht_out: Path = None):
     """
     Формируем финальную таблицу для выдачи.
     :param path: путь к базе

@@ -5,7 +5,7 @@ from unittest import TestCase, skipIf
 import yaml
 
 from prom_package.config import SKIP_REAL, PATH_PROM, PATH_BASE, DEBUG_MODE
-from prom_package.update_stock_on_prom import write_products_prom, read_products_prom, get_prom_chang_list
+from prom_package.prom import write_products_prom, read_products_prom, get_prom_chang_list
 from uninet.get_data_uninet import BasePassDBF, CODEPAGE
 
 if DEBUG_MODE:

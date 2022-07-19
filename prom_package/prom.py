@@ -178,8 +178,9 @@ def main():
 
 if __name__ == '__main__':
     # To compile .exe file:
+    # !!! For Windows 7 64x Python 3.8 + Pyinstaller-5.0.1 only !!!
     #  config.py set: PATH_PROM = Path.cwd()
     #  Command:
-    #   pyinstaller update_stock_on_prom.py --onefile
+    #   pyinstaller prom.py --onefile
 
     main()
