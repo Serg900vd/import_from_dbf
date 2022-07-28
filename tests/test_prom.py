@@ -51,15 +51,19 @@ class TestWriteProductsProm(TestCase):
         self.assertRaises(ValueError, write_products_prom, err_products_changed_list)
 
 
+def read_yaml(path_data: Path):
+    with open(path_data) as f:
+        # yaml.dump(products_prom, f, default_flow_style=False)
+        return yaml.safe_load(f)
+
+
 @skipIf(SKIP_REAL, 'Skipping tests that hit the real API server.')
-class TestReadProductsProm(TestCase):
-    def test_read_products_prom(self):
+class TestReadProductsProm_OnRealAPI(TestCase):
+    def test_onreal_read_products_prom(self):
         last_id = 637872504  # Gets a list with 21 items only
         products_prom = read_products_prom(last_id)
         path_data = PATH_TESTS / 'prom_test_data/read_products_prom_test.yaml'
-        with open(Path(path_data)) as f:
-            # yaml.dump(products_prom, f, default_flow_style=False)
-            products_prom_test = yaml.safe_load(f)
+        products_prom_test = read_yaml(path_data)
 
         self.assertListEqual(products_prom_test, products_prom)
 
@@ -89,5 +93,3 @@ class TestGetPromChangedList(TestCase):
 class TestLogging(TestCase):
     def test_logging(self):
         logging.debug('TestLogging')
-
-
