@@ -12,29 +12,32 @@ import logging
 import logging.config
 from dataclasses import dataclass, field, asdict
 from time import time
-from typing import List
+from typing import List, Literal
 
 from prom_package.api_prom import PromClient
 from prom_package.config import PATH_BASE, AUTH_TOKEN_PRODUCTS, LAST_PRODUCT_ID, HOST, DEBUG_MODE, LOGGING
 from uninet.get_data_uninet import BasePassDBF, CODEPAGE
 
 # Status constants
-STATUS_ON_DISPLAY = 'on_display'
-NOT_ON_DISPLAY = 'not_on_display'
+Status = Literal[
+    'on_display', 'draft', 'deleted', 'not_on_display', 'editing_required', 'approval_pending', 'deleted_by_moderator']
+STATUS_ON_DISPLAY: Status = 'on_display'
+NOT_ON_DISPLAY: Status = 'not_on_display'
 
 # Presence constants
-PRESENCE_AVAILABLE = 'available'
-PRESENCE_NOT_AVAILABLE = 'not_available'
+Presence = Literal['available', 'not_available', 'order', 'service', 'waiting']
+PRESENCE_AVAILABLE: Presence = 'available'
+PRESENCE_NOT_AVAILABLE: Presence = 'not_available'
 
 
 @dataclass
 class Product:
     id: int = 0
     external_id: str = ''
-    presence: str = PRESENCE_NOT_AVAILABLE
+    presence: Presence = PRESENCE_NOT_AVAILABLE
     price: float = 0.0
     prices: List[dict] = field(default_factory=list)
-    status: str = NOT_ON_DISPLAY
+    status: Status = NOT_ON_DISPLAY
 
     def __post_init__(self, ):
         if not self.prices:
