@@ -1,5 +1,6 @@
 import logging
 from pathlib import Path
+from typing import Union
 from unittest import TestCase, skipIf
 
 import yaml
@@ -51,9 +52,8 @@ class TestWriteProductsProm(TestCase):
         self.assertRaises(ValueError, write_products_prom, err_products_changed_list)
 
 
-def read_yaml(path_data: Path):
+def read_yaml(path_data: Path) -> Union[list, dict]:
     with open(path_data) as f:
-        # yaml.dump(products_prom, f, default_flow_style=False)
         return yaml.safe_load(f)
 
 
@@ -71,16 +71,13 @@ class TestReadProductsProm_OnRealAPI(TestCase):
 class TestGetPromChangedList(TestCase):
     def test_get_prom_changed_list(self):
         path_data = PATH_TESTS / 'prom_test_data/products_prom_test.yaml'
-        with open(Path(path_data)) as f:
-            products_prom_test = yaml.safe_load(f)
+        products_prom_test = read_yaml(path_data)
 
         path_data = PATH_TESTS / 'prom_test_data/products_changed_list_test.yaml'
-        with open(Path(path_data)) as f:
-            products_changed_list_test = yaml.safe_load(f)
+        products_changed_list_test = read_yaml(path_data)
 
         path_data = PATH_TESTS / 'prom_test_data/bd_test.yaml'
-        with open(Path(path_data)) as f:
-            bd_test = yaml.safe_load(f)
+        bd_test = read_yaml(path_data)
 
         bd = BasePassDBF(PATH_BASE, CODEPAGE, key_field_warehous='KOL_SKL', key_field_goods='SHOW_SITE')
         bd.goods = bd_test['goods']
