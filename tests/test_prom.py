@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 from typing import Union
 from unittest import TestCase, skipIf
+from unittest.mock import patch
 
 import yaml
 
@@ -58,12 +59,45 @@ def read_yaml(path_data: Path) -> Union[list, dict]:
 
 
 @skipIf(SKIP_REAL, 'Skipping tests that hit the real API server.')
-class TestReadProductsProm_OnRealAPI(TestCase):
+class TestReadProductsPromOnRealAPI(TestCase):
     def test_onreal_read_products_prom(self):
         last_id = 637872504  # Gets a list with 21 items only
         products_prom = read_products_prom(last_id)
         path_data = PATH_TESTS / 'prom_test_data/read_products_prom_test.yaml'
         products_prom_test = read_yaml(path_data)
+
+        self.assertListEqual(products_prom_test, products_prom)
+
+
+def mock_get_product_id():
+    def _get_product_id(self, last_id):
+        path_data = PATH_TESTS / 'prom_test_data/637949599_get_product_id.yaml'
+        return read_yaml(path_data) if last_id == 637949599 else None
+
+    return _get_product_id
+
+
+def mock_get_products_list():
+    def _get_products_list(self, last_id):
+        id_list = [628464896, 636197521, 637874961, 637949599]
+        if last_id not in id_list:
+            return None
+        path_data = PATH_TESTS / f'prom_test_data/{last_id}_get_products_list.yaml'
+        return read_yaml(path_data)
+
+    return _get_products_list
+
+
+class TestReadProductsProm(TestCase):
+    @patch('prom_package.api_prom.PromClient.get_products_list', new_callable=mock_get_products_list)
+    @patch('prom_package.api_prom.PromClient.get_product_id', new_callable=mock_get_product_id)
+    def test_read_products_prom(self, get_mock_id, get_mock_list):
+        last_id = 637949599
+        path_data = PATH_TESTS / 'prom_test_data/read_products_prom_test_637949599.yaml'
+        products_prom_test = read_yaml(path_data)
+        products_prom = read_products_prom(last_id)
+        # with open(path_data, 'w') as f:
+        #     yaml.dump(products_prom, f, default_flow_style=False)
 
         self.assertListEqual(products_prom_test, products_prom)
 
