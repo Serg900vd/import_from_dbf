@@ -1,0 +1,51 @@
+product:
+  category:
+    caption: "\u0442\u043E\u043D\u0435\u0440 \u0438 \u0447\u0435\u0440\u043D\u0438\
+      \u043B\u0430 \u0434\u043B\u044F \u043F\u0435\u0447\u0430\u0442\u0438"
+    id: 71003
+  currency: USD
+  date_modified: '2021-02-02T13:00:00+00:00'
+  description: "11762 HP 2500/2550/3500/3700 \u0416\u0435\u043B\u0442\u044B\u0439\
+    \ X-Generation \u0422\u043E\u043D\u0435\u0440 130g/4000\u0441\u0442\u0440 Yellow\
+    \ toner Uninet \u0422\u043E\u043D\u0435\u0440 Absolute Color\xAE X-Generation\
+    \ \u0434\u043B\u044F Color LaserJet 1500/1500L/2500/2500n/2500L/HP Color LaserJet\
+    \ 2550L/2550Ln/2550n/2820/2840/HP Color LaserJet 3500/3500n/3550/3700/ Canon LBP\
+    \ 5200(101/301/701)/LBP"
+  discount: null
+  external_id: KM395
+  group:
+    id: 27128488
+    name: HP 2500/2550/1500/3500/3700 Canon EP-87 LBP 520
+  id: 637949599
+  images:
+  - id: 1938076106
+    thumbnail_url: https://images.prom.ua/1938076106_w100_h100_11762-hp-2500255035003700.jpg
+    url: https://images.prom.ua/1938076106_w200_h200_11762-hp-2500255035003700.jpg
+  is_variation: false
+  keywords: "\u0442\u043E\u043D\u0435\u0440, Hp Canon Color, Hp Canon \u0426\u0432\
+    \u0435\u0442\u043D\u044B\u0435, Hp \u0438 Canon, Canon/HP, HP/Canon, HP 2500/2550/3500/3700"
+  main_image: https://images.prom.ua/1938076106_w200_h200_11762-hp-2500255035003700.jpg
+  measure_unit: "\u0448\u0442."
+  minimum_order_quantity: null
+  name: "11762 HP 2500/2550/3500/3700 \u0416\u0435\u043B\u0442\u044B\u0439 X-Generation\
+    \ \u0422\u043E\u043D\u0435\u0440 130g/4000\u0441\u0442\u0440 Yellow toner Uninet"
+  name_multilang:
+    ru: "11762 HP 2500/2550/3500/3700 \u0416\u0435\u043B\u0442\u044B\u0439 X-Generation\
+      \ \u0422\u043E\u043D\u0435\u0440 130g/4000\u0441\u0442\u0440 Yellow toner Uninet"
+    uk: "11762 HP 2500/2550/3500/3700 \u0416\u043E\u0432\u0442\u0438\u0439 X-Generation\
+      \ \u0422\u043E\u043D\u0435\u0440 130g/4000\u0441\u0442\u0440 Yellow toner Uninet"
+  presence: available
+  price: 6.0
+  prices:
+  - minimum_order_quantity: 5.0
+    price: 5.0
+  quantity_in_stock: null
+  regions:
+  - id: 194009
+    ru: "\u041A\u0438\u0435\u0432"
+    uk: "\u041A\u0438\u0457\u0432"
+  selling_type: universal
+  sku: KM395
+  status: on_display
+  variation_base_id: null
+  variation_group_id: null
