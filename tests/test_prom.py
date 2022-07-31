@@ -1,5 +1,4 @@
 import logging
-from pathlib import Path
 from typing import Union
 from unittest import TestCase, skipIf
 from unittest.mock import patch
@@ -13,6 +12,7 @@ from uninet.get_data_uninet import BasePassDBF, CODEPAGE
 if DEBUG_MODE:
     logging.root.setLevel('DEBUG')
 PATH_TESTS = PATH_PROM.parent / 'tests'
+PATH_TESTS_DATA = PATH_TESTS / 'prom_test_data'
 
 
 @skipIf(SKIP_REAL, 'Skipping tests that hit the real API server.')
@@ -53,7 +53,8 @@ class TestWriteProductsProm(TestCase):
         self.assertRaises(ValueError, write_products_prom, err_products_changed_list)
 
 
-def read_yaml(path_data: Path) -> Union[list, dict]:
+def read_yaml(file: str) -> Union[list, dict]:
+    path_data = PATH_TESTS_DATA / file
     with open(path_data) as f:
         return yaml.safe_load(f)
 
@@ -63,16 +64,14 @@ class TestReadProductsPromOnRealAPI(TestCase):
     def test_onreal_read_products_prom(self):
         last_id = 637872504  # Gets a list with 21 items only
         products_prom = read_products_prom(last_id)
-        path_data = PATH_TESTS / 'prom_test_data/read_products_prom_test.yaml'
-        products_prom_test = read_yaml(path_data)
+        products_prom_test = read_yaml('test_onreal_read_products_prom_637872504.yaml')
 
         self.assertListEqual(products_prom_test, products_prom)
 
 
 def mock_get_product_id():
     def _get_product_id(self, last_id):
-        path_data = PATH_TESTS / 'prom_test_data/637949599_get_product_id.yaml'
-        return read_yaml(path_data) if last_id == 637949599 else None
+        return read_yaml('637949599_get_product_id.yaml') if last_id == 637949599 else None
 
     return _get_product_id
 
@@ -82,8 +81,7 @@ def mock_get_products_list():
         id_list = [628464896, 636197521, 637874961, 637949599]
         if last_id not in id_list:
             return None
-        path_data = PATH_TESTS / f'prom_test_data/{last_id}_get_products_list.yaml'
-        return read_yaml(path_data)
+        return read_yaml(f'{last_id}_get_products_list.yaml')
 
     return _get_products_list
 
@@ -93,8 +91,7 @@ class TestReadProductsProm(TestCase):
     @patch('prom_package.api_prom.PromClient.get_product_id', new_callable=mock_get_product_id)
     def test_read_products_prom(self, get_mock_id, get_mock_list):
         last_id = 637949599
-        path_data = PATH_TESTS / 'prom_test_data/read_products_prom_test_637949599.yaml'
-        products_prom_test = read_yaml(path_data)
+        products_prom_test = read_yaml('test_read_products_prom_637949599.yaml')
         products_prom = read_products_prom(last_id)
         # with open(path_data, 'w') as f:
         #     yaml.dump(products_prom, f, default_flow_style=False)
@@ -104,14 +101,9 @@ class TestReadProductsProm(TestCase):
 
 class TestGetPromChangedList(TestCase):
     def test_get_prom_changed_list(self):
-        path_data = PATH_TESTS / 'prom_test_data/products_prom_test.yaml'
-        products_prom_test = read_yaml(path_data)
-
-        path_data = PATH_TESTS / 'prom_test_data/products_changed_list_test.yaml'
-        products_changed_list_test = read_yaml(path_data)
-
-        path_data = PATH_TESTS / 'prom_test_data/bd_test.yaml'
-        bd_test = read_yaml(path_data)
+        products_prom_test = read_yaml('products_prom_test.yaml')
+        products_changed_list_test = read_yaml('products_changed_list_test.yaml')
+        bd_test = read_yaml('bd_test.yaml')
 
         bd = BasePassDBF(PATH_BASE, CODEPAGE, key_field_warehous='KOL_SKL', key_field_goods='SHOW_SITE')
         bd.goods = bd_test['goods']
