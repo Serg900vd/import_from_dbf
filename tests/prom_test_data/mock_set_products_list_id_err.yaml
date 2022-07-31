@@ -1,0 +1,6 @@
+errors:
+  '1616486427':
+    presence: 'Invalid presence value. Valid values: available, not_available, order,
+      waiting'
+processed_ids:
+- 628473798

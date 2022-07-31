@@ -15,6 +15,12 @@ PATH_TESTS = PATH_PROM.parent / 'tests'
 PATH_TESTS_DATA = PATH_TESTS / 'prom_test_data'
 
 
+def read_yaml(file: str) -> Union[list, dict]:
+    path_data = PATH_TESTS_DATA / file
+    with open(path_data) as f:
+        return yaml.safe_load(f)
+
+
 @skipIf(SKIP_REAL, 'Skipping tests that hit the real API server.')
 class TestWriteProductsPromOnRealAPI(TestCase):
     def test_write_products_prom(self):
@@ -26,20 +32,31 @@ class TestWriteProductsPromOnRealAPI(TestCase):
         self.assertRaises(ValueError, write_products_prom, err_products_changed_list)
 
 
-class TestWriteProductsProm(TestCase):
-    def test_write_products_prom(self):
-        products_changed_list = read_yaml('test_write_products_prom.yaml')
+def mock_set_products_list_id():
+    def _set_products_list_id(self, products_list):
+        return read_yaml('mock_set_products_list_id.yaml')
+    return _set_products_list_id
 
+
+def mock_set_products_list_id_err():
+    def _set_products_list_id(self, products_list):
+        return read_yaml('mock_set_products_list_id_err.yaml')
+    return _set_products_list_id
+
+
+class TestWriteProductsProm(TestCase):
+    @patch('prom_package.api_prom.PromClient.set_products_list_id', new_callable=mock_set_products_list_id)
+    def test_write_products_prom(self, get_mock):
+        products_changed_list = read_yaml('test_write_products_prom.yaml')
         self.assertTrue(write_products_prom(products_changed_list))
+
+    @patch('prom_package.api_prom.PromClient.set_products_list_id', new_callable=mock_set_products_list_id_err)
+    def test_write_products_prom_err(self, get_mock):
+        err_products_changed_list = read_yaml('test_write_products_prom_err.yaml')
+        self.assertRaises(ValueError, write_products_prom, err_products_changed_list)
 
     def test_write_products_prom_empty(self):
         self.assertFalse(write_products_prom([]))
-
-
-def read_yaml(file: str) -> Union[list, dict]:
-    path_data = PATH_TESTS_DATA / file
-    with open(path_data) as f:
-        return yaml.safe_load(f)
 
 
 @skipIf(SKIP_REAL, 'Skipping tests that hit the real API server.')
@@ -55,7 +72,6 @@ class TestReadProductsPromOnRealAPI(TestCase):
 def mock_get_product_id():
     def _get_product_id(self, last_id):
         return read_yaml('637949599_get_product_id.yaml') if last_id == 637949599 else None
-
     return _get_product_id
 
 
@@ -65,7 +81,6 @@ def mock_get_products_list():
         if last_id not in id_list:
             return None
         return read_yaml(f'{last_id}_get_products_list.yaml')
-
     return _get_products_list
 
 
