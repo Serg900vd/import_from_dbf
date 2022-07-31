@@ -1,0 +1,16 @@
+- external_id: test_HB770
+  id: 1616486427
+  presence: ERRRORnot_available
+  price: 8.5
+  prices:
+  - minimum_order_quantity: 5.0
+    price: 8.0
+  status: not_on_display
+- external_id: OL6
+  id: 628473798
+  presence: not_available
+  price: 16.73
+  prices:
+  - minimum_order_quantity: 2.0
+    price: 15.06
+  status: on_display
