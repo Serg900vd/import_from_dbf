@@ -6,9 +6,8 @@ from unittest.mock import patch, Mock
 
 import yaml
 
-import prom_package
 from prom_package.config import SKIP_REAL, PATH_PROM, DEBUG_MODE
-from prom_package.prom import write_products_prom, read_products_prom, get_prom_chang_list
+from prom_package.prom import PromClient, write_products_prom, read_products_prom, get_prom_chang_list
 from uninet.get_data_uninet import BasePassDBF
 
 if DEBUG_MODE:
@@ -35,14 +34,14 @@ class TestWriteProductsPromOnRealAPI(TestCase):
 
 
 class TestWriteProductsProm(TestCase):
-    @patch.object(prom_package.api_prom.PromClient, 'set_products_list_id')
+    @patch.object(PromClient, 'set_products_list_id')
     def test_write_products_prom(self, get_mock: Mock):
         get_mock.return_value = read_yaml('mock_set_products_list_id.yaml')
         products_changed_list = read_yaml('test_write_products_prom.yaml')
         self.assertTrue(write_products_prom(products_changed_list))
         get_mock.assert_called_with(products_changed_list)
 
-    @patch.object(prom_package.api_prom.PromClient, 'set_products_list_id')
+    @patch.object(PromClient, 'set_products_list_id')
     def test_write_products_prom_err(self, get_mock):
         get_mock.return_value = read_yaml('mock_set_products_list_id_err.yaml')
         err_products_changed_list = read_yaml('test_write_products_prom_err.yaml')
