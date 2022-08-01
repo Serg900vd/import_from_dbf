@@ -1,10 +1,11 @@
 import logging
 from typing import Union
 from unittest import TestCase, skipIf
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
 import yaml
 
+import prom_package
 from prom_package.config import SKIP_REAL, PATH_PROM, PATH_BASE, DEBUG_MODE
 from prom_package.prom import write_products_prom, read_products_prom, get_prom_chang_list
 from uninet.get_data_uninet import BasePassDBF, CODEPAGE
@@ -32,28 +33,20 @@ class TestWriteProductsPromOnRealAPI(TestCase):
         self.assertRaises(ValueError, write_products_prom, err_products_changed_list)
 
 
-def mock_set_products_list_id():
-    def _set_products_list_id(self, products_list):
-        return read_yaml('mock_set_products_list_id.yaml')
-    return _set_products_list_id
-
-
-def mock_set_products_list_id_err():
-    def _set_products_list_id(self, products_list):
-        return read_yaml('mock_set_products_list_id_err.yaml')
-    return _set_products_list_id
-
-
 class TestWriteProductsProm(TestCase):
-    @patch('prom_package.api_prom.PromClient.set_products_list_id', new_callable=mock_set_products_list_id)
-    def test_write_products_prom(self, get_mock):
+    @patch.object(prom_package.api_prom.PromClient, 'set_products_list_id')
+    def test_write_products_prom(self, get_mock: Mock):
+        get_mock.return_value = read_yaml('mock_set_products_list_id.yaml')
         products_changed_list = read_yaml('test_write_products_prom.yaml')
         self.assertTrue(write_products_prom(products_changed_list))
+        get_mock.assert_called_with(products_changed_list)
 
-    @patch('prom_package.api_prom.PromClient.set_products_list_id', new_callable=mock_set_products_list_id_err)
+    @patch.object(prom_package.api_prom.PromClient, 'set_products_list_id')
     def test_write_products_prom_err(self, get_mock):
+        get_mock.return_value = read_yaml('mock_set_products_list_id_err.yaml')
         err_products_changed_list = read_yaml('test_write_products_prom_err.yaml')
         self.assertRaises(ValueError, write_products_prom, err_products_changed_list)
+        get_mock.assert_called_with(err_products_changed_list)
 
     def test_write_products_prom_empty(self):
         self.assertFalse(write_products_prom([]))
@@ -72,6 +65,7 @@ class TestReadProductsPromOnRealAPI(TestCase):
 def mock_get_product_id():
     def _get_product_id(self, last_id):
         return read_yaml('637949599_get_product_id.yaml') if last_id == 637949599 else None
+
     return _get_product_id
 
 
@@ -81,6 +75,7 @@ def mock_get_products_list():
         if last_id not in id_list:
             return None
         return read_yaml(f'{last_id}_get_products_list.yaml')
+
     return _get_products_list
 
 
