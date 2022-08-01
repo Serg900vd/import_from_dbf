@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 from typing import Union
 from unittest import TestCase, skipIf
 from unittest.mock import patch, Mock
@@ -6,9 +7,9 @@ from unittest.mock import patch, Mock
 import yaml
 
 import prom_package
-from prom_package.config import SKIP_REAL, PATH_PROM, PATH_BASE, DEBUG_MODE
+from prom_package.config import SKIP_REAL, PATH_PROM, DEBUG_MODE
 from prom_package.prom import write_products_prom, read_products_prom, get_prom_chang_list
-from uninet.get_data_uninet import BasePassDBF, CODEPAGE
+from uninet.get_data_uninet import BasePassDBF
 
 if DEBUG_MODE:
     logging.root.setLevel('DEBUG')
@@ -96,9 +97,9 @@ class TestGetPromChangedList(TestCase):
     def test_get_prom_changed_list(self):
         products_prom_test = read_yaml('products_prom_test.yaml')
         products_changed_list_test = read_yaml('products_changed_list_test.yaml')
+        # Get an instance of the class, parameters do not matter.
+        bd = BasePassDBF(Path('PATH_BASE'), 'CODEPAGE')
         bd_test = read_yaml('bd_test.yaml')
-
-        bd = BasePassDBF(PATH_BASE, CODEPAGE, key_field_warehous='KOL_SKL', key_field_goods='SHOW_SITE')
         bd.goods = bd_test['goods']
         bd.warehous = bd_test['warehous']
 
