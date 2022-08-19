@@ -159,11 +159,6 @@ def main_uninet(path: Union[Path, None], file_name_out: str, paht_out: Path = No
     if not paht_out:
         paht_out = path
 
-    # Быстрое решение через функцию load_tables_dbf_uninet()
-    # Загружаем таблицы
-    # warehous, invoice, goods = load_tables_dbf_uninet(path)
-    # firm = {150: 'Uninet USA', 183: 'H&B'}
-
     # Initialize Base Data for Uninet
     bd = BasePassDBF(path, CODEPAGE, FILTR_FIRM_UNINET_KM_HB, 'KOL_SKL', 0, FILTER_GROUP_KM_HB)
     # Load tables
@@ -171,9 +166,9 @@ def main_uninet(path: Union[Path, None], file_name_out: str, paht_out: Path = No
     warehous, invoice, goods, firm = bd.warehous, bd.invoice, bd.goods, bd.firm
 
     uninet = []
-    header = [('товарная_группа', 'код_товара', 'код_прихода', 'накладная', 'дата', 'поставщик', 'модель',
-               'наименование', 'фирма', 'приход', 'склад', 'свободно', 'резерв', 'выписано', 'оплачено', 'usd_закупка',
-               'грн_закупка', 'usd_a', 'usd_b', 'usd_c', 'usd_d', 'usd_розница')]
+    header = ('товарная_группа', 'код_товара', 'код_прихода', 'накладная', 'дата', 'поставщик', 'модель',
+              'наименование', 'фирма', 'приход', 'склад', 'свободно', 'резерв', 'выписано', 'оплачено', 'usd_закупка',
+              'грн_закупка', 'usd_a', 'usd_b', 'usd_c', 'usd_d', 'usd_розница')
     # count = 0
     for group_cod_inv, row in warehous.items():
         inv = row['inv']
@@ -190,8 +185,8 @@ def main_uninet(path: Union[Path, None], file_name_out: str, paht_out: Path = No
                    warehous[group_cod_inv]['kol'],
                    warehous[group_cod_inv]['kol_skl'],
                    warehous[group_cod_inv]['kol_skl']
-                        - warehous[group_cod_inv]['kol_rezerv']
-                        - warehous[group_cod_inv]['kol_otkaz'],
+                   - warehous[group_cod_inv]['kol_rezerv']
+                   - warehous[group_cod_inv]['kol_otkaz'],
                    warehous[group_cod_inv]['kol_rezerv'],
                    warehous[group_cod_inv]['kol_sf'],
                    warehous[group_cod_inv]['kol_sale'],
@@ -206,15 +201,14 @@ def main_uninet(path: Union[Path, None], file_name_out: str, paht_out: Path = No
         uninet.append(row_out)
         # if count > 4: break
         # count += 1
-
     uninet.sort(key=lambda j: (j[0], j[1]))
-    uninet = header + uninet
 
     if not Path.is_dir(paht_out):
         raise FileNotFoundError(f'Нет такого пути {paht_out}')
 
     with open(paht_out / file_name_out, 'w') as f:
         ff = csv.writer(f, delimiter=',', lineterminator='\n')
+        ff.writerow(header)
         for row in uninet:
             ff.writerow(row)
     print(f'Результат записан в {paht_out / file_name_out}')
