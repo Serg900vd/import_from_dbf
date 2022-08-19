@@ -9,8 +9,8 @@ warehous.DBF
   6 - KOL_SKL   : 0
   7 - KOL_REZERV: 0
   8 - KOL_SALE  : 1
-  9 - KOL_SF    : 0
- 10 - KOL_OTKAZ : 0
+  9 - KOL_SF    : 0  Выписаны по счетам
+ 10 - KOL_OTKAZ : 0  Оплачены по счетам но еще не отгружены
  11 - CODE      : 'QO4AAI0   '
  12 - PRICE_KRB : 935.0
  13 - TAX_TAM   : None

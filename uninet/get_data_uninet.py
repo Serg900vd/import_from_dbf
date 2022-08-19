@@ -205,7 +205,9 @@ def main_uninet(path: Union[Path, None], file_name_out: str, paht_out: Path = No
                    firm[goods[group_cod]['firm']],
                    warehous[group_cod_inv]['kol'],
                    warehous[group_cod_inv]['kol_skl'],
-                   warehous[group_cod_inv]['kol_skl'] - warehous[group_cod_inv]['kol_rezerv'],
+                   warehous[group_cod_inv]['kol_skl']
+                        - warehous[group_cod_inv]['kol_rezerv']
+                        - warehous[group_cod_inv]['kol_otkaz'],
                    warehous[group_cod_inv]['kol_rezerv'],
                    warehous[group_cod_inv]['kol_sf'],
                    warehous[group_cod_inv]['kol_sale'],
@@ -303,7 +305,6 @@ def main():
     elif argvlen == 3:
         path_base, path_result = Path(argv[1]), Path(argv[2])
 
-    # path_base, path_result = argv[1], argv[2]
     print('Путь к базе ', path_base)
     main_uninet(path_base, 'stock_uninet.csv', path_result)
 
