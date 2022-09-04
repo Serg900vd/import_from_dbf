@@ -146,7 +146,7 @@ class BasePassDBF:
         :return:
         """
         product = self.get_warehous_grcod_sum(group_cod)
-        return product['kol_skl'] - product['kol_rezerv'] > 0
+        return product['kol_skl'] - product['kol_rezerv'] - product['kol_otkaz'] > 0
 
 
 def main_uninet(path: Union[Path, None], file_name_out: str, paht_out: Path = None):
