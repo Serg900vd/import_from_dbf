@@ -1,5 +1,9 @@
-# Обновление данных для UNINET base.xls
-#
+# Data update for UNINET_base.xls
+# Read the stock from the database "Pass" (Visual FoxPro 6.0) and save the result to csv file.
+# "Pass" -- database name
+# Command-line interfaces:
+#  get_data_uninet.py [path_base] [path_result]
+
 import csv
 from pathlib import Path
 from sys import argv
@@ -7,7 +11,6 @@ from typing import List, Tuple, Union
 
 import dbf
 
-# Read the start path
 PATH_UNINET = Path(__file__).parent
 
 PATH_BASE = Path("d:/bases/work/pass_base/")
@@ -18,6 +21,11 @@ FILTER_GROUP_KM_HB = ('KM', 'HB')
 
 
 class BasePassDBF:
+    """
+    Read data from "Pass" database and store data in self.warehous, self.invoice, self.goods, self.firm
+    according to the set filters and keys.
+    """
+
     def __init__(self, path_base: Path, codepage: str,
                  filter_id_firm: Tuple[int, ...] = None,
                  key_field_warehous: Union[str, int] = 0,
@@ -44,16 +52,16 @@ class BasePassDBF:
 
     def set_firm(self, filter_id_firm: Tuple[int, ...] = None) -> bool:
         """
-        Возвращает, из файла firm.dbf, словарь в котором ключ поле FIRM, значение поле FIRM_TXT
-        Результат передает в параметр self.firm
-        :param filter_id_firm: (150, 183) коды FIRM которые необходимо отфильтровать
+        Read data from firm.dbf, result dictionary key = field "FIRM", value = field "FIRM_TXT"
+        Write the result to self.firm
+        :param filter_id_firm: (150, 183) FIRM codes to be filtered
         :return: bool
         """
         if not filter_id_firm:
             filter_id_firm = self.filter_id_firm
         _file = self.path_base / 'firm.dbf'
         if not Path.is_file(_file):
-            raise FileNotFoundError(f'Нет необходимого файла {_file}')
+            raise FileNotFoundError(f'File missing {_file}')
         _firm = {}
         with dbf.Table(str(_file), codepage=self.codepage) as f:
             with f.open() as ff:
@@ -69,16 +77,16 @@ class BasePassDBF:
                            key_field: Union[str, int] = 0,
                            filter_group: tuple = None) -> dict:
         """
-        Возвращает словарь по ключу key_tabl с вложенными строками в виде словаря {поле : значение ...}
-        :param file_name: path + file_name.dbf
+        Returns a dictionary key= key_tabl with nested records as a dictionary {field : value ...}
+        :param file_name: Path(path + file_name.dbf)
         :param codepage: 'cp1251'
-        :param key_tabl: lambda row: row.GROUP + str(row.COD) + row.INV (ключ таблицы по умолчанию)
-        :param key_field: 'SHOW_PRG' Имя поля или индекс. Значение True включает строку в результат
-        :param filter_group: ('KM', 'HB') кортеж с значениями поля GROUP которые необходимо отфильтровать
-        :return: {key_tabl : {'group': 'KM', 'cod': 750, 'groupid': 695, ...(все поля таблицы)}, ...}
+        :param key_tabl: lambda row: row.GROUP + str(row.COD) + row.INV (default table key)
+        :param key_field: 'SHOW_PRG' Field name or index. The field value "True" includes the record in the result.
+        :param filter_group: ('KM', 'HB') Tuple with GROUP field values to be filtered.
+        :return: {key_tabl : {'group': 'KM', 'cod': 750, 'groupid': 695, ...(all fields of the table)}, ...}
         """
         if not file_name.is_file():
-            raise FileNotFoundError(f'Нет необходимого файла {file_name}')
+            raise FileNotFoundError(f'File missing {file_name}')
         result = {}
         with dbf.Table(str(file_name), codepage=codepage) as f:
             with f.open() as ff:
@@ -93,6 +101,10 @@ class BasePassDBF:
         return result
 
     def load_tables_dbf(self):
+        """
+        Read tables warehous.dbf, invoice.dbf, goods.dbf, firm loaded.
+        Save the result in self.warehous, self.invoice, self.goods, self.firm
+        """
         print(str(self))
 
         self.warehous = self.get_data_from_pass(self.path_base / 'warehous.dbf', self.codepage,
@@ -115,7 +127,7 @@ class BasePassDBF:
 
     def get_warehous_grcod_filter(self, group_cod: str) -> List[dict]:
         """
-        Получаем список всех строк (приходы) для заданного продукта (уникальный ключ 'group_cod') из таблицы warehous
+        Get a list of all rows (goods receipts) for a given product (unique key 'group_cod') from the warehous table.
         :param group_cod:
         :return:
         """
@@ -123,7 +135,7 @@ class BasePassDBF:
 
     def get_warehous_grcod_sum(self, group_cod: str) -> dict:
         """
-        Суммируем приходы для заданного продукта
+        Sum receipts for a given product.
         :param group_cod:
         :return:
         """
@@ -141,7 +153,7 @@ class BasePassDBF:
 
     def is_product_on_stock(self, group_cod: str) -> bool:
         """
-        В наличие на складе?
+        In stock?
         :param group_cod:
         :return:
         """
@@ -149,15 +161,15 @@ class BasePassDBF:
         return product['kol_skl'] - product['kol_rezerv'] - product['kol_otkaz'] > 0
 
 
-def main_uninet(path: Union[Path, None], file_name_out: str, paht_out: Path = None):
+def main_uninet(path: Union[Path, None], file_name_out: str, path_out: Path = None):
     """
-    Формируем финальную таблицу для выдачи.
-    :param path: путь к базе
-    :param file_name_out: имя файла с результатом в формате .csv
-    :param paht_out: путь файла результата
+    Create the final table. Write the result to a file in csv format.
+    :param path: The path to the base.
+    :param file_name_out: The name of the result file in the format .csv.
+    :param path_out: A result file path.
     """
-    if not paht_out:
-        paht_out = path
+    if not path_out:
+        path_out = path
 
     # Initialize Base Data for Uninet
     bd = BasePassDBF(path, CODEPAGE, FILTR_FIRM_UNINET_KM_HB, 'KOL_SKL', 0, FILTER_GROUP_KM_HB)
@@ -203,15 +215,15 @@ def main_uninet(path: Union[Path, None], file_name_out: str, paht_out: Path = No
         # count += 1
     uninet.sort(key=lambda j: (j[0], j[1]))
 
-    if not Path.is_dir(paht_out):
-        raise FileNotFoundError(f'Нет такого пути {paht_out}')
+    if not Path.is_dir(path_out):
+        raise FileNotFoundError(f'Path missing {path_out}')
 
-    with open(paht_out / file_name_out, 'w') as f:
+    with open(path_out / file_name_out, 'w') as f:
         ff = csv.writer(f, delimiter=',', lineterminator='\n')
         ff.writerow(header)
         for row in uninet:
             ff.writerow(row)
-    print(f'Результат записан в {paht_out / file_name_out}')
+    print(f'The result is recorded in {path_out / file_name_out}')
 
 
 def main():
@@ -224,7 +236,7 @@ def main():
     elif argvlen == 3:
         path_base, path_result = Path(argv[1]), Path(argv[2])
 
-    print('Путь к базе ', path_base)
+    print('Path to base ', path_base)
     main_uninet(path_base, 'stock_uninet.csv', path_result)
 
 
