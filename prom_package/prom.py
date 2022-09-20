@@ -176,7 +176,7 @@ def main():
         write_products_prom(products_changed_list)
     except Exception as exc :
         logging.warning(f'Houston we have a problem >> {exc}')
-        # logging.warning(f'Houston we have a problem >>', exc)  # More details...
+        logging.debug(f'Houston we have a problem >>', exc)  # More details...
 
 
     time_run = time() - time_start
