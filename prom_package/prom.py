@@ -66,7 +66,7 @@ def read_products_prom(last_id: int) -> List[dict]:
     product_lust_id = api_prom.get_product_id(last_id)  # last =1616486427  first = 628464896
     products_prom = [product_lust_id['product']]
 
-    logging.debug('Start read_products_prom:')
+    logging.info('Start read_products_prom:')
     while True:
         products_20 = api_prom.get_products_list(last_id=last_id)
         products_20 = products_20['products']
@@ -76,6 +76,7 @@ def read_products_prom(last_id: int) -> List[dict]:
         last_id = products_prom[-1]['id']
 
         logging.debug('Prom read products: %s', len(products_prom))
+    logging.info('Finish read_products_prom:')
     return products_prom
 
 
@@ -159,19 +160,24 @@ def main():
     time_start = time()
     logging.info('----START----')
 
-    # Get an up-to-date list of goods from the site prom.ua
-    last_id = LAST_PRODUCT_ID
-    # last_id = 637872504  # Gets a list with 21 items only
-    products_prom = read_products_prom(last_id)
+    try:
+        # Get an up-to-date list of goods from the site prom.ua
+        last_id = LAST_PRODUCT_ID
+        # last_id = 637872504  # Gets a list with 21 items only
+        products_prom = read_products_prom(last_id)
 
-    # Load the tables warehous.dbf, invoice.DBF, goods.dbf, firm.dbf from the dbf database
-    bd = load_bd()
+        # Load the tables warehous.dbf, invoice.DBF, goods.dbf, firm.dbf from the dbf database
+        bd = load_bd()
 
-    # Find products with changes
-    products_changed_list = get_prom_chang_list(bd, products_prom)
+        # Find products with changes
+        products_changed_list = get_prom_chang_list(bd, products_prom)
 
-    # Record products with changes on Prom
-    write_products_prom(products_changed_list)
+        # Record products with changes on Prom
+        write_products_prom(products_changed_list)
+    except Exception as exc :
+        logging.warning(f'Houston we have a problem >> {exc}')
+        # logging.warning(f'Houston we have a problem >>', exc)  # More details...
+
 
     time_run = time() - time_start
     logging.info('----FINISH----\n----RUN TIME: %s s.', time_run)
