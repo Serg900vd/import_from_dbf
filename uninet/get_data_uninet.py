@@ -8,6 +8,7 @@ import csv
 from pathlib import Path
 from sys import argv
 from typing import List, Tuple, Union
+import logging
 
 import dbf
 
@@ -105,25 +106,25 @@ class BasePassDBF:
         Read tables warehous.dbf, invoice.dbf, goods.dbf, firm loaded.
         Save the result in self.warehous, self.invoice, self.goods, self.firm
         """
-        print(str(self))
+        logging.info(str(self))
 
         self.warehous = self.get_data_from_pass(self.path_base / 'warehous.dbf', self.codepage,
                                                 key_field=self.key_field_warehous,
                                                 filter_group=self.filter_group)
-        print('warehous loaded')
+        logging.info('warehous loaded')
 
         self.invoice = self.get_data_from_pass(self.path_base / 'invoice.DBF', self.codepage,
                                                key_tabl=lambda row: row.INV)
-        print('invoice loaded')
+        logging.info('invoice loaded')
 
         self.goods = self.get_data_from_pass(self.path_base / 'goods.dbf', self.codepage,
                                              key_tabl=lambda row: row.GROUP + str(row.COD),
                                              key_field=self.key_field_goods,
                                              filter_group=self.filter_group)
-        print('goods loaded')
+        logging.info('goods loaded')
 
         self.set_firm()
-        print('firm loaded')
+        logging.info('firm loaded')
 
     def get_warehous_grcod_filter(self, group_cod: str) -> List[dict]:
         """
@@ -135,7 +136,7 @@ class BasePassDBF:
 
     def get_warehous_grcod_sum(self, group_cod: str) -> dict:
         """
-        Sum receipts for a given product.
+        Sum receipts for the given product.
         :param group_cod:
         :return:
         """
@@ -223,7 +224,7 @@ def main_uninet(path: Union[Path, None], file_name_out: str, path_out: Path = No
         ff.writerow(header)
         for row in uninet:
             ff.writerow(row)
-    print(f'The result is recorded in {path_out / file_name_out}')
+    logging.info(f'The result is recorded in {path_out / file_name_out}')
 
 
 def main():
@@ -235,8 +236,8 @@ def main():
         path_base = path_result = Path(argv[1])
     elif argvlen == 3:
         path_base, path_result = Path(argv[1]), Path(argv[2])
-
-    print('Path to base ', path_base)
+    logging.root.setLevel(logging.INFO)
+    logging.info(f'Path to base => {path_base}')
     main_uninet(path_base, 'stock_uninet.csv', path_result)
 
 
