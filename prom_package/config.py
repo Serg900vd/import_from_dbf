@@ -65,7 +65,7 @@ LOGGING = {'version': 1,
            'formatters': {'formatter_0': {'datefmt': '%d/%m/%Y %H:%M:%S',
                                           'format': _format_console
                                           },
-                           'formatter_1': {'datefmt': '%d/%m/%Y %H:%M:%S',
+                          'formatter_1': {'datefmt': '%d/%m/%Y %H:%M:%S',
                                           'format': _format_file
                                           }
                           },
@@ -78,9 +78,18 @@ LOGGING = {'version': 1,
                                     'filename': 'prom.log',
                                     'formatter': 'formatter_1',
                                     'level': 'INFO',
-                                    'maxBytes': 16384}},
-           'root': {'handlers': ['to_console', 'to_file'],
-                                'level': 'INFO'}
+                                    'maxBytes': 16384},
+                        'to_mail': {'class': 'logging.handlers.SMTPHandler',
+                                    'mailhost': SMTP_CONFIG.host.split(':'),
+                                    'fromaddr': f'<{SMTP_CONFIG.from_addr}> Prom data update',
+                                    'toaddrs': SMTP_CONFIG.to_addr,
+                                    'subject': SMTP_CONFIG.subject,
+                                    'credentials': SMTP_CONFIG.user_password,
+                                    'formatter': 'formatter_1',
+                                    'level': 'WARNING'},
+                        },
+           'root': {'handlers': ['to_console', 'to_file', 'to_mail'],
+                    'level': 'INFO'}
            }
 
 if __name__ == '__main__':

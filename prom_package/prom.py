@@ -176,8 +176,8 @@ def main():
         # Record products with changes on Prom
         write_products_prom(products_changed_list)
     except Exception as exc:
-        import traceback
-        send_email(traceback.format_exc())
+        # import traceback
+        # send_email(traceback.format_exc())
 
         logging.warning(f'Houston we have a problem >> {exc}', exc_info=True, stack_info=True)
 
