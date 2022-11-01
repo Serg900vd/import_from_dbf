@@ -16,6 +16,7 @@ from typing import List, Literal
 
 from prom_package.api_prom import PromClient
 from prom_package.config import PATH_BASE, AUTH_TOKEN_PRODUCTS, LAST_PRODUCT_ID, HOST, DEBUG_MODE, LOGGING
+from prom_package.smtp import send_email
 from uninet.get_data_uninet import BasePassDBF, CODEPAGE
 
 # Status constants
@@ -174,9 +175,11 @@ def main():
 
         # Record products with changes on Prom
         write_products_prom(products_changed_list)
-    except Exception as exc :
-        logging.warning(f'Houston we have a problem >> {exc}')
-        logging.debug(f'Houston we have a problem >>', exc)  # More details...
+    except Exception as exc:
+        import traceback
+        send_email(traceback.format_exc())
+
+        logging.warning(f'Houston we have a problem >> {exc}', exc_info=True, stack_info=True)
 
 
     time_run = time() - time_start

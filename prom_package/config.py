@@ -1,7 +1,17 @@
 import json
-import logging.config
+from dataclasses import dataclass
 
 from pathlib import Path
+
+
+@dataclass
+class SmtpConfig:
+    host: str = 'host:port'
+    user_password: tuple = ('user', 'password')
+    from_addr: str = 'from@from_host'
+    to_addr: str = 'to@to_host'
+    subject: str = 'WARNING Prom data update has falled'
+
 
 # Read the start path
 PATH_PROM = Path(__file__).parent
@@ -16,6 +26,37 @@ PATH_BASE_TEST = Path("../tests/dbf/")
 SKIP_REAL = False
 # ON/OFF debug mode logging
 DEBUG_MODE = True
+
+#
+SMTP_CONFIG = SmtpConfig()
+
+if SKIP_REAL:
+    HOST = 'my.prom.ua'
+    AUTH_TOKEN_PRODUCTS = 'X'
+    PATH_BASE = PATH_BASE_TEST
+    LAST_PRODUCT_ID = 1616486427
+else:
+    config_prom_txt = PATH_PROM / 'config_prom.txt'
+    with config_prom_txt.open() as f:
+        config_prom_json = f.read()
+        config_prom = json.loads(config_prom_json)
+
+    # API Settigs
+    HOST = config_prom['HOST']
+    AUTH_TOKEN_PRODUCTS = config_prom['AUTH_TOKEN_PRODUCTS']
+
+    # Base path setting
+    PATH_BASE = Path(config_prom['PATH_BASE'])
+
+    # ID на Prom последнего продукта.
+    # Обновить при добавлении продуктов в каталог!
+    LAST_PRODUCT_ID = config_prom['LAST_PRODUCT_ID']
+
+    #
+    SMTP_CONFIG.host = config_prom['SMTP_HOST']
+    SMTP_CONFIG.user_password = tuple(config_prom['SMTP_USER_PASSWORD'])
+    SMTP_CONFIG.from_addr = config_prom['SMTP_FROM_ADDR']
+    SMTP_CONFIG.to_addr = config_prom['SMTP_TO_ADDR']
 
 # Logging configuration by dictConfig
 _format_console = '[%(filename)s-%(funcName)s].%(levelname)s: %(message)s'
@@ -42,28 +83,6 @@ LOGGING = {'version': 1,
                                 'level': 'INFO'}
            }
 
-if SKIP_REAL:
-    HOST = 'my.prom.ua'
-    AUTH_TOKEN_PRODUCTS = 'X'
-    PATH_BASE = PATH_BASE_TEST
-    LAST_PRODUCT_ID = 1616486427
-else:
-    config_prom_txt = PATH_PROM / 'config_prom.txt'
-    with config_prom_txt.open() as f:
-        config_prom_json = f.read()
-        config_prom = json.loads(config_prom_json)
-
-    # API Settigs
-    HOST = config_prom['HOST']
-    AUTH_TOKEN_PRODUCTS = config_prom['AUTH_TOKEN_PRODUCTS']
-
-    # Base path setting
-    PATH_BASE = Path(config_prom['PATH_BASE'])
-
-    # ID на Prom последнего продукта.
-    # Обновить при добавлении продуктов в каталог!
-    LAST_PRODUCT_ID = config_prom['LAST_PRODUCT_ID']
-
 if __name__ == '__main__':
     print(f'HOST: {HOST}')
     print(f'PATH_PROM: {PATH_PROM}')
@@ -72,3 +91,4 @@ if __name__ == '__main__':
     print(f'AUTH_TOKEN_PRODUCTS: {AUTH_TOKEN_PRODUCTS}')
     print(f'PATH_BASE: {PATH_BASE}')
     print(f'LAST_PRODUCT_ID: {LAST_PRODUCT_ID}')
+    print(f'SMTP_CONFIG: {SMTP_CONFIG}')
