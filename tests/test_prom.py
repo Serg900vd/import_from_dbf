@@ -52,7 +52,8 @@ class TestWriteProductsProm(TestCase):
         self.assertFalse(write_products_prom([]))
 
 
-@skipIf(SKIP_REAL, 'Skipping tests that hit the real API server.')
+@skipIf(True, 'Skipping tests that hit the real API server.')
+# @skipIf(SKIP_REAL, 'Skipping tests that hit the real API server.')
 class TestReadProductsPromOnRealAPI(TestCase):
     def test_onreal_read_products_prom(self):
         last_id = 637872504  # Gets a list with 21 items only
