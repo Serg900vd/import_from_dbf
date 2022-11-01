@@ -6,10 +6,7 @@
 
 import http.client
 import json
-import pprint
 from typing import Union
-
-from prom_package.config import AUTH_TOKEN_PRODUCTS, HOST
 
 
 class HTTPError(Exception):
@@ -41,8 +38,6 @@ class PromClient:
             if response.status != 200:
                 raise HTTPError('{}: {}'.format(response.status, response.reason))
             response_data = response.read()
-        # except:
-        #     raise
         finally:
             if self.connection:
                 self.connection.close()
@@ -93,66 +88,5 @@ class PromClient:
         return self.make_request(method, url, body)
 
 
-def main_read():
-    """
-    Для разработки. Надо УДАЛИТЬ!
-    :return:
-    """
-    # Initialize Client
-    if not AUTH_TOKEN_PRODUCTS:
-        raise Exception('Sorry, there\'s no any AUTH_TOKEN_PRODUCTS!')
-    api_prom = PromClient(HOST, AUTH_TOKEN_PRODUCTS)
-
-    # product_list = api_prom.get_products_list(2, group_id=81223949)
-    # if not product_list['products']:
-    #     raise Exception('Sorry, there\'s no any product!')
-    # pprint.pprint(product_list)
-
-    # test external_id 'test_HB770'
-    product_item = api_prom.get_product_external_id('test_HB770')
-    pprint.pprint(product_item)
-
-    # test product id 1616486427
-    # product_item = api_prom.get_product_id(1616486427)
-    # pprint.pprint(product_item)
-
-    # # Order example data. Requred to be setup to get example uninet
-    # order_id = order_list['orders'][0]['id']
-    # order_ids = [order_id]
-    # status = 'received'
-    #
-    # # Setting order status
-    # pprint.pprint(api_prom.set_order_status(status=status, ids=order_ids))
-    #
-    # # # Getting order by id
-    # pprint.pprint(api_prom.get_order(order_id))
-
-
-def main_write():
-    """
-    Для разработки. Надо УДАЛИТЬ!
-    :return:
-    """
-    # Initialize Client
-    if not AUTH_TOKEN_PRODUCTS:
-        raise Exception('Sorry, there\'s no any AUTH_TOKEN_PRODUCTS!')
-    api_prom = PromClient(HOST, AUTH_TOKEN_PRODUCTS)
-
-    # test product id 1616486427
-    # 'external_id' 'test_HB770' -- READ ONLY
-    products_list = [{'id': 1616486427,
-                      'external_id': 'test_HB770',
-                      'presence': 'available',
-                      'price': 8.5,
-                      'prices': [{'minimum_order_quantity': 5.0, 'price': 7.0}],
-                      'sku': 'test_HB770',
-                      'status': 'on_display',
-                      }]
-    response = api_prom.set_products_list_id(products_list)
-    pprint.pprint(response)
-
-
 if __name__ == '__main__':
-    # main_write()
-
-    main_read()
+    pass
