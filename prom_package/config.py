@@ -13,11 +13,14 @@ class SmtpConfig:
     subject: str = 'WARNING Prom data update has falled'
 
 
+PROM_VER = 'v1.4.0'
+
 # Read the start path
 PATH_PROM = Path(__file__).parent
-
-# To compile .exe file
-# PATH_PROM = Path.cwd()
+if not (PATH_PROM / 'config_prom.txt').is_file():
+    PATH_PROM = Path.cwd()
+    if not (PATH_PROM / 'config_prom.txt').is_file():
+        raise FileNotFoundError(f'No such file {PATH_PROM} config_prom.txt')
 
 # Test base setting
 PATH_BASE_TEST = Path("../tests/dbf/")
@@ -93,6 +96,7 @@ LOGGING = {'version': 1,
            }
 
 if __name__ == '__main__':
+    print(f'PROM_VER: {PROM_VER}')
     print(f'HOST: {HOST}')
     print(f'PATH_PROM: {PATH_PROM}')
     print(f'SKIP_REAL: {SKIP_REAL}')
