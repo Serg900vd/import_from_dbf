@@ -16,7 +16,6 @@ from typing import List, Literal
 
 from prom_package.api_prom import PromClient
 from prom_package.config import PATH_BASE, AUTH_TOKEN_PRODUCTS, LAST_PRODUCT_ID, HOST, DEBUG_MODE, LOGGING
-from prom_package.smtp import send_email
 from uninet.get_data_uninet import BasePassDBF, CODEPAGE
 
 # Status constants
@@ -54,6 +53,14 @@ class Product:
         return self.prices[0]['price']
 
 
+class PromClientOneConnect(PromClient):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def make_request_with_conn(self, *args, **kwargs) -> dict:
+        return self.make_request(*args, **kwargs)
+
+
 def read_products_prom(last_id: int) -> List[dict]:
     """
     Download the current list of products from the site.
@@ -63,20 +70,23 @@ def read_products_prom(last_id: int) -> List[dict]:
     """
     # A query without parameters returns a list with only 100 products.
     # There is no way to get the whole list.
-    api_prom = PromClient(HOST, AUTH_TOKEN_PRODUCTS)
-    product_lust_id = api_prom.get_product_id(last_id)  # last =1616486427  first = 628464896
-    products_prom = [product_lust_id['product']]
+    api_prom = PromClientOneConnect(HOST, AUTH_TOKEN_PRODUCTS)
 
     logging.info('Start read_products_prom:')
-    while True:
-        products_20 = api_prom.get_products_list(last_id=last_id)
-        products_20 = products_20['products']
-        if not products_20:
-            break
-        products_prom += products_20
-        last_id = products_prom[-1]['id']
-
-        logging.debug('Prom read products: %s', len(products_prom))
+    try:
+        api_prom.set_connection()
+        product_lust_id = api_prom.get_product_id(last_id)  # last =1616486427  first = 628464896
+        products_prom = [product_lust_id['product']]
+        while True:
+            products_20 = api_prom.get_products_list(last_id=last_id)
+            products_20 = products_20['products']
+            if not products_20:
+                break
+            products_prom += products_20
+            last_id = products_prom[-1]['id']
+            logging.debug('Prom read products: %s', len(products_prom))
+    finally:
+        api_prom.close_connection()
     logging.info('Finish read_products_prom:')
     return products_prom
 
@@ -181,7 +191,6 @@ def main():
 
         logging.warning(f'Houston we have a problem >> {exc}', exc_info=True, stack_info=True)
 
-
     time_run = time() - time_start
     logging.info('----FINISH----\n----RUN TIME: %s s.', time_run)
     # if DEBUG_MODE:
@@ -193,6 +202,7 @@ if __name__ == '__main__':
     # !!! For Windows 7 64x Python 3.8 + Pyinstaller-5.0.1 only !!!
     #  config.py set: PATH_PROM = Path.cwd()
     #  Command:
+    #   cd .\prom_package\
     #   pyinstaller prom.py --onefile
 
     main()
