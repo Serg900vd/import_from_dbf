@@ -145,12 +145,16 @@ def write_products_prom(products_changed_list: list) -> bool:
     :return:
     """
     if products_changed_list:
-        api_prom = PromClient(HOST, AUTH_TOKEN_PRODUCTS)
-        response = api_prom.set_products_list_id(products_changed_list)
-        logging.info('processed_ids: %s', response['processed_ids'])
-        if response['errors']:
-            logging.warning('ERRORS: %s', response['errors'])
-            raise ValueError(f'errors: {response["errors"]}')
+        # The error is returned if len(products_changed_list) > 100
+        for k in range(len(products_changed_list), 0, -100):
+            api_prom = PromClient(HOST, AUTH_TOKEN_PRODUCTS)
+            s = k - 100 if k > 100 else 0
+            products = products_changed_list[s:k]
+            response = api_prom.set_products_list_id(products)
+            if response['errors']:
+                logging.warning('ERRORS: %s', response['errors'])
+                raise ValueError(f'errors: {response["errors"]}')
+            logging.info('processed_ids: %s', response['processed_ids'])
         return True
     else:
         logging.info('products_changed_list is empty %s', products_changed_list)

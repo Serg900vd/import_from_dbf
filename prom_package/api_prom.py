@@ -87,6 +87,9 @@ class PromClient:
         return self.make_request_with_conn(method, url)
 
     def set_products_list_id(self, products: list) -> dict:
+        """
+        The error is returned if len(products_changed_list) > 100
+        """
         url = f'/api/v1/products/edit'
         method = 'POST'
         body = products
@@ -95,6 +98,7 @@ class PromClient:
     def set_products_list_external_id(self, products_external_id: list) -> dict:
         """
         "id": "string",  <--- product_external_id
+        The error is returned if len(products_changed_list_id) > 100
         """
         url = f'/api/v1/products/edit_by_external_id'
         method = 'POST'
