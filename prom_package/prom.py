@@ -7,6 +7,10 @@
 #  "AUTH_TOKEN_PRODUCTS": "my_token",
 #  "PATH_BASE": "path_to_base",
 #  "LAST_PRODUCT_ID": int_last_product_id_on_prom_catalog
+#  "SMTP_HOST": "my_smtp_host:port_number",
+#  "SMTP_USER_PASSWORD": ["user", "password"],
+#  "SMTP_FROM_ADDR": "mail_sender",
+#  "SMTP_TO_ADDR": "mail_to"
 # }
 import logging
 import logging.config
@@ -168,6 +172,8 @@ def _logging_config():
         for handler in logging.root.handlers:
             if handler.name == 'to_console':
                 handler.setLevel('DEBUG')
+            # if handler.name == 'to_file':
+            #     handler.setLevel('DEBUG')
 
 
 def main():
