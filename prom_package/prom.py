@@ -19,7 +19,7 @@ from time import time
 from typing import List, Literal
 
 from prom_package.api_prom import PromClient
-from prom_package.config import PATH_BASE, AUTH_TOKEN_PRODUCTS, LAST_PRODUCT_ID, HOST, DEBUG_MODE, LOGGING
+from prom_package.config import PATH_BASE, AUTH_TOKEN_PRODUCTS, LAST_PRODUCT_ID, HOST, DEBUG_MODE, LOGGING, PROM_VER
 from uninet.get_data_uninet import BasePassDBF, CODEPAGE
 
 # Status constants
@@ -179,7 +179,7 @@ def _logging_config():
 def main():
     _logging_config()
     time_start = time()
-    logging.info('----START----')
+    logging.info(f'----START---- PROM_VER = {PROM_VER}')
 
     try:
         # Get an up-to-date list of goods from the site prom.ua
@@ -210,7 +210,7 @@ def main():
 if __name__ == '__main__':
     # To compile .exe file:
     # !!! For Windows 7 64x Python 3.8 + Pyinstaller-5.0.1 only !!!
-    #  config.py set: PATH_PROM = Path.cwd()
+    #
     #  Command:
     #   cd .\prom_package\
     #   pyinstaller prom.py --onefile
