@@ -19,7 +19,7 @@ from time import time
 from typing import List, Literal
 
 from prom_package.api_prom import PromClient
-from prom_package.config import PATH_BASE, AUTH_TOKEN_PRODUCTS, LAST_PRODUCT_ID, HOST, DEBUG_MODE, LOGGING, PROM_VER
+from prom_package.config import PATH_BASE, AUTH_TOKEN_PRODUCTS, HOST, DEBUG_MODE, LOGGING, PROM_VER
 from uninet.get_data_uninet import BasePassDBF, CODEPAGE
 
 # Status constants
@@ -66,7 +66,7 @@ class PromClientOneConnect(PromClient):
         return self.make_request(*args, **kwargs)
 
 
-def read_products_prom(last_id: int) -> List[dict]:
+def read_products_prom(last_id: int = None) -> List[dict]:
     """
     Download the current list of products from the site.
     Iterations in 20 pcs. starting from the last (last_id) in reverse order.
@@ -80,8 +80,10 @@ def read_products_prom(last_id: int) -> List[dict]:
     logging.info('Start read_products_prom:')
     try:
         api_prom.set_connection()
-        product_lust_id = api_prom.get_product_id(last_id)  # last =1616486427  first = 628464896
-        products_prom = [product_lust_id['product']]
+        products_prom = []
+        if last_id:
+            product_lust_id = api_prom.get_product_id(last_id)  # last =1616486427  first = 628464896
+            products_prom = [product_lust_id['product']]
         while True:
             products_20 = api_prom.get_products_list(last_id=last_id)
             products_20 = products_20['products']
@@ -190,9 +192,8 @@ def main():
 
     try:
         # Get an up-to-date list of goods from the site prom.ua
-        last_id = LAST_PRODUCT_ID
         # last_id = 637872504  # Gets a list with 21 items only
-        products_prom = read_products_prom(last_id)
+        products_prom = read_products_prom()
 
         # Load the tables warehous.dbf, invoice.DBF, goods.dbf, firm.dbf from the dbf database
         bd = load_bd()

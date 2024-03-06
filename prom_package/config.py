@@ -51,10 +51,6 @@ else:
     # Base path setting
     PATH_BASE = Path(config_prom['PATH_BASE'])
 
-    # ID на Prom последнего продукта.
-    # Обновить при добавлении продуктов в каталог!
-    LAST_PRODUCT_ID = config_prom['LAST_PRODUCT_ID']
-
     #
     SMTP_CONFIG.host = config_prom['SMTP_HOST']
     SMTP_CONFIG.user_password = tuple(config_prom['SMTP_USER_PASSWORD'])
