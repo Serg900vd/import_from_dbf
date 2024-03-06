@@ -42,6 +42,7 @@ class Product:
     price: float = 0.0
     prices: List[dict] = field(default_factory=list)
     status: Status = NOT_ON_DISPLAY
+    quantity_in_stock: int = 0
 
     def __post_init__(self, ):
         if not self.prices:
@@ -114,11 +115,17 @@ def get_prom_chang_list(bd: BasePassDBF, products_prom: list) -> list:
     """
     products_chang_list = []
     for p in products_prom:
-        product_prom = Product(p['id'], p['external_id'], p['presence'], p['price'], p['prices'], p['status'])
+        product_prom = Product(p['id'], p['external_id'], p['presence'], p['price'], p['prices'], p['status'],
+                               p['quantity_in_stock'])
 
         group_cod = p['external_id']
-        presence = PRESENCE_AVAILABLE if bd.is_product_on_stock(group_cod) else PRESENCE_NOT_AVAILABLE
-        product_bd = Product(p['id'], group_cod, presence)
+        quantity_in_stock = bd.quantity_product_on_stock(group_cod)
+        product_bd = Product(
+            id=p['id'],
+            external_id=group_cod,
+            presence=PRESENCE_AVAILABLE if quantity_in_stock else PRESENCE_NOT_AVAILABLE,
+            quantity_in_stock=quantity_in_stock if quantity_in_stock < 20 else 20
+        )
         try:
             if bd.goods[group_cod]['show_site']:
                 product_bd.status = STATUS_ON_DISPLAY

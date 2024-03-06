@@ -152,14 +152,14 @@ class BasePassDBF:
                 _group_cod_sum[param] += row[param]
         return _group_cod_sum
 
-    def is_product_on_stock(self, group_cod: str) -> bool:
+    def quantity_product_on_stock(self, group_cod: str) -> int:
         """
-        In stock?
         :param group_cod:
         :return:
         """
         product = self.get_warehous_grcod_sum(group_cod)
-        return product['kol_skl'] - product['kol_rezerv'] - product['kol_otkaz'] > 0
+        quantity = product['kol_skl'] - product['kol_rezerv'] - product['kol_otkaz']
+        return quantity if quantity > 0 else 0
 
 
 def main_uninet(path: Union[Path, None], file_name_out: str, path_out: Path = None):
