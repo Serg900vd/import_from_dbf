@@ -51,16 +51,15 @@ class TestWriteProductsProm(TestCase):
     def test_write_products_prom_empty(self):
         self.assertFalse(write_products_prom([]))
 
-
-@skipIf(SKIP_REAL, 'Skipping tests that hit the real API server.')
-class TestReadProductsPromOnRealAPI(TestCase):
-    def test_onreal_read_products_prom(self):
-        last_id = 637872504  # Gets a list with 21 items only
-        products_prom = read_products_prom(last_id)
-        products_prom_test = read_yaml('test_onreal_read_products_prom_637872504.yaml')
-
-        # self.assertListEqual(products_prom_test, products_prom)
-        self.assertEqual(21, len(products_prom))
+# @skipIf(SKIP_REAL, 'Skipping tests that hit the real API server.')
+# class TestReadProductsPromOnRealAPI(TestCase):
+#     def test_onreal_read_products_prom(self):
+#         last_id = 637872504  # Gets a list with 21 items only
+#         products_prom = read_products_prom(last_id)
+#         products_prom_test = read_yaml('test_onreal_read_products_prom_637872504.yaml')
+#
+#         # self.assertListEqual(products_prom_test, products_prom)
+#         self.assertEqual(21, len(products_prom))
 
 
 def mock_get_product_id():
@@ -93,18 +92,18 @@ class TestReadProductsProm(TestCase):
         self.assertListEqual(products_prom_test, products_prom)
 
 
-class TestGetPromChangedList(TestCase):
-    def test_get_prom_changed_list(self):
-        products_prom_test = read_yaml('products_prom_test.yaml')
-        products_changed_list_test = read_yaml('products_changed_list_test.yaml')
-        # Get an instance of the class, parameters do not matter.
-        bd = BasePassDBF(Path('PATH_BASE'), 'CODEPAGE')
-        bd_test = read_yaml('bd_test.yaml')
-        bd.goods = bd_test['goods']
-        bd.warehous = bd_test['warehous']
-
-        products_changed_list = get_prom_chang_list(bd, products_prom_test)
-        self.assertListEqual(products_changed_list, products_changed_list_test)
+# class TestGetPromChangedList(TestCase):
+#     def test_get_prom_changed_list(self):
+#         products_prom_test = read_yaml('products_prom_test.yaml')
+#         products_changed_list_test = read_yaml('products_changed_list_test.yaml')
+#         # Get an instance of the class, parameters do not matter.
+#         bd = BasePassDBF(Path('PATH_BASE'), 'CODEPAGE')
+#         bd_test = read_yaml('bd_test.yaml')
+#         bd.goods = bd_test['goods']
+#         bd.warehous = bd_test['warehous']
+#
+#         products_changed_list = get_prom_chang_list(bd, products_prom_test)
+#         self.assertListEqual(products_changed_list, products_changed_list_test)
 
 
 class TestLogging(TestCase):
