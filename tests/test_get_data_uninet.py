@@ -70,8 +70,10 @@ class TestBasePassDBFbB(TestCase):
                    'kol_skl': 5, 'old_sale': 0}
         self.assertEqual(self.bd.get_warehous_grcod_sum('KM1129'), _result)
 
-    def test_is_product_on_stock(self):
-        self.assertEqual(self.bd.quantity_product_on_stock('KM1129'), True)
+    @skipIf(PATH_BASE, 'Skip for real base')
+    def test_quantity_product_on_stock(self):
+        self.assertEqual(self.bd.quantity_product_on_stock('KM1129'), 5)
+        self.assertEqual(self.bd.quantity_product_on_stock('KM1130'), 0)
 
     @skipUnless(PATH_BASE, 'Run for real base')
     def test_get_warehous_grcod_filter_real(self):
@@ -104,9 +106,9 @@ class TestBasePassDBFbB(TestCase):
         self.assertEqual(_result_got, _result_test)
 
     @skipUnless(PATH_BASE, 'Run for real base')
-    def test_is_product_on_stock_real(self):
-        self.assertEqual(self.bd.quantity_product_on_stock('KM1182'), True)
-        self.assertEqual(self.bd.quantity_product_on_stock('KM1175'), False)
+    def test_quantity_product_on_stock_real(self):
+        self.assertEqual(self.bd.quantity_product_on_stock('KM1182'), 1)
+        self.assertEqual(self.bd.quantity_product_on_stock('KM1175'), 0)
 
 
 class TestBasePassDBFGetDataFromPass(TestCase):

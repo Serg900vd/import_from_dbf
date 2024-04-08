@@ -13,6 +13,7 @@ PRODUCT_ID_1616486427 = {'id': 1616486427,
                          'prices': [{'minimum_order_quantity': 5.0, 'price': 8.0}],
                          'sku': 'test_HB770',  # -- READ ONLY
                          'status': 'draft',
+                         'quantity_in_stock': 3,
                          }
 RESET_PRODUCT_ID_1616486427 = {'id': 1616486427,
                                'external_id': 'test_HB770',  # -- READ ONLY
@@ -20,7 +21,8 @@ RESET_PRODUCT_ID_1616486427 = {'id': 1616486427,
                                'price': 0.5,
                                'prices': [{'minimum_order_quantity': 2.0, 'price': 0.1}],
                                'sku': 'test_HB770',  # -- READ ONLY
-                               'status': 'on_display',
+                               'status': 'not_on_display',
+                               'quantity_in_stock': None,
                                }
 PRODUCT_KEYS = {'keywords', 'status', 'is_variation', 'sku', 'variation_base_id', 'presence', 'external_id',
                 'selling_type', 'prices', 'price', 'group', 'currency', 'minimum_order_quantity', 'measure_unit',
