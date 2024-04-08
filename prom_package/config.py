@@ -13,7 +13,7 @@ class SmtpConfig:
     subject: str = 'WARNING Prom data update has falled'
 
 
-PROM_VER = 'v1.4.1'
+PROM_VER = 'v1.4.2'
 
 # Read the start path
 PATH_PROM = Path(__file__).parent
