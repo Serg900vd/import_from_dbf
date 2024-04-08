@@ -37,7 +37,7 @@ PRESENCE_NOT_AVAILABLE: Presence = 'not_available'
 @dataclass
 class Product:
     id: int = 0
-    external_id: str = ''
+    sku: str = ''
     presence: Presence = PRESENCE_NOT_AVAILABLE
     price: float = 0.0
     prices: List[dict] = field(default_factory=list)
@@ -117,14 +117,14 @@ def get_prom_chang_list(bd: BasePassDBF, products_prom: list) -> list:
     """
     products_chang_list = []
     for p in products_prom:
-        product_prom = Product(p['id'], p['external_id'], p['presence'], p['price'], p['prices'], p['status'],
+        product_prom = Product(p['id'], p['sku'], p['presence'], p['price'], p['prices'], p['status'],
                                p['quantity_in_stock'])
 
-        group_cod = p['external_id']
+        group_cod = p['sku']
         quantity_in_stock = bd.quantity_product_on_stock(group_cod)
         product_bd = Product(
             id=p['id'],
-            external_id=group_cod,
+            sku=group_cod,
             presence=PRESENCE_AVAILABLE if quantity_in_stock else PRESENCE_NOT_AVAILABLE,
             quantity_in_stock=quantity_in_stock if quantity_in_stock < 20 else 20
         )
